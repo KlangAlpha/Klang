@@ -14,7 +14,7 @@ class Klang():
         self.stocklist    = []
         self.stockindex   = {}
         self.currentindex = 0
-        self.currentdf    = []
+        self.currentdf    = {}
         self.reload       = False
 
 
