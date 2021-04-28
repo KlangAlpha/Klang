@@ -12,6 +12,10 @@ pip3 install -r requirements.txt
 ```
 
 # 应用示例
+* 第一次会下载数据
 ```
 from Klang import *
+
+C/C[1]
+
 ```

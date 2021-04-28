@@ -9,12 +9,14 @@ def setstock(kl1):
     global kl
     kl = kl1
 
+#获取股票数据
 def getstockdata(name):
     if isinstance(kl.currentdf.get('df'),pandas.core.frame.DataFrame):
         return kl.currentdf['df'][name]
     return []
         
-
+#做类似C/C[1]计算
+#计算涨跌率
 def match_size(*datas_list):
     size = min(len(data) for data in datas_list)
     if size == 0:
@@ -22,15 +24,22 @@ def match_size(*datas_list):
     new_list = [np.array(data[:size]) for data in datas_list]
     return new_list
 
+
+#股票数据重新定义以方便计算
+
 class Kdatas(object):
     def __init__(self,index=0):
         self._data = []
         self.currentindex = -1 #stock code index
-        self.index = index
+        self.index = index     #C,C[1],C[2]
 
+
+
+    #比较currentindex值的目的是切换股票的时候刷新
     @property
     def data(self):
         if len(self._data) == 0 or self.currentindex != kl.currentindex:
+            self.currentindex = kl.currentindex
             d = getstockdata(self.name).astype(self.dtype)
             self._data = d[self.index:]
 
@@ -45,10 +54,6 @@ class Kdatas(object):
         else:
             n._data = np.array([])
         return n
-
-    @property
-    def value(self):
-        pass 
 
     def __truediv__(self, other):
         s1 , s2 = match_size(self.data,other.data)
