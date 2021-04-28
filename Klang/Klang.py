@@ -46,5 +46,7 @@ def Klang_init():
 
     Kl.stocklist = bs.init_stock_list()
     Kl.get_day()
+
+    #set default stock
     Kl.currentdf = Kl.df_all[0]    
 

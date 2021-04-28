@@ -23,19 +23,25 @@ def match_size(*datas_list):
     return new_list
 
 class Kdatas(object):
-    def __init__(self):
+    def __init__(self,index=0):
         self._data = []
+        self.currentindex = -1 #stock code index
+        self.index = index
 
     @property
     def data(self):
-        if len(self._data) == 0:
-            self._data = getstockdata(self.name).astype(self.dtype)
+        if len(self._data) == 0 or self.currentindex != kl.currentindex:
+            d = getstockdata(self.name).astype(self.dtype)
+            self._data = d[self.index:]
+
         return self._data
 
+    #C,index=0,
+    #C[1],index=1
     def __getitem__(self, index):
-        n = self.__class__()
+        n = self.__class__(index)
         if len(self._data) > index:
-            n._data = self._data[index:]
+            n._data = self.data[index:]
         else:
             n._data = np.array([])
         return n

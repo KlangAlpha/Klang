@@ -66,7 +66,7 @@ def load_stock_trader(Kl,name=filename_st):
             number += 1
 
             # save df to list
-            Kl.df_all.append({name:pd.DataFrame.from_dict(stock[name])}) 
+            Kl.df_all.append({"name":name,"df":pd.DataFrame.from_dict(stock[name])}) 
 
 
 #从bs获取日K数据
