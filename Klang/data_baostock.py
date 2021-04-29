@@ -66,7 +66,10 @@ def load_stock_trader(Kl,name=filename_st):
             number += 1
 
             # save df to list
-            Kl.df_all.append({"name":name,"df":pd.DataFrame.from_dict(stock[name])}) 
+            df = pd.DataFrame.from_dict(stock[name])
+            df['datetime'] = df['date']
+            df = df.set_index('date')
+            Kl.df_all.append({"name":name,"df":df}) 
 
 
 #从bs获取日K数据
@@ -78,6 +81,7 @@ def get_day(name,code,start,end):
     datas = rs.get_data()
     if len(datas) < 2:
         return []
+    print(len(datas),datas.date[datas.index[-1]])
     return datas
 
 # 从文件中一行数据 格式化分析出信息

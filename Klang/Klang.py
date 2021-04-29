@@ -15,13 +15,28 @@ class Klang():
         self.stockindex   = {}
         self.currentindex = 0
         self.currentdf    = {}
+        self.dfstart      = "2021-01-01"
+        self.dfend        = end
         self.reload       = False
 
 
+    #df_all 是总的数据
+    #每次加载的时候可以设置并且获取部分数据
 
     def setcurrent(self,code):
         self.currentindex = self.stockindex[code]
         self.currentdf = self.df_all[self.currentindex]
+        df = self.currentdf['df']
+        df = df[self.dfstart:self.dfend] 
+        self.currentdf['df'] = df
+        
+    def setdate(self,start="2021-01-01",end=end):
+        self.dfstart=start
+        self.dfend=end
+        df = self.currentdf['df']
+        df = df[self.dfstart:self.dfend] 
+        self.currentdf['df'] = df
+ 
 
     """
     获取所有的A股的日K数据
@@ -38,6 +53,16 @@ class Klang():
         bs.updatestock()
 
 
+#
+# 循环计算所有股票，把满足表达式的显示出来
+#
+def search(condition,printf=print):
+    #save old state
+
+    for i in Kl.df_all:
+        pass
+
+    #restore old state
 
 Kl = Klang()
 
