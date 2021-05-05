@@ -26,7 +26,8 @@ def match_size(*datas_list):
     size = min(len(data) for data in datas_list)
     if size == 0:
         return np.array([]),np.array([])
-    new_list = [np.array(data[:size]) for data in datas_list]
+    #[len-size:]
+    new_list = [np.array(data[len(data)-size:]) for data in datas_list]
     return new_list
 
 
@@ -41,6 +42,10 @@ class Kdatas(object):
         self.index = index     #C,C[1],C[2]
 
 
+    #返回最后一天的数据
+    @property
+    def value(self):
+        return self.data[-1]
 
     #比较currentindex值的目的是切换股票的时候刷新
     @property
@@ -55,8 +60,11 @@ class Kdatas(object):
             self.dfend   = kl.dfend
 
             d = getstockdata(self.name).astype(self.dtype)
-            self._data = d[self.index:]
-
+            index = len(d) - self.index
+            if index > 0:
+                self._data = d[:index]
+            else :
+                self._data = []
         return self._data
 
     #C,index=0,
@@ -64,7 +72,8 @@ class Kdatas(object):
     def __getitem__(self, index):
         n = self.__class__(index)
         if len(self._data) > index:
-            n._data = self.data[index:]
+            nindex = len(self._data) - index
+            n._data = self.data[:nindex]
         else:
             n._data = np.array([])
         return n
@@ -75,6 +84,11 @@ class Kdatas(object):
 
     __div__ = __truediv__
 
+    def __len__(self):
+        return len(self.data)
+
+    def __repr__(self):
+        return str(self.value)
 
 # create open high low close volume date
 for name in ["open", "high", "low", "close", "volume", "datetime"]:
