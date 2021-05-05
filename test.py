@@ -14,7 +14,7 @@ print(C)
 
 # 系列比，可以计算出每天的涨幅
 print(C.data,C[1].data)
-#print(C/C[1])
+print(C/C[1])
 
 #显示当天TCL的收盘价
 Kl.setcurrent('sz.000100')

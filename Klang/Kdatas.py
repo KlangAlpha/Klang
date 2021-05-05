@@ -77,13 +77,12 @@ class Kdatas(object):
         else:
             n._data = np.array([])
         return n
-    """
+
     def __truediv__(self, other):
-        s1 , s2 = match_size(self.data,other.data)
-        return s1 / s2
+        #s1 , s2 = match_size(self.data,other.data)
+        return self.value / other.value
 
     __div__ = __truediv__
-    """
 
     def __len__(self):
         return len(self.data)
