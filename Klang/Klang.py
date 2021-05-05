@@ -4,6 +4,7 @@
 from . import data_zhanluejia as zhanluejia
 from . import data_baostock as bs 
 from .common import *
+import copy
 
 class Klang():
     def __init__(self):
@@ -22,10 +23,10 @@ class Klang():
 
     #df_all 是总的数据
     #每次加载的时候可以设置并且获取部分数据
-
+    # copy.deepcopy 深度复制数据，以免破坏
     def setcurrent(self,code):
         self.currentindex = self.stockindex[code]
-        self.currentdf = self.df_all[self.currentindex]
+        self.currentdf = copy.deepcopy(self.df_all[self.currentindex])
         df = self.currentdf['df']
         df = df[self.dfstart:self.dfend] 
         self.currentdf['df'] = df
@@ -33,6 +34,8 @@ class Klang():
     def setdate(self,start="2021-01-01",end=end):
         self.dfstart=start
         self.dfend=end
+        # 重新获取数据
+        self.currentdf = copy.deepcopy(self.df_all[self.currentindex])
         df = self.currentdf['df']
         df = df[self.dfstart:self.dfend] 
         self.currentdf['df'] = df
