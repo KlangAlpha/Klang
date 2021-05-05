@@ -1,16 +1,20 @@
 #
-#
+# Klang lib
 #
 
 
 from .Klang import Kl,Klang_init
 from .Kdatas import *
+from .tdx import *
 
 #kdatas set kl
 setstock(Kl)
 
 Klang_init()
 
+settdx(
+    DATETIME
+)
 __all__ = [
     "OPEN", "O",
     "HIGH", "H",
