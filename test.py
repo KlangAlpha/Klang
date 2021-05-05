@@ -1,4 +1,4 @@
-from Klang import C,Klang
+from Klang import C,Klang,REF,REFDATE
 
 Kl = Klang.Kl
 # 设置为隆基
@@ -14,10 +14,13 @@ print(C)
 
 # 系列比，可以计算出每天的涨幅
 print(C.data,C[1].data)
-print(C/C[1])
+#print(C/C[1])
 
 #显示当天TCL的收盘价
 Kl.setcurrent('sz.000100')
 Kl.setdate()
 print(C)
+
+print(REF(C,1))
+print(REFDATE(C,'20210429'))
 
