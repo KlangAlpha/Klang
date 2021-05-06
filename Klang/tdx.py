@@ -1,6 +1,8 @@
 #
 # tdx 通达信相关的函数
 #
+import talib
+
 tdx_datetime=None
 
 def settdx(d):
@@ -12,8 +14,10 @@ def settdx(d):
 返回无效数。
 用法： DRAWNULL
 """
-def DRAWNULL():
+def DNULL():
     return None
+
+DRAWNULL = DNULL()
 
 """
 REF 向前引用
@@ -40,6 +44,26 @@ def REFDATE(X,A):
     if idx == "":
         return None
     return X[idx]
+
+
+def BARSCOUNT(X):
+    return len(X)
+
+def HHV(X,N):
+    if N == 0:
+        data = X.data
+    else:
+        data = X.data[len(X)-N:]
+
+    return talib.MAX(data,N)[-1]
+
+
+def LLV(X,N):
+    if N == 0:
+        data = X.data
+    else:
+        data = X.data[len(X)-N:]
+    return talib.MIN(data,N)[-1]
 
 
 def iif(condition,result1,result2):
