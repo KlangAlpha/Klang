@@ -1,4 +1,9 @@
-from Klang import C,Klang,REF,REFDATE
+from Klang import (
+    C,Klang,
+    REF,REFDATE,
+    MA,
+    HHV,LLV
+)
 
 Kl = Klang.Kl
 # 设置为隆基
@@ -24,3 +29,6 @@ print(C)
 print(REF(C,1))
 print(REFDATE(C,'20210429'))
 
+print(MA(C,5))
+print(HHV(C,10))
+print(LLV(C,10))
