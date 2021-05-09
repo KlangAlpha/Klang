@@ -2,9 +2,30 @@
 from ply import *
 
 tokens = ( 
-           'ID',
-           'TRUE',
-           'FALSE' )
+          'ID',
+          'NUMBER',
+          'PLUS',
+          'MINUS',
+          'TIMES',
+          'DIVIDE',
+          'LPAREN',
+          'RPAREN',
+          'TRUE',
+          'FALSE' )
+
+# Regular expression rules for simple tokens
+t_PLUS    = r'\+'
+t_MINUS   = r'-'
+t_TIMES   = r'\*'
+t_DIVIDE  = r'/'
+t_LPAREN  = r'\('
+t_RPAREN  = r'\)'
+
+# A regular expression rule with some action code
+def t_NUMBER(t):
+    r'\d+'
+    t.value = int(t.value)
+    return t
 
 def t_TRUE(t):
     r'(true)'
