@@ -25,6 +25,9 @@ class Klang():
     #每次加载的时候可以设置并且获取部分数据
     # copy.deepcopy 深度复制数据，以免破坏
     def setcurrent(self,code):
+        if len(self.df_all) < 1:
+            print ("正在加载数据请稍后")
+            return False
         self.currentindex = self.stockindex[code]
         self.currentdf = copy.deepcopy(self.df_all[self.currentindex])
         df = self.currentdf['df']
@@ -32,6 +35,9 @@ class Klang():
         self.currentdf['df'] = df
         
     def setdate(self,start="2021-01-01",end=end):
+        if len(self.df_all) < 1:
+            print ("正在加载数据请稍后")
+            return False
         self.dfstart=start
         self.dfend=end
         # 重新获取数据
