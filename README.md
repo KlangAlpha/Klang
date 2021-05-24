@@ -19,3 +19,15 @@ from Klang import *
 C/C[1]
 
 ```
+
+# Klang 语言(K浪)
+```
+Kl:>a=1+3
+4
+Kl:>b=3*5
+15
+Kl:>testfunc(a,b,2)
+4 15 2 9.5
+Kl:>
+
+```
