@@ -73,9 +73,9 @@ def t_COMMENT(t):
     r'\#.*'
     pass
 
-
+#[\u4E00-\u9FA5] 简体中文
 def t_ID(t):
-    r'[a-zA-Z_][a-zA-Z_0-9]*'
+    r'[a-zA-Z_\u4E00-\u9FA5][a-zA-Z_0-9\u4E00-\u9FA5]*'
     # Check for reserved words
     t.type = reserved.get(t.value.lower(), 'ID')
     return t
