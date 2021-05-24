@@ -7,7 +7,6 @@ from .Klang import Kl,Klang_init
 from .Kdatas import *
 from .talib_api import *
 from .tdx import *
-from .kparse import *
 
 #kdatas set kl
 setstock(Kl)
