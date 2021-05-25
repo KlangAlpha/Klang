@@ -108,7 +108,8 @@ def Klang_init():
     #异步加载df 放到df_all
     t = threading.Thread(target=Kl.get_all_day)
     t.start()
-
+    
     #set default stock
+    Kl.setdate(end)
     Kl.currentdf = Kl.df_all[0]    
 

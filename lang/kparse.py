@@ -3,7 +3,7 @@ from .mAST import mAST
 from ply import *
 import copy
 
-DEBUG_MODE = True 
+DEBUG_MODE = False 
 
 # import some required globals from tokenizer
 astList = []
