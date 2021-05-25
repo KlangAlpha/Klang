@@ -3,7 +3,7 @@ from .mAST import mAST
 from ply import *
 import copy
 
-DEBUG_MODE = False 
+DEBUG_MODE = True 
 
 # import some required globals from tokenizer
 astList = []
@@ -169,6 +169,11 @@ def p_expression_num(p):
     'expression : NUMBER'
     debug('NUMBER', p[1])
     p[0] = int(p[1])
+
+def p_expression_float(p):
+    'expression : FLOAT'
+    debug('FLOAT', p[1])
+    p[0] = float(p[1])
 
 
 def p_expression_string(p):

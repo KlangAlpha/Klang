@@ -9,6 +9,7 @@ states = (
 # List of basic token names.
 tokens = (
     'NUMBER',
+    'FLOAT',
     'ID',
     'SEMI',
     'STRING',
@@ -80,6 +81,10 @@ def t_ID(t):
     t.type = reserved.get(t.value.lower(), 'ID')
     return t
 
+def t_FLOAT(t):
+    r'((\d*\.\d+)(E[\+-]?\d+)?|([1-9]\d*E[\+-]?\d+))'
+    t.value = float(t.value)
+    return t
 
 # A regular expression rule with some action code
 def t_NUMBER(t):
