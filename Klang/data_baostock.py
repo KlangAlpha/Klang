@@ -124,7 +124,7 @@ def get_all_day(Kl):
         load_stock_trader(Kl)
         return 
 
-    print("正在从网上下载股票数据")
+    print("正在从网上下载股票数据,时间回有点长")
     for stock in stocklist:
         code ,name = getstockinfo(stock)
         #print('正在获取',name,'代码',code)
