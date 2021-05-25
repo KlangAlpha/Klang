@@ -1,5 +1,7 @@
 #
 # K-line, stock datas 
+# Klang 提供了全局的股票数据，和获取股票数据的方法
+# Kdatas 是提供了单只股票的数据和计算方法
 #
 import numpy as np
 import pandas
@@ -22,6 +24,7 @@ def getstockdata(name):
         
 #做类似C/C[1]计算
 #计算涨跌率
+#C和C1都是列表，numpy计算的时候需要同样list size
 def match_size(*datas_list):
     size = min(len(data) for data in datas_list)
     if size == 0:
@@ -91,6 +94,7 @@ class Kdatas(object):
         return str(self.value)
 
 # create open high low close volume date
+# 建立全局的 o,O,OPEN,等关键词
 for name in ["open", "high", "low", "close", "volume", "datetime"]:
     dtype = np.float64 if name != "datetime" else np.str_
     cls = type("{}Kdatas".format(name.capitalize()), (Kdatas, ), {"name": name, "dtype": dtype})

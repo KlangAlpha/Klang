@@ -2,12 +2,15 @@ import baostock as bs
 import pandas as pd
 import os
 import json
-
+from threading import Lock
 bs.login()
 
 
 filename_sl = os.path.expanduser("~/.klang_stock_list.csv")
 filename_st = os.path.expanduser("~/.klang_stock_trader.csv")
+
+
+mutex = Lock()
 
 #
 #stock list
@@ -32,7 +35,7 @@ def updatestock(name=filename_sl):
     # 结果集输出到csv文件
     result.to_csv(name, index=False)    
 
-def init_stock_list(offset=0):
+def init_stock_list(Kl,offset=0):
     if not os.path.exists(filename_sl):
         print('正在下载股票库列表....')
         updatestock(filename_sl)
@@ -41,6 +44,16 @@ def init_stock_list(offset=0):
     print("正在从文件",filename_sl,"加载股票列表")
     stocklist = open(filename_sl).readlines()
     stocklist = stocklist[1+int(offset):] #删除第一行
+
+    # 初始化 code到index 对应表
+    number = 0
+    for stock in stocklist:
+            code ,name = getstockinfo(stock)
+            Kl.stockindex[code] = number
+            Kl.df_all.append({"name":name,"df":None,"code":code}) 
+            number += 1
+        
+
     return stocklist
 
 #
@@ -52,36 +65,41 @@ def save_stock_trader(df_dict):
     f.write(content)
     f.close()
 
+# load stock data from file
 def load_stock_trader(Kl,name=filename_st):
     content = open(name).read()
 
     df_dict = json.loads(content)
     number = 0
     for stock in df_dict:
-        for name in stock:
-
             # save order for index
-            code = stock[name]['code']['0']
-            Kl.stockindex[code] = number
-            number += 1
-
+            code = stock['code']
+            name = stock['name']
             # save df to list
-            df = pd.DataFrame.from_dict(stock[name])
+            df = pd.DataFrame.from_dict(stock['df'])
             df['datetime'] = df['date']
             df = df.set_index('date')
-            Kl.df_all.append({"name":name,"df":df}) 
+            Kl.df_all[number]["df"] = df
+            number += 1
 
 
 #从bs获取日K数据
-def get_day(name,code,start,end):
+def get_day(name,code,start,end,setindex=False):
+    mutex.acquire()
     rs = bs.query_history_k_data_plus(code, 
                                       'date,open,high,low,close,volume,code,turn', 
                                       start_date=start,
                                       end_date=end,frequency='d' )
     datas = rs.get_data()
+    mutex.release()
+
     if len(datas) < 2:
         return []
-    print(len(datas),datas.date[datas.index[-1]])
+    #print(len(datas),datas.date[datas.index[-1]])
+    if setindex == True:
+        datas['datetime'] = datas['date']
+        datas = datas.set_index('date')
+        
     return datas
 
 # 从文件中一行数据 格式化分析出信息
@@ -109,10 +127,10 @@ def get_all_day(Kl):
     print("正在从网上下载股票数据")
     for stock in stocklist:
         code ,name = getstockinfo(stock)
-        print('正在获取',name,'代码',code)
+        #print('正在获取',name,'代码',code)
         df = get_day(name,code,Kl.start_date,Kl.end_date)
         if len(df) > 0:
-           df_dict.append({name:df.to_dict()})
+           df_dict.append({'df':df.to_dict(),'name':name,'code':code})
 
     save_stock_trader(df_dict)
     load_stock_trader(Kl)

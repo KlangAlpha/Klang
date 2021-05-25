@@ -11,7 +11,7 @@ from .tdx import *
 #kdatas set kl
 setstock(Kl)
 
-#Klang_init()
+Klang_init()
 
 settdx(
     DATETIME
