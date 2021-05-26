@@ -2,7 +2,8 @@
 
 from lang import kparser,setPY
 from Klang.common import today 
-from Klang import C,MA
+from Klang import C,MA,CROSS
+
 #
 # today 
 #

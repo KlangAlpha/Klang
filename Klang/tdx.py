@@ -45,6 +45,16 @@ def REFDATE(X,A):
         return None
     return X[idx]
 
+"""
+两条线交叉。
+
+用法：　CROSS(A，B)　表示当A从下方向上穿过B时返回1，否则返回0。
+
+例如：　CROSS(MA(CLOSE，5)，MA(CLOSE，10))　表示5日均线与10日均线交金叉。
+"""
+def CROSS(A,B):
+    return A[-2] < B[-2] and A[-1] >= B[-1]
+
 
 def BARSCOUNT(X):
     return len(X)

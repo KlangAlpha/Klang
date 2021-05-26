@@ -40,13 +40,20 @@ def p_statement_expr(p):
     p[0] = p[1]
 
 
+def p_statement(p):
+    """
+    statement : statement_print 
+               | statement_func
+    """
+    p[0] = p[1]
+
 def p_statement_print(p):
-    'statement : PRINT LPAREN expr_list RPAREN'
+    'statement_print : PRINT LPAREN expr_list RPAREN'
     debug('PRINT', p[3])
     p[0] = mAST(action='print', params=p[3])
 
 def p_statement_func(p):
-    'statement : ID LPAREN expr_list RPAREN'
+    'statement_func : ID LPAREN expr_list RPAREN'
     debug('FUNC', p[3])
     p[0] = mAST(action='func', params=[p[1],p[3]])
 
