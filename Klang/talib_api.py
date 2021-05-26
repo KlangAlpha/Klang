@@ -5,4 +5,4 @@
 import talib
 
 def MA(X,N):
-    return talib.MA(X.data,N)[-1]
+    return talib.MA(X.data,N)

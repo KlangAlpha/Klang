@@ -37,7 +37,7 @@ while True:
     result = kparser.parse(s+"\n")
     for x in result:
         ret = x.run()
-        if ret != None:
+        if ret is not None:
             print(ret)
 
 #python里获取klang设置的变量值
