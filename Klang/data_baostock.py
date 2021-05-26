@@ -87,7 +87,7 @@ def load_stock_trader(Kl,name=filename_st):
 def get_day(name,code,start,end,setindex=False):
     mutex.acquire()
     rs = bs.query_history_k_data_plus(code, 
-                                      'date,open,high,low,close,volume,code,turn', 
+                                      'date,open,high,low,close,volume,code,turn,amount', 
                                       start_date=start,
                                       end_date=end,frequency='d' )
     datas = rs.get_data()
@@ -99,7 +99,9 @@ def get_day(name,code,start,end,setindex=False):
     if setindex == True:
         datas['datetime'] = datas['date']
         datas = datas.set_index('date')
-        
+
+    datas.rename(columns={'volume':'vol','amount':'amo'},inplace = True) 
+
     return datas
 
 # 从文件中一行数据 格式化分析出信息

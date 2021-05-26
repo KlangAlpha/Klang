@@ -17,6 +17,8 @@ df2 = df[(df.date >= '2020-10-01') &
 """
 
 #获取股票数据
+#baostock volume,TDX use vol
+
 def getstockdata(name):
     if isinstance(kl.currentdf.get('df'),pandas.core.frame.DataFrame):
         return kl.currentdf['df'][name]
@@ -95,7 +97,7 @@ class Kdatas(object):
 
 # create open high low close volume date
 # 建立全局的 o,O,OPEN,等关键词
-for name in ["open", "high", "low", "close", "volume", "datetime"]:
+for name in ["open", "high", "low", "close", "volume", 'vol','amo',"datetime"]:
     dtype = np.float64 if name != "datetime" else np.str_
     cls = type("{}Kdatas".format(name.capitalize()), (Kdatas, ), {"name": name, "dtype": dtype})
     obj = cls()
