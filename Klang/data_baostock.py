@@ -100,7 +100,7 @@ def get_day(name,code,start,end,setindex=False):
         datas['datetime'] = datas['date']
         datas = datas.set_index('date')
 
-    datas.rename(columns={'volume':'vol','amount':'amo'},inplace = True) 
+    datas.rename(columns={'volume':'vol'},inplace = True) 
 
     return datas
 
