@@ -42,6 +42,8 @@ specials_sc = {
     ')':    'RPAREN',
     ',':    'COMMA',
     ':':    'COLON',
+    '[':    'LBRACKET',
+    ']':    'RBRACKET',
 }
 
 # List of multi character literals
@@ -76,7 +78,7 @@ def t_COMMENT(t):
 
 #[\u4E00-\u9FA5] 简体中文
 def t_ID(t):
-    r'[a-zA-Z_\u4E00-\u9FA5][a-zA-Z_0-9\u4E00-\u9FA5]*(\[\d+\])?'
+    r'[a-zA-Z_\u4E00-\u9FA5][a-zA-Z_0-9\u4E00-\u9FA5]*'
     # Check for reserved words
     t.type = reserved.get(t.value.lower(), 'ID')
     return t

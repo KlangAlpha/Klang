@@ -164,6 +164,11 @@ def p_expression_var(p):
     debug('VAR', p[1])
     p[0] = mAST(action='get', params=[p[1]])
 
+#[\d]
+def p_expression_varslice(p):
+    'expression : ID LBRACKET NUMBER RBRACKET'
+    debug('VAR', p[1])
+    p[0] = mAST(action='get_slice', params=[p[1],p[3]])
 
 def p_expression_num(p):
     'expression : NUMBER'
