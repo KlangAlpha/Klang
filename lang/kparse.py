@@ -43,7 +43,6 @@ def p_statement_expr(p):
 def p_statement(p):
     """
     statement : statement_print 
-               | statement_func
     """
     p[0] = p[1]
 
@@ -155,6 +154,9 @@ def p_condition_parens(p):
     debug('COND_PARENS', p[2])
     p[0] = p[2]
 
+def p_expression_func(p):
+    'expression : statement_func'
+    p[0] = p[1]
 
 def p_expression_bool_true(p):
     'expression : TRUE'
