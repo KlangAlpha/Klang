@@ -97,7 +97,7 @@ class Kdatas(object):
 
 # create open high low close volume date
 # 建立全局的 o,O,OPEN,等关键词
-for name in ["open", "high", "low", "close", "volume", 'vol','amo',"datetime"]:
+for name in ["open", "high", "low", "close", "volume", 'vol','amount',"datetime"]:
     dtype = np.float64 if name != "datetime" else np.str_
     cls = type("{}Kdatas".format(name.capitalize()), (Kdatas, ), {"name": name, "dtype": dtype})
     obj = cls()
