@@ -2,7 +2,7 @@
 
 from lang import kparser,setPY,Kexec
 from Klang.common import today 
-from Klang import C,MA,CROSS
+from Klang import Kl,C,MA,CROSS
 
 #
 # today 
@@ -17,8 +17,8 @@ def setpyglobals(name,val):
 
 setPY(getpyglobals,setpyglobals) 
 
-def testfunc(a,b=0,c=1):
-    print(a,b,c,(a+b)/c)
+def getstockinfo(a):
+    return Kl.currentdf['name'] + "-" + Kl.currentdf['code']
 
 pi=3.1415926
 
@@ -27,14 +27,14 @@ print(C/C[1])
 
 testblock=\
 """
-x=50
+
 kloop
-print(x)
-if x>10:
-    print("x>10")
-if x<10:
-    print("x<10")
-endp;
+ret = CROSS(MA(C,5),MA(C,10))
+info = getstockinfo(0)
+if ret == True:
+    print(info,ret)
+endp
+
 """
 
 Kexec(testblock)

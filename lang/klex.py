@@ -26,7 +26,7 @@ reserved = {
     'or':    'OR',
     'true':  'TRUE',
     'false': 'FALSE',
-    'kloop': 'KLOOP',
+    'kloop': 'KLOOP', #kloop 是一个关键词循环所有的股票
     'endp' : 'ENDP',
 }
 

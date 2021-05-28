@@ -48,8 +48,12 @@ class mAST:
             result = ret[self.params[1]]
 
         elif self.action == 'kloop':
-            for x in self.params:
-                mAST.resolve(x)
+            Kl  = getpyglobals('Kl')
+            for df in Kl.df_all:
+                Kl.setcurrent(df["code"])
+
+                for x in self.params:
+                    mAST.resolve(x)
 
         elif self.action == 'loop':
             for i in self.params[1]:

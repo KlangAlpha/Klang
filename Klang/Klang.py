@@ -32,7 +32,7 @@ class Klang():
 
         #如果没有数据需要加载
         if self.df_all[index]['df'] is None:
-            print ("正在加载数据请稍后")
+            #print ("正在加载数据请稍后")
             self.df_all[index]['df'] = self.data_engine.get_day(
                 self.df_all[index]['name'],
                 self.df_all[index]['code'],
@@ -82,16 +82,7 @@ class Klang():
         bs.updatestock()
 
 
-#
-# 循环计算所有股票，把满足表达式的显示出来
-#
-def search(condition,printf=print):
-    #save old state
 
-    for i in Kl.df_all:
-        pass
-
-    #restore old state
 
 Kl = Klang()
 
