@@ -47,6 +47,10 @@ class mAST:
                 ret= getpyglobals(self.params[0])
             result = ret[self.params[1]]
 
+        elif self.action == 'kloop':
+            for x in self.params:
+                mAST.resolve(x)
+
         elif self.action == 'loop':
             for i in self.params[1]:
                 symbols[self.params[0]] = i

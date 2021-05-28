@@ -19,6 +19,7 @@ def p_function(p):
     '''
     function : function statement SEMI
              | function line_statement
+             | function kloop
              | empty
     '''
     if len(p) > 2:
@@ -28,6 +29,29 @@ def p_function(p):
     else:
         debug('FUNCTION', p[1:])
 
+#存储多条语句组成的语句block
+blockList=[]
+def p_func_block(p):
+    '''
+    func_block : func_block statement SEMI
+               | func_block line_statement
+               | empty 
+    '''
+    if len(p) > 2:
+        debug('FUNBLOCK', str(p[2]))
+        blockList.append(p[2])
+        p[0] = blockList
+    else:
+        debug('FUNCTION', p[1:])
+
+#讲循环里面的语句块 加入到loop里面
+def p_kloop(p):
+    '''
+    kloop : KLOOP SEMI func_block  ENDP %prec LOOP_INSTR
+    '''
+    global blockList
+    p[0] = mAST(action='kloop',params=copy.copy(blockList))
+    blockList = []
 
 def p_statement_none(p):
     'line_statement : SEMI'
@@ -242,3 +266,11 @@ def debug(*params):
         print("[DBG] %s" % (' : '.join(str(x) for x in params),))
 
 kparser = yacc.yacc()
+
+def Kexec(datas):
+    result = kparser.parse(datas)
+    for x in result:
+        if x is not None:
+            x.run()
+
+

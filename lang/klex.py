@@ -26,6 +26,8 @@ reserved = {
     'or':    'OR',
     'true':  'TRUE',
     'false': 'FALSE',
+    'kloop': 'KLOOP',
+    'endp' : 'ENDP',
 }
 
 # List of single character literals

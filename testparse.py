@@ -1,6 +1,6 @@
 #test lex parse
 
-from lang import kparser,setPY
+from lang import kparser,setPY,Kexec
 from Klang.common import today 
 from Klang import C,MA,CROSS
 
@@ -24,22 +24,31 @@ pi=3.1415926
 
 print(C/C[1])
 
+
+testblock=\
+"""
+x=50
+kloop
+print(x)
+if x>10:
+    print("x>10")
+if x<10:
+    print("x<10")
+endp;
+"""
+
+Kexec(testblock)
+
+
 while True:
     # 通过Klang谁知一个变量    
-    result = kparser.parse("O=pi+1;")
-    for x in result:
-        x.run()
-
-
+    Kexec("O=pi+1;")
 
     s = input("Kl:>")
     if s == "quit":
         break
-    result = kparser.parse(s+"\n")
-    for x in result:
-        ret = x.run()
-        if ret is not None:
-            print(ret)
+    
+    Kexec(s+";")
 
 #python里获取klang设置的变量值
 print(O)
