@@ -22,12 +22,10 @@ reserved = {
     'else':  'ELSE',
     'for':   'FOR',
     'in':    'IN',
-    'and':   'AND',
-    'or':    'OR',
     'true':  'TRUE',
     'false': 'FALSE',
     'kloop': 'KLOOP', #kloop 是一个关键词循环所有的股票
-    'endp' : 'ENDP',
+    'endp': 'ENDP',
 }
 
 # List of single character literals
@@ -37,6 +35,8 @@ specials_sc = {
     '*':    'MUL',
     '/':    'DIV',
     '%':    'MOD',
+    'and':  'AND',
+    'or':   'OR',
     '=':    'ASSIGN',
     '<':    'LT',
     '>':    'GT',
@@ -60,6 +60,7 @@ specials_mc = {
 precedence = (
     ('nonassoc', 'LOOP_INSTR'),
     ('nonassoc', 'IFX', 'SEMI', 'FOR'),
+    ('left', 'AND', 'OR'),
     ('left', 'LT', 'LE', 'GT', 'GE', 'EQ', 'NE'),
     ('left', 'REM', 'ADD'),
     ('left', 'MUL', 'DIV', 'MOD'),
@@ -81,7 +82,14 @@ def t_COMMENT(t):
 def t_ID(t):
     r'[a-zA-Z_\u4E00-\u9FA5][a-zA-Z_0-9\u4E00-\u9FA5]*'
     # Check for reserved words
-    t.type = reserved.get(t.value.lower(), 'ID')
+    reserved1 = {
+        'and':  'AND',
+        'or':   'OR',
+    }
+
+    reserved1.update(reserved)
+
+    t.type = reserved1.get(t.value.lower(), 'ID')
     return t
 
 def t_FLOAT(t):

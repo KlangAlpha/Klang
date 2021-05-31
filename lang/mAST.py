@@ -82,18 +82,20 @@ class mAST:
             b = mAST.resolve(self.params[2])
             op = self.params[1]
             result = {
-                '+':  lambda a, b: a + b,
-                '-':  lambda a, b: a - b,
-                '*':  lambda a, b: a * b,
-                '/':  lambda a, b: a / b,
-                '%':  lambda a, b: a % b,
-                '**': lambda a, b: a ** b,
-                '>':  lambda a, b: (a > b),
-                '>=': lambda a, b: (a >= b),
-                '<':  lambda a, b: (a < b),
-                '<=': lambda a, b: (a <= b),
-                '==': lambda a, b: (a == b),
-                '!=': lambda a, b: (a != b),
+                '+':   lambda a, b: a + b,
+                '-':   lambda a, b: a - b,
+                '*':   lambda a, b: a * b,
+                '/':   lambda a, b: a / b,
+                '%':   lambda a, b: a % b,
+                '**':  lambda a, b: a ** b,
+                '>':   lambda a, b: (a > b),
+                '>=':  lambda a, b: (a >= b),
+                '<':   lambda a, b: (a < b),
+                '<=':  lambda a, b: (a <= b),
+                '==':  lambda a, b: (a == b),
+                '!=':  lambda a, b: (a != b),
+                'and': lambda a, b: (a and b),
+                'or':  lambda a, b: (a or b),
             }[op](a, b)
             debug("[BINOP]", a, op, b, result)
         else:
