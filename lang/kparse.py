@@ -110,7 +110,10 @@ def p_statement_for_line(p):
 
 
 def p_statement_cond_postfix_else(p):
-    'line_statement : statement IF condition_list ELSE statement SEMI'
+    """
+    line_statement : statement IF condition_list ELSE statement SEMI
+                    | statement IF expression ELSE statement SEMI
+    """
     debug("PSTFX IF-ELSE", p[1:])
     p[0] = mAST(action='condition', params=[p[3], p[1], p[5]])
 
@@ -121,7 +124,10 @@ def p_ifassign(p):
 
 
 def p_statement_cond_postfix_assign(p):
-    'line_statement : if_assign IF condition_list ELSE expression SEMI'
+    '''
+    line_statement : if_assign IF condition_list ELSE expression SEMI
+                    | if_assign IF expression ELSE expression SEMI
+    '''
     debug("PSTFX IF-ELSE-ASSIGN", p[1:])
     p[0] = mAST(action='assign', params=[
         p[1][0], mAST(action='condition', params=[p[3], p[1][1], p[5]])
@@ -132,6 +138,8 @@ def p_statement_cond(p):
     '''
     line_statement : IF condition_list COLON statement SEMI %prec IFX
                    | IF condition_list COLON SEMI statement SEMI %prec IFX
+                   | IF expression COLON statement SEMI %prec IFX
+                   | IF expression COLON SEMI statement SEMI %prec IFX
     '''
     debug("IF", [str(x) for x in p[1:]])
     if len(p) < 7:
@@ -160,12 +168,19 @@ def p_expression_list(p):
         p[0] = p[1] + [p[3]]
 
 
+ 
+
+
 def p_condition_list(p):
     '''
-    condition_list : expression %prec CONDLIST
+    condition_list : expression AND expression
+                   | expression OR expression
                    | condition_list AND expression
                    | condition_list OR expression
+                   
     '''
+
+
     debug('CONDITION', p[1:])
     if len(p) > 2:
         p[0] = mAST(action='logop', params=p[1:])
@@ -197,7 +212,7 @@ def p_expression_var(p):
     debug('VAR', p[1])
     p[0] = mAST(action='get', params=[p[1]])
 
-#[\d]
+#[\d+] , C[1]
 def p_expression_varslice(p):
     'expression : ID LBRACKET NUMBER RBRACKET'
     debug('VAR', p[1])

@@ -22,19 +22,23 @@ def getstockinfo(a):
 
 pi=3.1415926
 
-print(C/C[1])
+#print(C/C[1])
 
 
 testblock=\
 """
 
 kloop
-ret = CROSS(MA(C,5),MA(C,10))
+ret = CROSS(MA(C,5),MA(C,20))
+ret1 = (C - C[1])/C[1]
+ret2 = (C - C[1])/C[1] > 0.05
 info = getstockinfo(0)
-if ret == True:
-    print(info,ret)
-endp
 
+if ret == True and ret2 :
+    print(info,ret,ret1)
+
+endp
+print("计算完成")
 """
 
 Kexec(testblock)
