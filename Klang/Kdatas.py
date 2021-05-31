@@ -50,7 +50,7 @@ class Kdatas(object):
     #返回最后一天的数据
     @property
     def value(self):
-        return self.data[-1]
+        return self.dtype(self.data[-1])
 
     #比较currentindex值的目的是切换股票的时候刷新
     @property
@@ -83,11 +83,49 @@ class Kdatas(object):
             n._data = np.array([])
         return n
 
+    def __add__(self,other):
+        if isinstance(other,Kdatas):  
+            return self.value + other.value
+        else: #int float
+            return self.value + other
+
+    def __sub__(self,other):
+        if isinstance(other,Kdatas):  
+            return self.value - other.value
+        else: #int float
+            return self.value - other
+
+    def __rsub__(self,other):
+        if isinstance(other,Kdatas):  
+            return other.value - self.value
+        else: #int float
+            return other - self.value
+
+
+    def __mul__(self,other):
+        if isinstance(other,Kdatas):  
+            return self.value * other.value
+        else: #int float
+            return self.value * other
+
+
     def __truediv__(self, other):
         #s1 , s2 = match_size(self.data,other.data)
-        return self.value / other.value
+        if isinstance(other,Kdatas):  
+            return self.value / other.value
+        else:
+            return self.value / other
+
+    def __rtruediv__(self, other):
+        #s1 , s2 = match_size(self.data,other.data)
+        if isinstance(other,Kdatas):  
+            return self.dtype(other.value / self.value)
+        else:
+            return other / self.value
+
 
     __div__ = __truediv__
+    __rdiv__ = __rtruediv__
 
     def __len__(self):
         return len(self.data)
@@ -95,10 +133,10 @@ class Kdatas(object):
     def __repr__(self):
         return str(self.value)
 
-# create open high low close volume date
+# create open high low close volume datetime
 # 建立全局的 o,O,OPEN,等关键词
-for name in ["open", "high", "low", "close", "volume", 'vol','amount',"datetime"]:
-    dtype = np.float64 if name != "datetime" else np.str_
+for name in ["open", "high", "low", "close", "volume", 'vol','amount','datetime']:
+    dtype = float if name != "datetime" else np.str_
     cls = type("{}Kdatas".format(name.capitalize()), (Kdatas, ), {"name": name, "dtype": dtype})
     obj = cls()
     for var in [name[0], name[0].upper(), name.upper()]:
