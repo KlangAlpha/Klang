@@ -83,32 +83,106 @@ class Kdatas(object):
             n._data = np.array([])
         return n
 
+    # <
+    def __lt__(self, other):
+        if isinstance(other,Kdatas):  
+            return self.value < other.value
+        else: #int float
+            return self.value < other
+
+
+    # >
+    def __gt__(self, other):
+        if isinstance(other,Kdatas):  
+            return self.value > other.value
+        else: #int float
+            return self.value > other
+
+
+    # ==
+    def __eq__(self, other):
+        if isinstance(other,Kdatas):  
+            return self.value == other.value
+        else: #int float
+            return self.value == other
+
+
+    # !=
+    def __ne__(self, other):
+        if isinstance(other,Kdatas):  
+            return self.value != other.value
+        else: #int float
+            return self.value != other
+
+
+    # >=
+    def __ge__(self, other):
+        if isinstance(other,Kdatas):  
+            return self.value >= other.value
+        else: #int float
+            return self.value >= other
+
+
+    # <= 
+    def __le__(self, other):
+        if isinstance(other,Kdatas):  
+            return self.value <= other.value
+        else: #int float
+            return self.value <= other
+
+       # +
     def __add__(self,other):
         if isinstance(other,Kdatas):  
             return self.value + other.value
         else: #int float
             return self.value + other
-
+    # -
     def __sub__(self,other):
         if isinstance(other,Kdatas):  
             return self.value - other.value
         else: #int float
             return self.value - other
-
+    # -
     def __rsub__(self,other):
         if isinstance(other,Kdatas):  
             return other.value - self.value
         else: #int float
             return other - self.value
 
-
+    # *
     def __mul__(self,other):
         if isinstance(other,Kdatas):  
             return self.value * other.value
         else: #int float
             return self.value * other
 
+    # +
+    def __add__(self,other):
+        if isinstance(other,Kdatas):  
+            return self.value + other.value
+        else: #int float
+            return self.value + other
+    # -
+    def __sub__(self,other):
+        if isinstance(other,Kdatas):  
+            return self.value - other.value
+        else: #int float
+            return self.value - other
+    # -
+    def __rsub__(self,other):
+        if isinstance(other,Kdatas):  
+            return other.value - self.value
+        else: #int float
+            return other - self.value
 
+    # *
+    def __mul__(self,other):
+        if isinstance(other,Kdatas):  
+            return self.value * other.value
+        else: #int float
+            return self.value * other
+
+    # / 
     def __truediv__(self, other):
         #s1 , s2 = match_size(self.data,other.data)
         if isinstance(other,Kdatas):  

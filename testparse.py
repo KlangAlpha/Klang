@@ -29,13 +29,18 @@ testblock=\
 """
 
 kloop
-ret = CROSS(MA(C,5),MA(C,20))
+ret = CROSS(C,MA(C,60))
+ma5 = MA(C,5)
+ma10 = MA(C,10)
+ma20 = MA(C,20)
+ma60 = MA(C,60)
+
 ret1 = (C - C[1])/C[1]
 ret2 = (C - C[1])/C[1] > 0.05
 info = getstockinfo(0)
 
-if ret == True and ret2 :
-    print(info,ret,ret1)
+if ma60[-1] < ma20[-1] and ma20[-1] < ma10[-1] and ma10[-1] < ma5[-1] and ret2 :
+    print(info,ret1*100)
 
 endp
 print("计算完成")

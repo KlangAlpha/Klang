@@ -201,9 +201,15 @@ def p_expression_var(p):
 
 #[\d+] , C[1]
 def p_expression_varslice(p):
-    'expression : ID LBRACKET NUMBER RBRACKET'
+    '''
+    expression : ID LBRACKET NUMBER RBRACKET
+               | ID LBRACKET REM NUMBER RBRACKET
+    '''
     debug('VAR', p[1])
-    p[0] = mAST(action='get_slice', params=[p[1],p[3]])
+    if len(p) == 5:
+        p[0] = mAST(action='get_slice', params=[p[1],p[3]])
+    if len(p) == 6:
+        p[0] = mAST(action='get_slice', params=[p[1],-int(p[4])])
 
 def p_expression_num(p):
     'expression : NUMBER'

@@ -43,7 +43,7 @@ class mAST:
                 result= getpyglobals(self.params[0])
         elif self.action == 'get_slice':
             ret = symbols.get(self.params[0], None)
-            if ret == None: #试着从python获取变量
+            if ret is None: #试着从python获取变量
                 ret= getpyglobals(self.params[0])
             result = ret[self.params[1]]
 
