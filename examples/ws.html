@@ -40,27 +40,36 @@
     </head>
     <body>
         <div class="buttons">
-            <div class="minus button">-</div>
-            <div class="value">?</div>
-            <div class="plus button">+</div>
+            <div class="minus button" id="send">send</div>
+            <div style="height:300px;width:400px;">
+                <textarea id="content" style="height:100%;width:100%"></textarea>
+            </div>
+            <div class="plus button" id="clear">clear</div>
         </div>
         <div class="state">
-            <span class="users">?</span> online
+            <span class="users">offline...wait connect</span> online
+        </div>
+
+        <div class="display">
+            <span id="display">..</span> online
         </div>
         <script>
-            var minus = document.querySelector('.minus'),
-                plus = document.querySelector('.plus'),
-                value = document.querySelector('.value'),
+            var send = document.querySelector('#send'),
+                clear = document.querySelector('#clear'),
+                content = document.querySelector('#content'),
                 users = document.querySelector('.users'),
+                display = document.querySelector('#display'),
                 websocket = new WebSocket("ws://127.0.0.1:6789/");
-            minus.onclick = function (event) {
-                websocket.send(JSON.stringify({action: 'minus'}));
+            send.onclick = function (event) {
+                websocket.send(JSON.stringify({action: 'execute',content:content.value,loop:true}));
             }
-            plus.onclick = function (event) {
-                websocket.send(JSON.stringify({action: 'plus'}));
+            clear.onclick = function (event) {
+                content.value = ""
+                //websocket.send(JSON.stringify({action: 'plus'}));
             }
             websocket.onmessage = function (event) {
                 data = JSON.parse(event.data);
+                console.log(data)
                 switch (data.type) {
                     case 'state':
                         value.textContent = data.value;
@@ -69,6 +78,9 @@
                         users.textContent = (
                             data.count.toString() + " user" +
                             (data.count == 1 ? "" : "s"));
+                        break;
+                    case 'display':
+                        display.textContent += data.name+"-"+data.code + "</br>";
                         break;
                     default:
                         console.error(

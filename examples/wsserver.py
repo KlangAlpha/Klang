@@ -10,7 +10,7 @@ logging.basicConfig()
 
 
 ######################klang #######################
-from lang import kparser,setPY,Kexec
+from Klang.lang import kparser,setPY,Kexec
 from Klang.common import today
 from Klang import Kl,C,MA,CROSS
 
@@ -27,16 +27,36 @@ def setpyglobals(name,val):
 
 setPY(getpyglobals,setpyglobals)
 
-def getstockinfo(a):
-    return Kl.currentdf['name'] + "-" + Kl.currentdf['code']
+def getstockinfo():
+    return Kl.currentdf['name'], Kl.currentdf['code']
  
 
-def kloopexec(code):
-    code = " kloop \n" + code + "\nendp;"
+def kloopexec(webindex,content):
+    code = "webindex =" + str(webindex) + "\n"
+    code += "kloop \n" + content + "\nendp;"
+    return code
 
+def cmd_call(code):
+    if code == "reset_list":
+        pass
+    if code == "reload_stock":
+        pass
 
 ###################web socket######################
-USERS = set()
+USERS = {}
+index = 0
+
+def await_run(coroutine):
+    try:
+        coroutine.send(None)
+    except StopIteration as e:
+        return e.value
+
+def DISPLAY(webindex):
+    name,code = getstockinfo()
+    message = {"type":"display","name":name,"code":code}
+    msg = json.dumps(message)
+    await_run(USERS[webindex].send(msg))
 
 def users_event():
     return json.dumps({"type": "users", "count": len(USERS)})
@@ -45,34 +65,40 @@ def users_event():
 async def notify_users():
     if USERS:  # asyncio.wait doesn't accept an empty list
         message = users_event()
-        await asyncio.wait([user.send(message) for user in USERS])
+        await asyncio.wait([USERS[user].send(message) for user in USERS])
 
 
 async def register(websocket):
-    USERS.add(websocket)
+    global USERS,index
+    USERS[index] = websocket
+    index += 1 
     await notify_users()
+    return index - 1
 
-
-async def unregister(websocket):
-    USERS.remove(websocket)
+async def unregister(index):
+    del USERS[index]
     await notify_users()
 
 
 async def counter(websocket, path):
     # register(websocket) sends user_event() to websocket
-    await register(websocket)
+    webindex = await register(websocket) #webindex is fixed name,use by *.html
+    print("register ",webindex,USERS)
     try:
         async for message in websocket:
             data = json.loads(message)
             if data["action"] == "execute":
-                if data.get("loop"):
-                    code = kloopexec(data['content'])
+                if data.get("loop") is not None:
+                    code = kloopexec(webindex,data['content'])
                 else:
+                    code = "webindex="+str(webindex)+"\n" + data['content']+"\n"
+
+                Kexec(code)
+            if data["action"] == "cmd":
                     code = data['content']
-                await kexec(code)
-        
+                    cmd_call(code)        
     finally:
-        await unregister(websocket)
+        await unregister(webindex)
 
 start_server = websockets.serve(counter, "localhost", 6789)
 

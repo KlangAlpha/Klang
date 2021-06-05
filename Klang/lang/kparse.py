@@ -66,7 +66,8 @@ def p_statement_expr(p):
 
 def p_statement(p):
     """
-    statement : statement_print 
+    statement : statement_print
+              | statement_func 
     """
     p[0] = p[1]
 
@@ -275,7 +276,10 @@ def debug(*params):
     if DEBUG_MODE:
         print("[DBG] %s" % (' : '.join(str(x) for x in params),))
 
-kparser = yacc.yacc()
+
+#parsetab.py -->outputdir
+
+kparser = yacc.yacc(debug=False,outputdir="/tmp")
 
 def Kexec(datas):
     result = kparser.parse(datas)
