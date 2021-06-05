@@ -10,5 +10,5 @@ setup(
     url="https://github.com/asmcos/Klang",
     author="asmcos",
     author_email="asmcos@jeapedu.com",
-    packages=["Klang"],
+    packages=["Klang","Klang/lang"],
 )

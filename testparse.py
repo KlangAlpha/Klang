@@ -1,6 +1,6 @@
 #test lex parse
 
-from lang import kparser,setPY,Kexec
+from Klang.lang import kparser,setPY,Kexec
 from Klang.common import today 
 from Klang import Kl,C,MA,CROSS
 
