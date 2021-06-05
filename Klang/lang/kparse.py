@@ -67,7 +67,6 @@ def p_statement_expr(p):
 def p_statement(p):
     """
     statement : statement_print
-              | statement_func 
     """
     p[0] = p[1]
 
@@ -137,6 +136,8 @@ def p_statement_cond(p):
     '''
     line_statement : IF condition_list COLON statement SEMI %prec IFX
                    | IF condition_list COLON SEMI statement SEMI %prec IFX
+                   | IF condition_list COLON SEMI statement_func SEMI %prec IFX
+                   | IF condition_list COLON statement_func SEMI %prec IFX
     '''
     debug("IF", [str(x) for x in p[1:]])
     if len(p) < 7:
@@ -178,7 +179,6 @@ def p_condition_list(p):
         p[0] = mAST(action='logop', params=p[1:])
     else:
         p[0] = p[1]
-
 
 
 def p_expression_func(p):
