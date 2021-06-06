@@ -6,6 +6,7 @@ import asyncio
 import json
 import logging
 import websockets
+from threading import Lock
 logging.basicConfig()
 
 
@@ -45,6 +46,8 @@ def cmd_call(code):
 ###################web socket######################
 USERS = {}
 index = 0
+busy = 0
+mutex = Lock ()
 
 def await_run(coroutine):
     try:
@@ -59,7 +62,7 @@ def DISPLAY(webindex,value):
     await_run(USERS[webindex].send(msg))
 
 def users_event():
-    return json.dumps({"type": "users", "count": len(USERS)})
+    return json.dumps({"type": "users", "count": len(USERS),"busy":busy})
 
 
 async def notify_users():
@@ -67,6 +70,9 @@ async def notify_users():
         message = users_event()
         await asyncio.wait([USERS[user].send(message) for user in USERS])
 
+async def notice(message):
+    msg = json.dumps(message)
+    await asyncio.wait([USERS[user].send(msg) for user in USERS])
 
 async def register(websocket):
     global USERS,index
@@ -81,22 +87,38 @@ async def unregister(index):
 
 
 async def counter(websocket, path):
+    global busy
     # register(websocket) sends user_event() to websocket
     webindex = await register(websocket) #webindex is fixed name,use by *.html
     print("register ",webindex,USERS)
     try:
         async for message in websocket:
             data = json.loads(message)
+            print(data)
             if data["action"] == "execute":
+                if busy == 1:
+                    await notice({"type":"busy","value":True,"op" :False})
+                    continue
                 if data.get("loop") is not None:
                     code = kloopexec(webindex,data['content'])
                 else:
                     code = "webindex="+str(webindex)+"\n" + data['content']+"\n"
 
+                # busy lock
+                mutex.acquire()
+                busy = 1
+                await notice({"type":"busy","value":True})
+
                 Kexec(code)
+
+                # unlock
+                mutex.release()   
+                await notice({"type":"busy","value":False})
+                busy = 0
+
             if data["action"] == "cmd":
                     code = data['content']
-                    cmd_call(code)        
+                    cmd_call(code)     
     finally:
         await unregister(webindex)
 
