@@ -52,9 +52,9 @@ def await_run(coroutine):
     except StopIteration as e:
         return e.value
 
-def DISPLAY(webindex):
+def DISPLAY(webindex,value):
     name,code = getstockinfo()
-    message = {"type":"display","name":name,"code":code}
+    message = {"type":"display","name":name,"code":code,"value":value}
     msg = json.dumps(message)
     await_run(USERS[webindex].send(msg))
 
