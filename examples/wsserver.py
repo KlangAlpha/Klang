@@ -48,6 +48,7 @@ USERS = {}
 index = 0
 busy = 0
 mutex = Lock ()
+current = 0 # default display user
 
 def await_run(coroutine):
     try:
@@ -55,11 +56,11 @@ def await_run(coroutine):
     except StopIteration as e:
         return e.value
 
-def DISPLAY(webindex,value):
+def DISPLAY(value):
     name,code = getstockinfo()
     message = {"type":"display","name":name,"code":code,"value":value}
     msg = json.dumps(message)
-    await_run(USERS[webindex].send(msg))
+    await_run(USERS[current].send(msg))
 
 def users_event():
     return json.dumps({"type": "users", "count": len(USERS),"busy":busy})
@@ -87,7 +88,7 @@ async def unregister(index):
 
 
 async def counter(websocket, path):
-    global busy
+    global busy,current
     # register(websocket) sends user_event() to websocket
     webindex = await register(websocket) #webindex is fixed name,use by *.html
     print("register ",webindex,USERS)
@@ -108,12 +109,13 @@ async def counter(websocket, path):
                 mutex.acquire()
                 busy = 1
                 await notice({"type":"busy","value":True})
-
+                current = webindex
                 Kexec(code)
 
                 # unlock
                 mutex.release()   
                 await notice({"type":"busy","value":False})
+                current = 0
                 busy = 0
 
             if data["action"] == "cmd":

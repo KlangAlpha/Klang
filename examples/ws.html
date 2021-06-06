@@ -129,6 +129,10 @@
                 flexbusy = document.querySelector('#flexbusy'),
                 websocket = new WebSocket("ws://127.0.0.1:6789/");
             run.onclick = function (event) {
+                if (flexbusy.checked == true){
+                    alert("正在执行任务")
+                    return
+                }
                 vue.$data.result = []
                 websocket.send(JSON.stringify({action: 'execute',content:content.value,loop:true}));
             }
