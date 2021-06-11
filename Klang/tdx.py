@@ -2,6 +2,7 @@
 # tdx 通达信相关的函数
 #
 import talib
+import numpy as np
 
 tdx_datetime=None
 
@@ -81,3 +82,17 @@ def iif(condition,result1,result2):
         return result1
     else:
         return result2
+
+"""
+国内SMA算法
+"""
+def SMA(datas,period,period2):
+    y1 = 0
+    result = []
+    for d in datas:
+        if str(d) == 'nan':
+            result.append(np.nan)
+            continue
+        y1=(d * period2 + (period-period2)*y1 )/period
+        result.append(y1)
+    return np.array(result,dtype='float64')

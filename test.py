@@ -2,6 +2,7 @@ from Klang import (
     C,Klang,
     REF,REFDATE,
     MA,
+    SMA,
     HHV,LLV
 )
 
@@ -30,5 +31,6 @@ print(REF(C,1))
 print(REFDATE(C,'20210429'))
 
 print(MA(C,5))
+print(SMA(C,5,1))
 print(HHV(C,10))
 print(LLV(C,10))

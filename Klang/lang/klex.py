@@ -13,6 +13,7 @@ tokens = (
     'ID',
     'SEMI',
     'STRING',
+    'ASSIGN',
 )
 
 reserved = {
@@ -37,7 +38,6 @@ specials_sc = {
     '%':    'MOD',
     'and':  'AND',
     'or':   'OR',
-    '=':    'ASSIGN',
     '<':    'LT',
     '>':    'GT',
     '(':    'LPAREN',
@@ -90,6 +90,10 @@ def t_ID(t):
     reserved1.update(reserved)
 
     t.type = reserved1.get(t.value.lower(), 'ID')
+    return t
+# :=, =
+def t_ASSIGN(t):
+    r'(:)?='
     return t
 
 def t_FLOAT(t):

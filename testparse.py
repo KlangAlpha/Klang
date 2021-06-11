@@ -31,7 +31,7 @@ testblock=\
 
 kloop
 ret = CROSS(C,MA(C,60))
-ma5 = MA(C,5)
+ma5 := MA(C,5)
 ma10 = MA(C,10)
 ma20 = MA(C,20)
 ma60 = MA(C,60)
