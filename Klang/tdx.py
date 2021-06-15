@@ -83,6 +83,19 @@ def iif(condition,result1,result2):
     else:
         return result2
 
+# 返回A和B的最小值
+def MIN(A,B):
+    if A < B :
+        return A
+    return B
+
+# 返回A和B的最大值
+def MAX(A,B):
+    if A > B:
+        return A
+    return B
+
+
 """
 国内SMA算法
 """

@@ -2,7 +2,10 @@
 
 from Klang.lang import kparser,setPY,Kexec
 from Klang.common import today 
-from Klang import Kl,C,MA,CROSS
+from Klang import (Kl,
+    C,O,V,H,L,
+    MA,CROSS,
+    MAX,MIN)
 
 #
 # today 
@@ -47,12 +50,12 @@ endp
 print("计算完成")
 """
 
-Kexec(testblock)
+#Kexec(testblock)
 
 
 while True:
     # 通过Klang谁知一个变量    
-    Kexec("O=pi+1;")
+    Kexec("ABCD=pi+1;")
 
     s = input("Kl:>")
     if s == "quit":
@@ -61,4 +64,4 @@ while True:
     Kexec(s+";")
 
 #python里获取klang设置的变量值
-print(O)
+print(ABCD)
