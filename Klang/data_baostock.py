@@ -27,7 +27,8 @@ def updatestock(name=filename_sl):
                                       'date,open,high,low,close,volume', 
                                       start_date='2021-04-20',
                                       frequency='d')
-        if len(kdata.get_row_data()) == 0:
+        stockd =kdata.get_data()
+        if len(stockd) < 3:
             continue
         print(row)
         industry_list.append(row)
