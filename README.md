@@ -21,13 +21,29 @@ C/C[1]
 ```
 
 # Klang 语言(K浪)
+* testparse.py 代码片段
 ```
-Kl:>a=1+3
-4
-Kl:>b=3*5
-15
-Kl:>testfunc(a,b,2)
-4 15 2 9.5
-Kl:>
+kloop
+ret = CROSS(C,MA(C,60))
+ma5 := MA(C,5)
+ma10 = MA(C,10)
+ma20 = MA(C,20)
+ma60 = MA(C,60)
 
+ret1 = (C - C[1])/C[1]
+ret2 = (C - C[1])/C[1] > 0.05
+info = getstockinfo(0)
+
+if ma60[-1] < ma20[-1] and ma20[-1] < ma10[-1] and ma10[-1] < ma5[-1] and ret2 :
+    print(info,ret1*100)
+
+endp
+print("计算完成")
 ```
+
+# 支持列表
+* 逐步兼容通达信公式，C,MA,CROSS
+* 兼容 := 负值语法
+* 支持兼容 python函数,getstockinfo等 getstockinfo是在python里面自定义的函数
+* kloop,endp 是自定义语法，会遍历整个A股的股票，
+
