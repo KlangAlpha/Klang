@@ -3,19 +3,22 @@
 #
 
 
-from .Klang import Kl,Klang_init
-from .Kdatas import *
+from .Klang import Kl,Klang_init #1.
+from .Kdatas import *            #2.
 from .talib_api import *
 from .tdx import *
 
-#kdatas set kl
+#1. kdatas set kl
 setstock(Kl)
 
+#2. init Klang
 Klang_init()
 
-settdx(
-    DATETIME
-)
+#3.set to tdx
+settdx(DATETIME,Kl)
+
+DATE = DATETIME
+
 __all__ = [
     "OPEN", "O",
     "HIGH", "H",

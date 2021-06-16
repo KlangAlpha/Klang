@@ -2,7 +2,11 @@
 # K-line, stock datas 
 # Klang 提供了全局的股票数据，和获取股票数据的方法
 # Kdatas 是提供了单只股票的数据和计算方法
-#
+# 类似通达信这样的公式，经过计算的数据有时候需要 计算整个周期，有时候是单个周期
+# 因此需要封装成 python 类来解决
+# 例如： if CLOSE > OPEN, 判断的是单个周期
+# 例如： EVERY (CLOSE > OPEN,N) 这时候判断的是多个周期
+
 import numpy as np
 import pandas
 
@@ -18,6 +22,7 @@ df2 = df[(df.date >= '2020-10-01') &
 
 #获取股票数据
 #baostock volume,TDX use vol
+#
 
 def getstockdata(name):
     if isinstance(kl.currentdf.get('df'),pandas.core.frame.DataFrame):
@@ -83,10 +88,17 @@ class Kdatas(object):
             raise StopIteration
         return n
 
+
+    def __bool__(self):
+        return bool(self.value)
+
     # <
     def __lt__(self, other):
         if isinstance(other,Kdatas):  
-            return self.value < other.value
+            ko = KdatasOpt()
+            d1,d2 = match_size(self.data,other.data)
+            ko._data = d1 < d2
+            return ko
         else: #int float
             return self.value < other
 
@@ -94,7 +106,10 @@ class Kdatas(object):
     # >
     def __gt__(self, other):
         if isinstance(other,Kdatas):  
-            return self.value > other.value
+            ko = KdatasOpt()
+            d1,d2 = match_size(self.data,other.data)
+            ko._data = d1 > d2
+            return ko
         else: #int float
             return self.value > other
 
@@ -102,7 +117,10 @@ class Kdatas(object):
     # ==
     def __eq__(self, other):
         if isinstance(other,Kdatas):  
-            return self.value == other.value
+            ko = KdatasOpt()
+            d1,d2 = match_size(self.data,other.data)
+            ko._data = d1 == d2
+            return ko
         else: #int float
             return self.value == other
 
@@ -110,7 +128,10 @@ class Kdatas(object):
     # !=
     def __ne__(self, other):
         if isinstance(other,Kdatas):  
-            return self.value != other.value
+            ko = KdatasOpt()
+            d1,d2 = match_size(self.data,other.data)
+            ko._data = d1 != d2
+            return ko
         else: #int float
             return self.value != other
 
@@ -118,7 +139,10 @@ class Kdatas(object):
     # >=
     def __ge__(self, other):
         if isinstance(other,Kdatas):  
-            return self.value >= other.value
+            ko = KdatasOpt()
+            d1,d2 = match_size(self.data,other.data)
+            ko._data = d1 >= d2
+            return ko
         else: #int float
             return self.value >= other
 
@@ -126,59 +150,48 @@ class Kdatas(object):
     # <= 
     def __le__(self, other):
         if isinstance(other,Kdatas):  
-            return self.value <= other.value
+            ko = KdatasOpt()
+            d1,d2 = match_size(self.data,other.data)
+            ko._data = d1 <= d2
+            return ko
         else: #int float
             return self.value <= other
 
        # +
     def __add__(self,other):
         if isinstance(other,Kdatas):  
-            return self.value + other.value
+            ko = KdatasOpt()
+            d1,d2 = match_size(self.data,other.data)
+            ko._data = d1 + d2
+            return ko
         else: #int float
             return self.value + other
     # -
     def __sub__(self,other):
         if isinstance(other,Kdatas):  
-            return self.value - other.value
+            ko = KdatasOpt()
+            d1,d2 = match_size(self.data,other.data)
+            ko._data = d1 - d2
+            return ko
         else: #int float
             return self.value - other
     # -
     def __rsub__(self,other):
         if isinstance(other,Kdatas):  
-            return other.value - self.value
+            ko = KdatasOpt()
+            d1,d2 = match_size(self.data,other.data)
+            ko._data = d2 - d1
+            return ko
         else: #int float
             return other - self.value
 
     # *
     def __mul__(self,other):
         if isinstance(other,Kdatas):  
-            return self.value * other.value
-        else: #int float
-            return self.value * other
-
-    # +
-    def __add__(self,other):
-        if isinstance(other,Kdatas):  
-            return self.value + other.value
-        else: #int float
-            return self.value + other
-    # -
-    def __sub__(self,other):
-        if isinstance(other,Kdatas):  
-            return self.value - other.value
-        else: #int float
-            return self.value - other
-    # -
-    def __rsub__(self,other):
-        if isinstance(other,Kdatas):  
-            return other.value - self.value
-        else: #int float
-            return other - self.value
-
-    # *
-    def __mul__(self,other):
-        if isinstance(other,Kdatas):  
-            return self.value * other.value
+            ko = KdatasOpt()
+            d1,d2 = match_size(self.data,other.data)
+            ko._data = d1 * d2
+            return ko
         else: #int float
             return self.value * other
 
@@ -186,14 +199,20 @@ class Kdatas(object):
     def __truediv__(self, other):
         #s1 , s2 = match_size(self.data,other.data)
         if isinstance(other,Kdatas):  
-            return self.value / other.value
+            ko = KdatasOpt()
+            d1,d2 = match_size(self.data,other.data)
+            ko._data = d1 / d2
+            return ko
         else:
             return self.value / other
 
     def __rtruediv__(self, other):
         #s1 , s2 = match_size(self.data,other.data)
         if isinstance(other,Kdatas):  
-            return self.dtype(other.value / self.value)
+            ko = KdatasOpt()
+            d1,d2 = match_size(self.data,other.data)
+            ko._data = d2 / d1
+            return ko
         else:
             return other / self.value
 
@@ -206,6 +225,30 @@ class Kdatas(object):
 
     def __repr__(self):
         return str(self.value)
+
+# 这是经过计算后的数据数组
+# 例如：开盘价 > 收盘价
+# if C > O ,判断是否为真的时候调用bool
+# 计算 C - O  的时候 统计所有的周期 C和O的大小
+
+class KdatasOpt(Kdatas):
+
+    def __init__(self,index=0):
+        self.index = index
+        self.dtype = float
+
+    def __bool__(self):
+        return bool(self._data[-1])
+
+    @property
+    def data(self):    
+        return self._data
+
+    #返回最后一天的数据
+    @property
+    def value(self):
+        return self.dtype(self._data[-1])
+
 
 # create open high low close volume datetime
 # 建立全局的 o,O,OPEN,等关键词

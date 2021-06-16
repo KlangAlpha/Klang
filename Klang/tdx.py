@@ -4,11 +4,12 @@
 import talib
 import numpy as np
 
-tdx_datetime=None
+tdx_datetime=None #Kdatas
+kl = None         #Klang
 
-def settdx(d):
-    global tdx_datetime
-
+def settdx(d,kl1):
+    global tdx_datetime,kl
+    kl = kl1
     tdx_datetime=d
 
 """
@@ -95,7 +96,21 @@ def MAX(A,B):
         return A
     return B
 
+# condition is np.array
 
+def EVERY(condition,N):
+
+    if N > len(condition):
+        return False
+
+
+    for i in range(0,N):
+        if not condition[i]:
+            return False
+
+    return True
+
+    
 """
 国内SMA算法
 """
