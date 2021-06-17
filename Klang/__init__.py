@@ -8,6 +8,9 @@ from .Kdatas import *            #2.
 from .talib_api import *
 from .tdx import *
 
+#2021.06.17
+version="0.1.1"
+
 #1. kdatas set kl
 setstock(Kl)
 
@@ -46,6 +49,7 @@ __all__ = [
     "LLV",
     "IF", "IIF"
 ]
+
 
 ################
 # tdx.py
