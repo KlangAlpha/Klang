@@ -77,6 +77,7 @@ def LLV(X,N):
         data = X.data[len(X)-N:]
     return talib.MIN(data,N)[-1]
 
+IF=IIF=iif
 
 def iif(condition,result1,result2):
     if(condition):
@@ -97,7 +98,8 @@ def MAX(A,B):
     return B
 
 # condition is np.array
-
+# N 周期内 一直满足条件
+# EVERY(C>O,10),10个周期内一直是收阳线
 def EVERY(condition,N):
 
     if N > len(condition):
@@ -110,9 +112,43 @@ def EVERY(condition,N):
 
     return True
 
+
+#N 周期内满足过某个条件
+def EXIST(condition,N):
+    l = min(len(condition),N)  
+    
+    for i in range(0,l):
+        if condition[i]:
+            return True
+
+    return False
+
+"""
+类型：引用函数
+
+功能：统计
+
+
+描述：统计满足条件的周期数。
+"""
+
+def COUNT(condition,N):
+
+    if N > len(condition):
+        return 0
+    if N < 0:
+        N = len(condition)
+
+    count = 0
+    for i in range(0,N):
+        if condition[i]:
+            count += 1
+
+    return count
+
     
 """
-国内SMA算法
+国内SMA算法,和TA-lib算法不同
 """
 def SMA(datas,period,period2):
     y1 = 0

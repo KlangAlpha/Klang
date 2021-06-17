@@ -2,6 +2,7 @@
 stock K-line language 
 
 # Klang 是股票K线形态语言,基于 python3
+* 语言解释器采用 python的 ply库，他是flex，yacc语法的实现
 * 股票数据来源 baostock,zhanluejia
 * 支持 同花顺、通达信、文华财经等的公式, 感谢funcat 移植到了 Python 版本
 * 支持结构形态 感谢talib

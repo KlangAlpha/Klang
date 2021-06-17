@@ -5,7 +5,7 @@ from Klang import (
     SMA,
     HHV,LLV,
     DATE,
-    EVERY,
+    EVERY, EXIST
 )
 
 Kl = Klang.Kl
@@ -40,8 +40,11 @@ print(SMA(C,5,1))
 print(HHV(C,10))
 print(LLV(C,10))
 print(EVERY(C<O,10))
+
 Kl.setcurrent('sh.600392')
+
 print(EVERY(C<O,2))
 
 
+print(EXIST(C<O,10))
 
