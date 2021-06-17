@@ -77,13 +77,14 @@ def LLV(X,N):
         data = X.data[len(X)-N:]
     return talib.MIN(data,N)[-1]
 
-IF=IIF=iif
 
-def iif(condition,result1,result2):
+def IIF(condition,result1,result2):
     if(condition):
         return result1
     else:
         return result2
+
+IF=IIF
 
 # 返回A和B的最小值
 def MIN(A,B):
