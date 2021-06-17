@@ -45,7 +45,7 @@ class Klang():
     #df_all 是总的数据
     #每次加载的时候可以设置并且获取部分数据
     # copy.deepcopy 深度复制数据，以免破坏
-    def setcurrent(self,code):
+    def code(self,code):
         self.getdatabycode(code)
         self.currentindex = self.stockindex[code]
         self.currentdf = copy.deepcopy(self.df_all[self.currentindex])
@@ -54,7 +54,8 @@ class Klang():
         df = df[self.dfstart:self.dfend] 
         self.currentdf['df'] = df
         
-    def setdate(self,start="2021-01-01",end=end):
+    setcurrent = code
+    def date(self,start="2021-01-01",end=end):
         code = self.df_all[self.currentindex]['code']
         self.getdatabycode(code)
 
@@ -66,7 +67,8 @@ class Klang():
         df = df[self.dfstart:self.dfend] 
         self.currentdf['df'] = df
  
-
+    setdate = date
+    
     """
     获取所有的A股的日K数据
     """
@@ -97,6 +99,6 @@ def Klang_init():
     t.start()
     
     #set default stock
-    Kl.setdate(start='2021-01-01')
+    Kl.date(start='2021-01-01')
     Kl.currentdf = Kl.df_all[0]    
 
