@@ -9,7 +9,10 @@ stock K-line language
 
 # install
 ```
+git clone https://github.com/asmcos/Klang
+cd Klang
 pip3 install -r requirements.txt 
+python3 setup.py install
 ```
 
 # 应用示例 python  版本
