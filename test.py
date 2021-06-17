@@ -23,8 +23,8 @@ print(C)
 
 
 #显示当天TCL的收盘价
-Kl.setcurrent('sz.000100')
-Kl.setdate()
+Kl.code('sz.000100')
+Kl.date()
 print(C)
 
 

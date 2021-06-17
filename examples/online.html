@@ -84,7 +84,7 @@
     <tr v-for="(item,index) in result">
       <th scope="row" >{{index}}</th>
       <td>{{item.name}}</td>
-      <td>{{item.code}}</td>
+      <td><a v-bind:href="'https://gu.qq.com/'+item.code" target=_blank >{{item.code}}</td>
       <td>{{item.value}}</td>
     </tr>
   </tbody>
@@ -97,7 +97,7 @@
 </div> <!-- app for vue-->
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-     <script src="https://unpkg.com/vue@next"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/3.1.0/vue.global.js"></script>
     <script>
 
       const VueApp = {
@@ -113,11 +113,6 @@
         created() {
         },
         methods: {
-        // These methods won't trigger a watcher because we changed only a property of Object/Array,
-        // not the Object/Array itself
-            changeArticleText() {
-                this.article.text = 'Vue 3 is awesome'
-            }
         }
       }//VueApp
       window.vue = Vue.createApp(VueApp).mount('#app')
@@ -127,11 +122,18 @@
                 content = document.querySelector('#content'),
                 display = document.querySelector('#display'),
                 flexbusy = document.querySelector('#flexbusy'),
+                connstate = document.querySelector('#flexCheckCheckedDisabled'),
                 websocket = new WebSocket("ws://127.0.0.1:6789/");
+
+                connstate.checked = false
             run.onclick = function (event) {
                 if (flexbusy.checked == true){
                     alert("正在执行任务")
                     return
+                }
+                if (connstate.checked == false){
+                    alert("请先链接,或者刷新页面链接服务器")
+                    return 
                 }
                 vue.$data.result = []
                 websocket.send(JSON.stringify({action: 'execute',content:content.value,loop:true}));
@@ -141,6 +143,7 @@
             }
             websocket.onmessage = function (event) {
                 data = JSON.parse(event.data);
+                connstate.checked = true 
                 console.log(data)
                 switch (data.type) {
                     case 'busy':
@@ -165,7 +168,8 @@
                         }
                         break;
                     case 'display':
-                        vue.$data.result.push({name:data.name,code:data.code,value:data.value})
+                        code = data.code.replace(".","")
+                        vue.$data.result.push({name:data.name,code:code,value:data.value})
                         break;
                     default:
                         console.error(
@@ -176,7 +180,8 @@
                     console.log('websocket 断开: ' + e.code + ' ' + e.reason + ' ' + e.wasClean)
                     vue.$data.online = 0
                     vue.$data.usercount = 0
-                    $("#flexbusy").checked= false 
+                    flexbusy.checked  = false 
+                    connstate.checked = false
             }
  
 

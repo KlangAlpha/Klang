@@ -52,11 +52,10 @@ class mAST:
             for df in Kl.df_all:
                 try:
                     Kl.setcurrent(df["code"])
-
                     for x in self.params:
                         mAST.resolve(x)
-                except:
-                    pass
+                except Exception as e:
+                    print("ERROR",str(e))
 
         elif self.action == 'loop':
             for i in self.params[1]:

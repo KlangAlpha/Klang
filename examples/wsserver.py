@@ -28,7 +28,7 @@ def setpyglobals(name,val):
 
 setPY(getpyglobals,setpyglobals)
 
-def getstockinfo():
+def getstockinfo(name=0):
     return Kl.currentdf['name'], Kl.currentdf['code']
  
 
@@ -58,7 +58,7 @@ def await_run(coroutine):
 
 def DISPLAY(value):
     name,code = getstockinfo()
-    message = {"type":"display","name":name,"code":code,"value":value}
+    message = {"type":"display","name":name,"code":code,"value":str(value)}
     msg = json.dumps(message)
     await_run(USERS[current].send(msg))
 
@@ -97,23 +97,28 @@ async def counter(websocket, path):
             data = json.loads(message)
             print(data)
             if data["action"] == "execute":
-                if busy == 1:
+                # 1. 判断是否在执行中
+                if busy == 1: #同时只能有一人之行
                     await notice({"type":"busy","value":True,"op" :False})
                     continue
+
+                # 2. 判断是否加loop循环之行
                 if data.get("loop") is not None:
                     code = kloopexec(webindex,data['content'])
                 else:
                     code = "webindex="+str(webindex)+"\n" + data['content']+"\n"
 
-                # busy lock
+                # 3. 执行 busy lock 执行锁
                 mutex.acquire()
+                current = webindex
                 busy = 1
                 await notice({"type":"busy","value":True})
-                current = webindex
                 Kexec(code)
-
                 # unlock
-                mutex.release()   
+                mutex.release()   #之行完成，解锁，发通知给web用户
+                print('执行完成')
+
+                # 4. 执行完成 
                 await notice({"type":"busy","value":False})
                 current = 0
                 busy = 0

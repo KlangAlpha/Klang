@@ -50,7 +50,8 @@ endp
 print("计算完成")
 """
 
-#Kexec(testblock)
+
+Kexec(testblock)
 
 
 while True:

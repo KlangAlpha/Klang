@@ -81,7 +81,7 @@ class Kdatas(object):
     #C[1],index=1
     def __getitem__(self, index):
         n = self.__class__(index)
-        if len(self._data) >index:
+        if len(self.data) >index:
             nindex = len(self._data) - index
             n._data = self.data[:nindex]
         else:
