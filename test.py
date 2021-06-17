@@ -5,6 +5,7 @@ from Klang import (
     SMA,
     HHV,LLV,
     DATE,
+    ABS,
     EVERY, EXIST
 )
 
@@ -45,6 +46,7 @@ Kl.setcurrent('sh.600392')
 
 print(EVERY(C<O,2))
 
+print(ABS(C-O))
 
 print(EXIST(C<O,10))
 

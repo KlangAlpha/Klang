@@ -4,12 +4,17 @@
 
 import talib
 import numpy as np
+from .Kdatas import Kdatas,KdatasOpt
 
 def MA(X,N):
     return talib.MA(X.data,N)
 
 def ABS(X):
-    return np.abs(X)
+    if isinstance(X,Kdatas):
+        data = X.data
+    else:
+        data = X
+    return np.abs(data)
 
 #对X序列进行N个周期求和
 #当N为0时，是求所有周期的总和
