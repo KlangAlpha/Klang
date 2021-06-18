@@ -37,9 +37,11 @@ def kloopexec(webindex,content):
     code += "kloop \n" + content + "\nendp;"
     return code
 
-def cmd_call(code):
-    if code == "reset_list":
-        pass
+def cmd_call(data):
+    code = data['content']
+    pw   = data['pw']
+    if code == "reset_all" and pw == "Klang":
+        Kl.updateall()
     if code == "reload_stock":
         pass
 
@@ -56,6 +58,7 @@ def await_run(coroutine):
     except StopIteration as e:
         return e.value
 
+# 因为DISPLAY是需要在Klang执行，所以需要await_run执行 sync消息
 def DISPLAY(value):
     name,code = getstockinfo()
     message = {"type":"display","name":name,"code":code,"value":str(value)}
@@ -87,45 +90,51 @@ async def unregister(index):
     await notify_users()
 
 
-async def counter(websocket, path):
+async def execute(data,webindex):
     global busy,current
+    print(data)
+    # 1. 判断是否在执行中
+    if busy == 1: #同时只能有一人之行
+        await notice({"type":"busy","value":True,"op" :False})
+        return
+
+    # 2. 判断是否加loop循环之行
+    if data.get("loop") is not None:
+        code = kloopexec(webindex,data['content'])
+    else:
+        code = "webindex="+str(webindex)+"\n" + data['content']+"\n"
+
+    # 3. 执行 busy lock 执行锁
+    mutex.acquire()
+
+    current = webindex
+    busy = 1
+    await notice({"type":"busy","value":True})
+    Kexec(code)
+    # unlock
+
+    mutex.release()   #之行完成，解锁，发通知给web用户
+    print('执行完成')
+
+    # 4. 执行完成 
+    await notice({"type":"busy","value":False})
+    current = 0
+    busy = 0
+
+
+
+async def counter(websocket, path):
     # register(websocket) sends user_event() to websocket
     webindex = await register(websocket) #webindex is fixed name,use by *.html
     print("register ",webindex,USERS)
     try:
         async for message in websocket:
             data = json.loads(message)
-            print(data)
             if data["action"] == "execute":
-                # 1. 判断是否在执行中
-                if busy == 1: #同时只能有一人之行
-                    await notice({"type":"busy","value":True,"op" :False})
-                    continue
-
-                # 2. 判断是否加loop循环之行
-                if data.get("loop") is not None:
-                    code = kloopexec(webindex,data['content'])
-                else:
-                    code = "webindex="+str(webindex)+"\n" + data['content']+"\n"
-
-                # 3. 执行 busy lock 执行锁
-                mutex.acquire()
-                current = webindex
-                busy = 1
-                await notice({"type":"busy","value":True})
-                Kexec(code)
-                # unlock
-                mutex.release()   #之行完成，解锁，发通知给web用户
-                print('执行完成')
-
-                # 4. 执行完成 
-                await notice({"type":"busy","value":False})
-                current = 0
-                busy = 0
+                await execute(data,webindex)
 
             if data["action"] == "cmd":
-                    code = data['content']
-                    cmd_call(code)     
+                cmd_call(data)     
     finally:
         await unregister(webindex)
 

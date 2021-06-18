@@ -80,9 +80,23 @@ class Klang():
     A 股目前有4000多只股票    
     股票列表存储到stock_list.csv文件
     """
-    def updatestock(self):
-        bs.updatestock()
+    def updatestocklist(self):
+        bs.updatestocklist()
+        self.stocklist = bs.init_stock_list(self)
 
+    """
+    升级所有股票的日K数据
+    """
+    def updatestockdata(self):
+        bs.updatestockdata(self)
+
+    def updateall(self):
+        self.updatestocklist()
+        self.updatestockdata()
+
+        #set default stock
+        self.date(start='2021-01-01')
+        self.currentdf = Kl.df_all[0]    
 
 
 

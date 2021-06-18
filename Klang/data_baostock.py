@@ -15,7 +15,7 @@ mutex = Lock()
 #
 #stock list
 #
-def updatestock(name=filename_sl):
+def updatestocklist(stname=filename_sl):
     rs = bs.query_stock_industry()
 
     # 打印结果集
@@ -25,7 +25,7 @@ def updatestock(name=filename_sl):
         row = rs.get_row_data()
         kdata = bs.query_history_k_data_plus(row[1], 
                                       'date,open,high,low,close,volume', 
-                                      start_date='2021-04-20',
+                                      start_date='2021-05-20',
                                       frequency='d')
         stockd =kdata.get_data()
         if len(stockd) < 3:
@@ -34,12 +34,26 @@ def updatestock(name=filename_sl):
         industry_list.append(row)
     result = pd.DataFrame(industry_list, columns=rs.fields)
     # 结果集输出到csv文件
-    result.to_csv(name, index=False)    
+    result.to_csv(stname, index=False)    
+
+def updatestockdata(Kl):
+    stocklist = Kl.stocklist
+    df_dict = []
+    for stock in stocklist:
+        code ,name = getstockinfo(stock)
+        #print('正在获取',name,'代码',code)
+        df = get_day(name,code,Kl.start_date,Kl.end_date)
+        if len(df) > 0:
+           df_dict.append({'df':df.to_dict(),'name':name,'code':code})
+
+    save_stock_trader(df_dict)
+    load_stock_trader(Kl)
+
 
 def init_stock_list(Kl,offset=0):
     if not os.path.exists(filename_sl):
         print('正在下载股票库列表....')
-        updatestock(filename_sl)
+        updatestocklist(filename_sl)
         print("股票列表下载完成")
 
     print("正在从文件",filename_sl,"加载股票列表")
@@ -48,6 +62,7 @@ def init_stock_list(Kl,offset=0):
 
     # 初始化 code到index 对应表
     number = 0
+    Kl.df_all = []
     for stock in stocklist:
             code ,name = getstockinfo(stock)
             Kl.stockindex[code] = number
