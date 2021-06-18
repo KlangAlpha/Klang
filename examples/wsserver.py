@@ -9,7 +9,6 @@ import websockets
 from threading import Lock
 logging.basicConfig()
 
-
 ######################klang #######################
 from Klang.lang import kparser,setPY,Kexec
 from Klang.common import today
@@ -18,6 +17,13 @@ from Klang import Kl,C,MA,CROSS
 #
 # today 
 #
+
+import argparse
+parser = argparse.ArgumentParser()
+parser.add_argument("--port", help="--port 3768",default='6789')
+args = parser.parse_args()
+port = int(args.port)
+
 
 def getpyglobals(name):
     return globals().get(name)
@@ -138,7 +144,7 @@ async def counter(websocket, path):
     finally:
         await unregister(webindex)
 
-start_server = websockets.serve(counter, "localhost", 6789)
+start_server = websockets.serve(counter, "0.0.0.0", port)
 
 asyncio.get_event_loop().run_until_complete(start_server)
 asyncio.get_event_loop().run_forever()
