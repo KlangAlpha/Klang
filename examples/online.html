@@ -203,6 +203,11 @@
       }//VueApp
       window.vue = Vue.createApp(VueApp).mount('#app')
 
+
+     var host = window.location.host
+     if (host == ""){
+        host = "127.0.0.1"
+     }
             var run = document.querySelector('#run'),
                 reset = document.querySelector('#reset'),
                 resetcmd = document.querySelector('#resetcmd'),
@@ -210,7 +215,7 @@
                 display = document.querySelector('#display'),
                 flexbusy = document.querySelector('#flexbusy'),
                 connstate = document.querySelector('#flexCheckCheckedDisabled'),
-                websocket = new WebSocket("ws://127.0.0.1:9099/");
+                websocket = new WebSocket("ws://"+host+":9099/");
 
                 preOne = document.querySelector('#preOne'),
                 content.value = preOne.textContent
