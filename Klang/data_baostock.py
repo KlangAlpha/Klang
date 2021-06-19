@@ -115,7 +115,13 @@ def get_day(name,code,start,end,setindex=False):
     if setindex == True:
         datas['datetime'] = datas['date']
         datas = datas.set_index('date')
-
+    close  = datas['close'].iloc[-1]
+    volume = datas['volume'].iloc[-1]
+    turn   = datas['turn'].iloc[-1]
+    try :
+        datas['hqltsz'] = float(volume) * float(close)/ float(turn) / 1000000 
+    except:
+        datas['hqltsz'] = 0.0001 #没有交易量
     datas.rename(columns={'volume':'vol'},inplace = True) 
 
     return datas

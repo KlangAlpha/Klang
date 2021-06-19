@@ -88,6 +88,7 @@
       <th scope="col">name</th>
       <th scope="col">code</th>
       <th scope="col">值</th>
+      <th scope="col">流通市值(亿)</th>
     </tr>
   </thead>
   <tbody>
@@ -96,6 +97,7 @@
       <td>{{item.name}}</td>
       <td><a v-bind:href="'https://gu.qq.com/'+item.code" target=_blank >{{item.code}}</td>
       <td>{{item.value}}</td>
+      <td>{{item.hqltsz}}</td>
     </tr>
   </tbody>
 </table> 
@@ -183,7 +185,12 @@
                         break;
                     case 'display':
                         code = data.code.replace(".","")
-                        vue.$data.result.push({name:data.name,code:code,value:data.value})
+                        hqltsz = data.hqltsz.toFixed(2)
+                        value = data.value
+                        if (String(parseFloat(value)) != "NaN"){ //NaN 是无法直接比较的
+                            value = parseFloat(value).toFixed(4)
+                        }
+                        vue.$data.result.push({name:data.name,code:code,value:value,hqltsz:hqltsz})
                         break;
                     default:
                         console.error(
