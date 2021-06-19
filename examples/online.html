@@ -94,8 +94,8 @@
             <div >
                 <textarea id="content" style="min-height:200px;width:80%"></textarea>
             </div>
-            <button type="button" class="btn btn-warning" style="margin-right:30px;"id="reset">Reset</button>
-            <button type="button" class="btn btn-primary" id="run">Run</button>
+            <button type="button" class="btn btn-warning" style="margin-right:30px;"id="reset">重写</button>
+            <button type="button" class="btn btn-primary" id="run">运行公式</button>
 
 <p> </p>
 <div class="accordion" id="accordionExample">
@@ -118,7 +118,7 @@
         if val > arg1:
             DISPLAY(val)
       </pre>
-      <button type="button" class="btn-Copy" onclick="CopyN('One')">Copy</button>
+      <button type="button" class="btn-Copy" onclick="CopyN('One')">复制公式</button>
       <p style="margin:35px;"></p>
       </div>
     </div>
@@ -137,7 +137,7 @@
       <pre style="background:#F8F9FA;margin-top:20px;" v-bind:id="'pre'+index">
           {{code.content}}
       </pre>
-      <button type="button" class="btn-Copy" v-bind:onclick="'CopyN('+index+')'">Copy</button>
+      <button type="button" class="btn-Copy" v-bind:onclick="'CopyN('+index+')'">复制公式</button>
       <p style="margin:35px;"></p>
 
       </div>
@@ -222,6 +222,8 @@
                 connstate = document.querySelector('#flexCheckCheckedDisabled'),
                 websocket = new WebSocket("ws://127.0.0.1:9099/");
 
+                preOne = document.querySelector('#preOne'),
+                content.value = preOne.textContent
                 connstate.checked = false
             run.onclick = function (event) {
                 if (flexbusy.checked == true){
