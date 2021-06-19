@@ -132,8 +132,7 @@
     <div v-bind:id="'collapse'+index" class="accordion-collapse collapse" v-bind:aria-labelledby="'heading'+index" data-bs-parent="#accordionExample">
       <div class="accordion-body">
 
-      <pre style="background:#F8F9FA;margin-top:20px;" v-bind:id="'pre'+index">
-          {{code.content}}
+      <pre style="background:#F8F9FA;margin-top:20px;" v-bind:id="'pre'+index">{{code.content}}
       </pre>
       <button type="button" class="btn-Copy" v-bind:onclick="'CopyN('+index+')'">复制公式</button>
       <p style="margin:35px;"></p>
@@ -182,8 +181,17 @@
   <!--script src="http://klang.zhanluejia.net.cn/assets/js/main.js"></script-->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
     <script src="https://cdn.bootcdn.net/ajax/libs/vue/3.1.0/vue.global.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.21.1/axios.min.js"></script>
     <script>
-
+   var hostname = window.location.hostname
+   var host = window.location.host
+     if (hostname == ""){
+        hostname = "127.0.0.1"
+        apihost = "http://127.0.0.1:1337"
+     } else {
+        apihost = "http://"+host
+     }
+   
       const VueApp = {
         data() {
             return {
@@ -191,12 +199,23 @@
                 usercount:0,
                 busy:false,
                 result:[],
+                url:apihost+"/strategies",
                 codes:[{title:"均线向上",content:"ma1=MA(C,5);\nma2=MA(C,10);\nma3=MA(C,20);\nif ma1[-1] > ma2[-1] and ma2[-1]>ma3[-1]:\n        DISPLAY(C);"},
                        {title:"收盘价金叉60日均线",content:"ret = CROSS(C,MA(C,60))\nif ret:\n    DISPLAY(C);\n"}]
             }
         },
     
         created() {
+            
+        },
+
+        mounted () {
+            var that = this
+            axios
+                .get(that.url)
+                .then(function(response){
+                        that.codes = response.data
+                })
         },
         methods: {
         }
@@ -204,18 +223,14 @@
       window.vue = Vue.createApp(VueApp).mount('#app')
 
 
-     var host = window.location.host
-     if (host == ""){
-        host = "127.0.0.1"
-     }
-            var run = document.querySelector('#run'),
+           var run = document.querySelector('#run'),
                 reset = document.querySelector('#reset'),
                 resetcmd = document.querySelector('#resetcmd'),
                 content = document.querySelector('#content'),
                 display = document.querySelector('#display'),
                 flexbusy = document.querySelector('#flexbusy'),
                 connstate = document.querySelector('#flexCheckCheckedDisabled'),
-                websocket = new WebSocket("ws://"+host+":9099/");
+                websocket = new WebSocket("ws://"+hostname+":9099/");
 
                 preOne = document.querySelector('#preOne'),
                 content.value = preOne.textContent
