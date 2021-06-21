@@ -5,7 +5,7 @@ from Klang.common import today
 from Klang import (Kl,
     C,O,V,H,L,
     MA,CROSS,
-    MAX,MIN)
+    MAX,MIN,MACD)
 
 #
 # today 
@@ -50,9 +50,13 @@ endp
 print("计算完成")
 """
 
+testblock1 =\
+"""
+a,b,c = MACD(C)
+"""
 
-Kexec(testblock)
-
+Kexec(testblock1)
+print(a)
 
 while True:
     # 通过Klang谁知一个变量    

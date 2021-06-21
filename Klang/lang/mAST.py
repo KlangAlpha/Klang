@@ -37,9 +37,16 @@ class mAST:
             result = symbols[self.params[0]] = mAST.resolve(self.params[1])
             setpyglobals(self.params[0],result)
 
+        elif self.action == 'assign_list':#存到全局变量
+            #print("params",self.params[0],self.params[1])
+            l = mAST.resolve(self.params[1])
+            for i in range(0,len(l)):
+                result = symbols[self.params[0][i]] =l[i]
+                setpyglobals(self.params[0][i],result)
+            
         elif self.action == 'get':
             result = symbols.get(self.params[0], None)
-            if result == None: #试着从python获取变量
+            if result is None: #试着从python获取变量
                 result= getpyglobals(self.params[0])
         elif self.action == 'get_slice':
             ret = symbols.get(self.params[0], None)

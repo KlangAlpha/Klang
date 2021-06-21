@@ -146,6 +146,26 @@ def p_statement_cond(p):
         p[0] = mAST(action='condition', params=[p[2], p[5]])
 
 
+def p_statement_assign_list(p):
+    '''
+    line_statement : idlist ASSIGN condition_list SEMI
+    '''
+    p[0] = mAST(action='assign_list', params=[p[1], p[3]])
+    
+    
+
+def p_idlist(p):
+    '''
+    idlist : ID COMMA ID
+           | idlist COMMA ID  
+    '''
+    if isinstance(p[1],list):
+        p[1].append(p[3])
+        p[0] = p[1]
+    else :
+        p[0] = [p[1],p[3]]
+
+
 def p_statement_assign(p):
     '''
     line_statement : ID ASSIGN condition_list SEMI

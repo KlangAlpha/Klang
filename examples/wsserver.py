@@ -19,14 +19,9 @@ from Klang import (Kl,
     VOLUME, V, VOL,
     DATETIME,
 
-    SMA,
-    MA,
-    EMA,
-    WMA,
+    SMA,MA,EMA,WMA,
 
-    SUM,
-    ABS,
-    STD,
+    SUM,ABS,STD,
 
     CROSS,
     REF,
@@ -36,7 +31,8 @@ from Klang import (Kl,
     COUNT,
     HHV,
     LLV,
-    IF, IIF)
+    IF, IIF,
+    MACD,APPROX)
 
 
 
@@ -146,6 +142,7 @@ async def execute(data,webindex):
 
 async def counter(websocket, path):
     # register(websocket) sends user_event() to websocket
+    global busy,current
     webindex = await register(websocket) #webindex is fixed name,use by *.html
     print("register ",webindex,USERS)
     try:
@@ -156,9 +153,14 @@ async def counter(websocket, path):
 
             if data["action"] == "cmd":
                 cmd_call(data)     
+    except:
+        if current == webindex:
+            current = 0
+            busy = 0
+        await unregister(webindex)
     finally:
         await unregister(webindex)
-
+        
 start_server = websockets.serve(counter, "0.0.0.0", 9099)
 
 asyncio.get_event_loop().run_until_complete(start_server)

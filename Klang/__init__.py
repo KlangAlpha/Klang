@@ -66,5 +66,6 @@ __all__ = [
 
 # MA,ABS,SUM
 # STD,EMA,WMA
-
+# MACD
+# APPROX
 
