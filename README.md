@@ -1,14 +1,16 @@
 # Klang
 stock K-line language 
+股票K线语言
 
-# 在线使用
+# 在线试用
 你可以在线体验 Klang 编程, 且内置了多个选股公式 [Online](http://klang.zhanluejia.net.cn/online.html)
 
 # Klang 是股票K线形态语言,基于 python3
-* 语言解释器采用 python的 ply库，他是flex，yacc语法的实现
+* 语言解释器采用 python的 ply库，他采用了flex，yacc语法的实现
 * 股票数据来源 baostock,zhanluejia
 * 支持 同花顺、通达信、文华财经等的公式, 感谢funcat 移植到了 Python 版本
 * 支持结构形态 感谢talib
+* Klang 语言是基于Python语法拓展了部分自己的语法，并且编写了快捷的股票公式 
 
 # install
 ```
@@ -26,12 +28,16 @@ from Klang import *
 C/C[1]
 
 ```
+以上代码就快捷的计算了今日收盘价/昨日收盘价
+默认计算第一个股票 sh.600000
+今日收盘价，更新时间为下午5点左右
 
 ### 设置当前股票 'sh.601012','sz.000100'
 
 ```
 Kl.code('sh.601012')
 ```
+你也可以设置你想要的股票code
 
 ### 设置时间，周期默认是 2021-01-01开始
 * 默认数据是日K
@@ -81,12 +87,14 @@ setPY(getpyglobals,setpyglobals)
 
 ```
 ###  执行 K语言语句
-* 负值
+* 赋值
 ```
 pi = 3.14 #python
 Kexec("ABCD=pi+1;") #调用K语言执行，执行后K变量共享给了python
 
 ```
+调用 Kexec执行Klang语法，Kexec参数里穿的字符串语法遵守Klang语法规则
+
 
 ### 执行一段代码
 * 详细例子参见 testparse.py
@@ -117,7 +125,20 @@ Kexec(testblock)
 
 ### 支持功能列表
 * 逐步兼容通达信公式，C,MA,CROSS
-* 兼容 := 负值语法
+* 兼容 := 赋值语法
 * 支持兼容 python函数,getstockinfo等 getstockinfo是在python里面自定义的函数
 * kloop,endp 是自定义语法，会遍历整个A股的股票，
+
+
+### examples
+* 使用了网页+websocket server模式
+* server里调用 Kexec执行 所有的输入
+* 默认的输入会扫描所有的A股4000多只股票
+* 计算结果回传到网页界面显示
+
+```
+python3 wsserver.py
+```
+
+浏览 online.html 即可运算公式了
 
