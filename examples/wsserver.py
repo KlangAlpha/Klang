@@ -38,8 +38,8 @@ def cmd_call(data):
     pw   = data['pw']
     if code == "reset_all" and pw == "Klang":
         Kl.updateall()
-    if code == "reload_stock":
-        pass
+    if code == "reset_stock"  and pw == "Klang" :
+        Kl.updatestockdata()
 
 ###################web socket######################
 USERS = {}

@@ -55,7 +55,8 @@
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
             <li><a class="dropdown-item" href="#">结构</a></li>
-            <li><a class="dropdown-item" href="#" id="resetcmd">复位数据</a></li>
+            <li><a class="dropdown-item" href="#" id="resetcmd">复位列表和数据</a></li>
+            <li><a class="dropdown-item" href="#" id="rsetstock">复位数据</a></li>
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" href="#">波浪理论</a></li>
           </ul>
@@ -226,6 +227,7 @@
            var run = document.querySelector('#run'),
                 reset = document.querySelector('#reset'),
                 resetcmd = document.querySelector('#resetcmd'),
+                resetstock = document.querySelector('#resetstock'),
                 content = document.querySelector('#content'),
                 display = document.querySelector('#display'),
                 flexbusy = document.querySelector('#flexbusy'),
@@ -257,6 +259,9 @@
             }
             resetcmd.onclick = function (event) {
                 websocket.send(JSON.stringify({action: 'cmd',content:"reset_all",pw:"Klang"}));
+            }
+            resetstock.onclick = function (event) {
+                websocket.send(JSON.stringify({action: 'cmd',content:"reset_stock",pw:"Klang"}));
             }
             websocket.onmessage = function (event) {
                 data = JSON.parse(event.data);
