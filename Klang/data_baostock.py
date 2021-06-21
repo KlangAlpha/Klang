@@ -16,6 +16,7 @@ mutex = Lock()
 #stock list
 #
 def updatestocklist(stname=filename_sl):
+    bs.login()
     rs = bs.query_stock_industry()
 
     # 打印结果集
@@ -37,6 +38,8 @@ def updatestocklist(stname=filename_sl):
     result.to_csv(stname, index=False)    
 
 def updatestockdata(Kl):
+
+    bs.login()
     stocklist = Kl.stocklist
     df_dict = []
     for stock in stocklist:

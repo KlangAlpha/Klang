@@ -11,7 +11,32 @@ logging.basicConfig()
 
 ######################klang #######################
 from Klang.lang import kparser,setPY,Kexec
-from Klang import Kl,C,MA,CROSS
+from Klang import (Kl,
+    OPEN, O,
+    HIGH, H,
+    LOW, L,
+    CLOSE, C,
+    VOLUME, V, VOL,
+    DATETIME,
+
+    SMA,
+    MA,
+    EMA,
+    WMA,
+
+    SUM,
+    ABS,
+    STD,
+
+    CROSS,
+    REF,
+    MAX,
+    MIN,
+    EVERY,
+    COUNT,
+    HHV,
+    LLV,
+    IF, IIF)
 
 
 
