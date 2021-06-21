@@ -1,6 +1,9 @@
 # Klang
 stock K-line language 
 
+# 在线使用
+你可以在线体验 Klang 编程, 且内置了多个选股公式 [Online](http://klang.zhanluejia.net.cn/online.html)
+
 # Klang 是股票K线形态语言,基于 python3
 * 语言解释器采用 python的 ply库，他是flex，yacc语法的实现
 * 股票数据来源 baostock,zhanluejia
