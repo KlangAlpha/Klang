@@ -3,6 +3,7 @@
 #
 import talib
 import numpy as np
+from .Kdatas import KdataBase
 
 tdx_datetime=None #Kdatas
 kl = None         #Klang
@@ -54,28 +55,37 @@ def REFDATE(X,A):
 
 例如：　CROSS(MA(CLOSE，5)，MA(CLOSE，10))　表示5日均线与10日均线交金叉。
 """
+def _cross(a,b):
+    return a[-2] < b[-2] and a[-1] >= b[-1]
+
 def CROSS(A,B):
-    return A[-2] < B[-2] and A[-1] >= B[-1]
+    return _cross(A,B)
 
 
 def BARSCOUNT(X):
     return len(X)
 
 def HHV(X,N):
+    ret = KdataBase()
     if N == 0:
         data = X.data
     else:
         data = X.data[len(X)-N:]
 
-    return talib.MAX(data,N)[-1]
+    ret._data = talib.MAX(data,N)
+
+    return ret
 
 
 def LLV(X,N):
+    ret = KdataBase()
     if N == 0:
         data = X.data
     else:
         data = X.data[len(X)-N:]
-    return talib.MIN(data,N)[-1]
+    ret._data = talib.MIN(data,N)
+
+    return ret
 
 
 def IIF(condition,result1,result2):

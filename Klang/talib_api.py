@@ -7,15 +7,18 @@ import numpy as np
 from .Kdatas import KdataBase
 
 def MA(X,N):
-    return talib.MA(X.data,N)
+    ret = KdataBase()
+    ret._data = talib.MA(X.data,N)
+    return ret
 
 def ABS(X):
+    ret = KdataBase()
     if isinstance(X,KdataBase):
         data = X.data
     else:
         data = X
-    return np.abs(data)
-
+    ret._data = np.abs(data)
+    return ret
 
 
 #MACD
@@ -23,21 +26,33 @@ def MACD(X,fastperiod=12,slowperiod=26,signalperiod=9):
     diff,dea,macd = talib.MACD(X.data, fastperiod, slowperiod, signalperiod)
     macd = macd * 2
 
-    return diff,dea,macd
+    rdiff = KdataBase(data=diff)
+    rdea = KdataBase(data=dea)
+    rmacd = KdataBase(data=macd)
+
+    return rdiff,rdea,rmacd
 
 #对X序列进行N个周期求和
 #当N为0时，是求所有周期的总和
 def SUM(X,N):
-    return talib.SUM(X.data,N)
+    ret = KdataBase()
+    ret._data = talib.SUM(X.data,N)
+    return ret
 
 def STD(X,N):
-    return talib.STDDEV(X.data,N)
+    ret = KdataBase()
+    ret._data = talib.STDDEV(X.data,N)
+    return ret
 
 def EMA(X,N):
-    return talib.EMA(X.data,N)
+    ret = KdataBase()
+    ret._data = talib.EMA(X.data,N)
+    return ret
 
 def WMA(X,N):
-    return talib.WMA(X.data,N)
+    ret = KdataBase()
+    ret._data = talib.WMA(X.data,N)
+    return ret
 
 #默认浮动率 0.1
 def APPROX(A,B,f_rate=0.1):

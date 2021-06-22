@@ -64,6 +64,9 @@ class KdataBase(object):
     #C,index=0,
     #C[1],index=1
     def __getitem__(self, index):
+        if index < 0:
+            index = -(index + 1)
+
         n = self.__class__(index)
         if len(self.data) >index:
             nindex = len(self.data) - index
@@ -95,7 +98,7 @@ class KdataBase(object):
 
     # ==
     def __eq__(self, other):
-        if isinstance(other,Kdatas):  
+        if isinstance(other,KdataBase):  
             kb = KdataBase()
             d1,d2 = match_size(self.data,other.data)
             kb._data = d1 == d2
@@ -106,7 +109,7 @@ class KdataBase(object):
 
     # !=
     def __ne__(self, other):
-        if isinstance(other,Kdatas):  
+        if isinstance(other,KdataBase):  
             kb = KdataBase()
             d1,d2 = match_size(self.data,other.data)
             kb._data = d1 != d2
@@ -117,7 +120,7 @@ class KdataBase(object):
 
     # >=
     def __ge__(self, other):
-        if isinstance(other,Kdatas):  
+        if isinstance(other,KdataBase):  
             kb = KdataBase()
             d1,d2 = match_size(self.data,other.data)
             kb._data = d1 >= d2
@@ -128,7 +131,7 @@ class KdataBase(object):
 
     # <= 
     def __le__(self, other):
-        if isinstance(other,Kdatas):  
+        if isinstance(other,KdataBase):  
             kb = KdataBase()
             d1,d2 = match_size(self.data,other.data)
             kb._data = d1 <= d2
@@ -138,7 +141,7 @@ class KdataBase(object):
 
        # +
     def __add__(self,other):
-        if isinstance(other,Kdatas):  
+        if isinstance(other,KdataBase):  
             kb = KdataBase()
             d1,d2 = match_size(self.data,other.data)
             kb._data = d1 + d2
@@ -147,7 +150,7 @@ class KdataBase(object):
             return self.value + other
     # -
     def __sub__(self,other):
-        if isinstance(other,Kdatas):  
+        if isinstance(other,KdataBase):  
             kb = KdataBase()
             d1,d2 = match_size(self.data,other.data)
             kb._data = d1 - d2
@@ -156,7 +159,7 @@ class KdataBase(object):
             return self.value - other
     # -
     def __rsub__(self,other):
-        if isinstance(other,Kdatas):  
+        if isinstance(other,KdataBase):  
             kb = KdataBase()
             d1,d2 = match_size(self.data,other.data)
             kb._data = d2 - d1
@@ -166,7 +169,7 @@ class KdataBase(object):
 
     # *
     def __mul__(self,other):
-        if isinstance(other,Kdatas):  
+        if isinstance(other,KdataBase):  
             kb = KdataBase()
             d1,d2 = match_size(self.data,other.data)
             kb._data = d1 * d2
@@ -177,7 +180,7 @@ class KdataBase(object):
     # / 
     def __truediv__(self, other):
         #s1 , s2 = match_size(self.data,other.data)
-        if isinstance(other,Kdatas):  
+        if isinstance(other,KdataBase):  
             kb = KdataBase()
             d1,d2 = match_size(self.data,other.data)
             kb._data = d1 / d2
@@ -187,7 +190,7 @@ class KdataBase(object):
 
     def __rtruediv__(self, other):
         #s1 , s2 = match_size(self.data,other.data)
-        if isinstance(other,Kdatas):  
+        if isinstance(other,KdataBase):  
             kb = KdataBase()
             d1,d2 = match_size(self.data,other.data)
             kb._data = d2 / d1
