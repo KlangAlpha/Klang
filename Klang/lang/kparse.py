@@ -138,6 +138,7 @@ def p_statement_cond(p):
                    | IF condition_list COLON SEMI statement SEMI %prec IFX
                    | IF condition_list COLON SEMI statement_func SEMI %prec IFX
                    | IF condition_list COLON statement_func SEMI %prec IFX
+                   | IF condition_list COLON SEMI ID ASSIGN condition_list SEMI %prec IFX
     '''
     debug("IF", [str(x) for x in p[1:]])
     if len(p) < 7:
