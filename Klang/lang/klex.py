@@ -142,17 +142,19 @@ def t_string_end(t):
         t.lexer.begin('INITIAL')
         return t
 
-
+#1. == 优先判断==，以免和=冲突 
 @TOKEN(specials_mc_re)
 def t_SPECIAL_MC(t):
     t.type = specials_mc.get(t.value, 'SPECIAL')
     return t
 
-# :=, = 这位置必须在 == 后面
+#2. :=, = 这位置必须在 == 后面
+#  优先判断 := 以免和下的 : 冲突
 def t_ASSIGN(t):
     r'(:)?='
     return t
 
+#3. :, 
 @TOKEN(specials_sc_re)
 def t_SPECIAL_SC(t):
     t.type = specials_sc.get(t.value, 'SPECIAL')
