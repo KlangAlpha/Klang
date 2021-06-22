@@ -3,8 +3,8 @@
 from Klang.lang import kparser,setPY,Kexec
 from Klang.common import today 
 from Klang import (Kl,
-    C,O,V,H,L,
-    MA,CROSS,
+    C,O,V,H,L, CLOSE,HIGH,
+    MA,CROSS,BARSLAST,HHV,COUNT,
     MAX,MIN,MACD)
 
 #

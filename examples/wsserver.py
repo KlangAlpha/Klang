@@ -24,7 +24,7 @@ from Klang import (Kl,
     SUM,ABS,STD,
 
     CROSS,
-    REF,
+    REF,BARSLAST,BARSCOUNT,BARSLASTFIND,
     MAX,
     MIN,
     EVERY,

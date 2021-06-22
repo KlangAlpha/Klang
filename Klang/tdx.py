@@ -59,11 +59,41 @@ def _cross(a,b):
     return a[-2] < b[-2] and a[-1] >= b[-1]
 
 def CROSS(A,B):
-    return _cross(A,B)
-
+    result = []
+    for i in range(0,len(A)-1):
+        result.insert(0,_cross(A[-i].data,B[-i].data))
+    
+    ret = KdataBase(data=result)
+    return ret
 
 def BARSCOUNT(X):
     return len(X)
+
+
+
+"""
+功能：上一次条件成立位置
+
+
+描述：上一次条件成立到当前的周期数。
+
+用法：BARSLAST(X);
+
+例如：BARSLAST(CLOSE>OPEN);
+表示上次K线收阳到当前的周期数。
+"""
+def BARSLAST(X):
+    for i in range(0,len(X)):
+        if X[i]:
+            break
+    return i
+#
+def BARSLASTFIND(X,val):
+    for i in range(0,len(X)):
+        if X[i] == val:
+            break
+    return i
+#
 
 def HHV(X,N):
     ret = KdataBase()

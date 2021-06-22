@@ -59,6 +59,7 @@ __all__ = [
 # HHV,LLV,MIN,MAX,
 # EVERY,EXIST,SMA
 # COUNT,IF,IIF
+# BARSLAST
 
 ##################
 # talib_api.py
