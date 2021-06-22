@@ -48,6 +48,7 @@ specials_sc = {
     ']':    'RBRACKET',
 }
 
+
 # List of multi character literals
 specials_mc = {
     '>=':  'GE',
@@ -91,10 +92,7 @@ def t_ID(t):
 
     t.type = reserved1.get(t.value.lower(), 'ID')
     return t
-# :=, =
-def t_ASSIGN(t):
-    r'(:)?='
-    return t
+
 
 def t_FLOAT(t):
     r'((\d*\.\d+)(E[\+-]?\d+)?|([1-9]\d*E[\+-]?\d+))'
@@ -150,6 +148,10 @@ def t_SPECIAL_MC(t):
     t.type = specials_mc.get(t.value, 'SPECIAL')
     return t
 
+# :=, = 这位置必须在 == 后面
+def t_ASSIGN(t):
+    r'(:)?='
+    return t
 
 @TOKEN(specials_sc_re)
 def t_SPECIAL_SC(t):

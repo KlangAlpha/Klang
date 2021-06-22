@@ -23,11 +23,11 @@ def p_function(p):
              | empty
     '''
     if len(p) > 2:
-        debug('FUNCTION', str(p[2]))
+        debug('FUNCTION2', str(p[2]))
         astList.append(p[2])
         p[0] = p[2]
     else:
-        debug('FUNCTION', p[1:])
+        debug('FUNCTION1', p[1:])
 
 #存储多条语句组成的语句block
 blockList=[]
@@ -267,7 +267,7 @@ def p_expression_binop(p):
                | expression GE expression
                | expression LT expression
                | expression LE expression
-               | expression EQ expression
+               | expression EQ expression 
                | expression NE expression
                | expression AND expression
                | expression OR expression
