@@ -4,13 +4,13 @@
 
 import talib
 import numpy as np
-from .Kdatas import Kdatas,KdatasOpt
+from .Kdatas import KdataBase
 
 def MA(X,N):
     return talib.MA(X.data,N)
 
 def ABS(X):
-    if isinstance(X,Kdatas):
+    if isinstance(X,KdataBase):
         data = X.data
     else:
         data = X
