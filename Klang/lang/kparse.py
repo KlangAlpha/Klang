@@ -222,10 +222,12 @@ def p_expression_var(p):
     p[0] = mAST(action='get', params=[p[1]])
 
 #[\d+] , C[1]
+# expression is ID, C[a]
 def p_expression_varslice(p):
     '''
     expression : ID LBRACKET NUMBER RBRACKET
                | ID LBRACKET REM NUMBER RBRACKET
+               | ID LBRACKET expression RBRACKET
     '''
     debug('VAR', p[1])
     if len(p) == 5:

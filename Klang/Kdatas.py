@@ -64,6 +64,11 @@ class KdataBase(object):
     #C,index=0,
     #C[1],index=1
     def __getitem__(self, index):
+
+        #Klang Don't None 类型，因此处理判断位None
+        if index is None:
+            return None
+
         if index < 0:
             index = -(index + 1)
 

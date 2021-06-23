@@ -52,7 +52,9 @@ class mAST:
             ret = symbols.get(self.params[0], None)
             if ret is None: #试着从python获取变量
                 ret= getpyglobals(self.params[0])
-            result = ret[self.params[1]]
+
+            p = mAST.resolve(self.params[1])
+            result = ret[p]
 
         elif self.action == 'kloop':
             Kl  = getpyglobals('Kl')

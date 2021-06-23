@@ -53,6 +53,9 @@ print("计算完成")
 testblock1 =\
 """
 a,b,c = MACD(C)
+a = 1
+e = C[1]
+print(e)
 """
 
 Kexec(testblock1)
