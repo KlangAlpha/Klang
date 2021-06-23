@@ -9,6 +9,8 @@ import websockets
 from threading import Lock
 logging.basicConfig()
 
+import threading
+
 ######################klang #######################
 from Klang.lang import kparser,setPY,Kexec
 from Klang import (Kl,
@@ -58,9 +60,13 @@ def cmd_call(data):
     code = data['content']
     pw   = data['pw']
     if code == "reset_all" and pw == "Klang":
-        Kl.updateall()
+        #Kl.updateall()
+        t = threading.Thread(target=Kl.updateall)
+        t.start()
     if code == "reset_stock"  and pw == "Klang" :
-        Kl.updatestockdata()
+        #异步加载df 放到df_all
+        t = threading.Thread(target=Kl.updatestockdata)
+        t.start()
 
 ###################web socket######################
 USERS = {}
