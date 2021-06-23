@@ -58,7 +58,7 @@ class mAST:
             Kl  = getpyglobals('Kl')
             for df in Kl.df_all:
                 try:
-                    Kl.setcurrent(df["code"])
+                    Kl.code(df["code"])
                     for x in self.params:
                         mAST.resolve(x)
                 except Exception as e:
