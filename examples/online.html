@@ -26,16 +26,21 @@
     border: 1px solid;
     border-radius: .25rem;
  }
+ 
+ .bg {
+    background: rgba(14, 22, 34, 0.02);
+ }
+
   </style>
 
 
         <title>Klang(金浪)语言在线试用</title>
 
     </head>
-    <body>
+    <body class="bg">
 
    <div id="app">
-   <nav class="navbar navbar-expand-lg navbar-light bg-light" style="min-height:60px;">
+   <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm" style="min-height:60px;">
    <div class="container-fluid">
     <a class="navbar-brand" href="#">开始</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -87,17 +92,17 @@
 </nav>
 
 <div class="container" style="margin-top:30px;">
-  <div class="row">
+  <div class="row ">
     <div class="col" >
-      
-            <div >
-                <textarea id="content" style="min-height:200px;width:80%"></textarea>
+         <div class="shadow-sm p-3 mb-5 bg-white rounded" style="padding:20px;">
+            <div class="form">
+                <textarea id="content" style="min-height:200px;width:95%"></textarea>
             </div>
-            <button type="button" class="btn btn-warning" style="margin-right:30px;"id="reset">重写</button>
+            <button type="button" class="btn btn-warning" style="margin-right:30px;"id="reset">清除</button>
             <button type="button" class="btn btn-primary" id="run">运行公式</button>
-
-<p> </p>
-<div class="accordion" id="accordionExample">
+          </div> <!--shadow-sm-->
+        <p> </p>
+<div class="accordion shadow-sm rounded" id="accordionExample">
 
   <div class="accordion-item">
     <h2 class="accordion-header" id="headingOne">
@@ -107,7 +112,8 @@
     </h2>
     <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
       <div class="accordion-body">
-      <pre style="background:#F8F9FA;margin-top:20px;" id="preOne">
+      <pre style="background:#F8F9FA;padding:10px;" class="shadow-sm rounded " id="preOne">
+      <code>
         arg1 = 0.099
         ###############################
         # 参数arg1,表示涨幅的幅度
@@ -116,6 +122,7 @@
         val = (C-C[1]) / C[1]
         if val > arg1:
             DISPLAY(val)
+      </code>
       </pre>
       <button type="button" class="btn-Copy" onclick="CopyN('One')">复制公式</button>
       <p style="margin:35px;"></p>
@@ -133,7 +140,7 @@
     <div v-bind:id="'collapse'+index" class="accordion-collapse collapse" v-bind:aria-labelledby="'heading'+index" data-bs-parent="#accordionExample">
       <div class="accordion-body">
 
-      <pre style="background:#F8F9FA;margin-top:20px;" v-bind:id="'pre'+index">{{code.content}}
+      <pre style="background:#F8F9FA;padding:10px;" class="shadow-sm rounded" v-bind:id="'pre'+index"><code>{{code.content}}</code>
       </pre>
       <button type="button" class="btn-Copy" v-bind:onclick="'CopyN('+index+')'">复制公式</button>
       <p style="margin:35px;"></p>
