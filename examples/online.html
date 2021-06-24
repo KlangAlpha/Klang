@@ -31,6 +31,19 @@
     background: rgba(14, 22, 34, 0.02);
  }
 
+
+ .spinner-stop {
+    display: inline-block;
+    width: 2rem;
+    height: 2rem;
+    vertical-align: -.125em;
+    background-color: currentColor;
+    border-radius: 50%;
+    /* opacity: 0; */
+    /* -webkit-animation: .75s linear infinite spinner-grow; */
+    /* animation: .75s linear infinite spinner-grow; */
+   }
+
   </style>
 
 
@@ -71,14 +84,23 @@
         </li>
       </ul>
 
-    <div class="form-check" style="margin-right:20px;">
+
+    <div class="spinner-border spinner-border-sm text-primary" role="status" v-if="busy">
+    <span class="visually-hidden">...</span>
+    </div>
+
+    <div class="form-check" style="margin-right:20px;margin-left:10px;">
     
     <input class="form-check-input" type="checkbox" value="" id="flexbusy" checked disabled>
     <label class="form-check-label" for="flexbusy">
         busy
     </label>
     </div>
+   
+
     
+
+ 
     <div class="form-check">
 
     <input class="form-check-input" type="checkbox" value="" id="flexCheckCheckedDisabled" checked disabled>
@@ -170,29 +192,30 @@
     </div> <!-- col -->
     <div class="col">
         <div class="display">
+
             <table class="table table-bordered">
-  <thead>
-    <tr>
-      <th scope="col">#</th>
-      <th scope="col">name</th>
-      <th scope="col">code</th>
-      <th scope="col">值</th>
-      <th scope="col">流通市值(亿)</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr v-for="(item,index) in result">
-      <th scope="row" >{{index}}</th>
-      <td>{{item.name}}</td>
-      <td><a v-bind:href="'https://gu.qq.com/'+item.code" target=_blank >{{item.code}}</td>
-      <td>{{item.value}}</td>
-      <td>{{item.hqltsz}}</td>
-    </tr>
-  </tbody>
-</table> 
-        </div>
-    </div>
-  </div>
+            <thead>
+            <tr>
+            <th scope="col">#</th>
+            <th scope="col">name</th>
+            <th scope="col">code</th>
+            <th scope="col">值</th>
+            <th scope="col">流通市值(亿)</th>
+            </tr>
+            </thead>
+             <tbody>
+                <tr v-for="(item,index) in result">
+                <th scope="row" >{{index}}</th>
+                <td>{{item.name}}</td>
+                <td><a v-bind:href="'https://gu.qq.com/'+item.code" target=_blank >{{item.code}}</td>
+                <td>{{item.value}}</td>
+                <td>{{item.hqltsz}}</td>
+                </tr>
+                </tbody>
+            </table> 
+        </div> <!--display-->
+      </div><!--col-->
+  </div> <!--row-->
 </div> <!-- container-->
 
 </div> <!-- app for vue-->
@@ -218,7 +241,7 @@
             return {
                 online:0,
                 usercount:0,
-                busy:false,
+                busy:0,
                 result:[],
                 url:apihost+"/strategies",
                 codes:[{title:"均线向上",content:"ma1=MA(C,5);\nma2=MA(C,10);\nma3=MA(C,20);\nif ma1[-1] > ma2[-1] and ma2[-1]>ma3[-1]:\n        DISPLAY(C);"},
@@ -274,7 +297,11 @@
 
             function CopyN(arg1){
                 preN = document.querySelector('#pre'+arg1),
-                content.value = preN.textContent
+                title = ""
+                if (arg1 != "One") {
+                    title = "#  " + vue.$data.codes[arg1].title + "\n"
+                }
+                content.value = title +preN.textContent
             }
             reset.onclick = function (event) {
                 content.value = ""
@@ -297,9 +324,11 @@
 
                         if (data.value == true){
                             flexbusy.checked= true
+                            vue.$data.busy = 1
                         } else {
 
                             flexbusy.checked= false 
+                            vue.$data.busy = 0
                         }
                         break;
                     case 'users':
@@ -307,8 +336,10 @@
                         vue.$data.online = 1
                         if (data.busy == 0){
                             flexbusy.checked= false 
+                            vue.$data.busy = 0
                         } else {
                             flexbusy.checked= true
+                            vue.$data.busy = 1
                         }
                         break;
                     case 'display':

@@ -101,15 +101,22 @@ async def notice(message):
     msg = json.dumps(message)
     await asyncio.wait([USERS[user].send(msg) for user in USERS])
 
+mutexuser = Lock ()
+
 async def register(websocket):
     global USERS,index
+    mutexuser.acquire()
     USERS[index] = websocket
     index += 1 
+    mutexuser.release()
     await notify_users()
     return index - 1
 
 async def unregister(index):
-    del USERS[index]
+    mutexuser.acquire()
+    if USERS.get(index,None) != None:
+        del USERS[index]
+    mutexuser.release()
     await notify_users()
 
 
