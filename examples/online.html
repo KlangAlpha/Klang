@@ -202,7 +202,7 @@
             </thead>
              <tbody>
                 <tr v-for="(item,index) in result">
-                <th scope="row" >{{index}}</th>
+                <th scope="row" >{{index+1}}</th>
                 <td>{{item.name}}</td>
                 <td><a v-bind:href="'https://gu.qq.com/'+item.code" target=_blank ><font color=blue>{{item.code}}</font></a></td>
                 <td>{{item.value}}</td>
