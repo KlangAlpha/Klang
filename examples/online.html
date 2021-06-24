@@ -147,8 +147,9 @@
     </h2>
     <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
       <div class="accordion-body">
-      <pre style="background:#F8F9FA;padding:10px;" class="shadow-sm rounded " id="preOne">
-      <code>
+      <pre style="background:#F8F9FA;padding:10px;" class="shadow-sm rounded ">
+      <button type="button" class="btn-Copy" onclick="CopyN('One')">复制公式</button>
+      <code id="preOne">
         arg1 = 9.9
         ###############################
         # 参数arg1,表示涨幅的幅度
@@ -160,8 +161,6 @@
             DISPLAY(val)
       </code>
       </pre>
-      <button type="button" class="btn-Copy" onclick="CopyN('One')">复制公式</button>
-      <p style="margin:35px;"></p>
       </div>
     </div>
   </div>
@@ -176,10 +175,8 @@
     <div v-bind:id="'collapse'+index" class="accordion-collapse collapse" v-bind:aria-labelledby="'heading'+index" data-bs-parent="#accordionExample">
       <div class="accordion-body">
 
-      <pre style="background:#F8F9FA;padding:10px;" class="shadow-sm rounded" v-bind:id="'pre'+index"><code>{{code.content}}</code>
+      <pre style="background:#F8F9FA;padding:10px;" class="shadow-sm rounded"><button type="button" class="btn-Copy" v-bind:onclick="'CopyN('+index+')'">复制公式</button><code v-bind:id="'pre'+index">{{code.content}}</code>
       </pre>
-      <button type="button" class="btn-Copy" v-bind:onclick="'CopyN('+index+')'">复制公式</button>
-      <p style="margin:35px;"></p>
 
       </div>
     </div> <!--div id -->
