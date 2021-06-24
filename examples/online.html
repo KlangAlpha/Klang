@@ -95,7 +95,20 @@
   <div class="row ">
     <div class="col" >
          <div class="shadow-sm p-3 mb-5 bg-white rounded" style="padding:20px;">
-            <div class="form">
+  
+        
+           <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" id="ltszCheck" value="option1">
+            <label class="form-check-label" for="ltszCheck">剔除小市值</label>
+         </div>
+        <div class="form-check form-check-inline">
+        <input class="form-check-input" type="checkbox" id="STCheck" value="option2" checked>
+        <label class="form-check-label" for="STCheck">剔除ST</label>
+        </div>
+
+
+
+           <div class="form">
                 <textarea id="content" style="min-height:200px;width:95%"></textarea>
             </div>
             <button type="button" class="btn btn-warning" style="margin-right:30px;"id="reset">清除</button>
@@ -239,6 +252,8 @@
                 display = document.querySelector('#display'),
                 flexbusy = document.querySelector('#flexbusy'),
                 connstate = document.querySelector('#flexCheckCheckedDisabled'),
+                ltszcheck = document.querySelector('#ltszCheck'),
+                STcheck = document.querySelector('#STCheck'),
                 websocket = new WebSocket("ws://"+hostname+":9099/");
 
                 preOne = document.querySelector('#preOne'),
@@ -299,6 +314,15 @@
                     case 'display':
                         code = data.code.replace(".","")
                         hqltsz = data.hqltsz.toFixed(2)
+
+
+                        if (ltszcheck.checked == true && hqltsz < 100.0){
+                            break;
+                        }
+                        if (STcheck.checked == true && data.name.includes("ST")){
+                            break;
+                        }
+
                         value = data.value
                         if (String(parseFloat(value)) != "NaN"){ //NaN 是无法直接比较的
                             value = parseFloat(value).toFixed(4)
