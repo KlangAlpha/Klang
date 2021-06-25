@@ -13,6 +13,7 @@ import threading
 
 ######################klang #######################
 from Klang.lang import kparser,setPY,Kexec
+
 from Klang import (Kl,
     OPEN, O,
     HIGH, H,
@@ -36,6 +37,8 @@ from Klang import (Kl,
     IF, IIF,
     MACD,APPROX)
 
+code = Kl.code
+date = Kl.date
 
 
 def getpyglobals(name):
