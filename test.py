@@ -10,21 +10,26 @@ from Klang import (
 )
 
 Kl = Klang.Kl
+code = Kl.code
+date = Kl.date
+
 # 设置为隆基
-Kl.setcurrent('sh.601012')
+code('sh.601012')
 print(C)
+
+print(Kl.currentdf['df'])
 
 # 设置为茅台
-Kl.setcurrent('sh.600519')
+code('sh.600519')
 print(C)
 
-Kl.setdate(start='2021-04-26',end='2021-04-29')
+date(start='2021-04-26',end='2021-04-29')
 print(C)
 
 
 #显示当天TCL的收盘价
-Kl.code('sz.000100')
-Kl.date()
+code('sz.000100')
+date()
 print(C)
 
 
@@ -42,7 +47,7 @@ print(HHV(C,10))
 print(LLV(C,10))
 print(EVERY(C<O,10))
 
-Kl.setcurrent('sh.600392')
+code('sh.600392')
 
 print(EVERY(C<O,2))
 
