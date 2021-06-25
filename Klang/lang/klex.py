@@ -46,6 +46,7 @@ specials_sc = {
     ':':    'COLON',
     '[':    'LBRACKET',
     ']':    'RBRACKET',
+    '.':    'PERIOD',
 }
 
 

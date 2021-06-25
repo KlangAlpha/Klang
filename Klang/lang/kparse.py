@@ -76,7 +76,10 @@ def p_statement_print(p):
     p[0] = mAST(action='print', params=p[3])
 
 def p_statement_func(p):
-    'statement_func : ID LPAREN expr_list RPAREN'
+    '''
+    statement_func : ID LPAREN expr_list RPAREN
+                    | subid LPAREN expr_list RPAREN
+    '''
     debug('FUNC', p[3])
     p[0] = mAST(action='func', params=[p[1],p[3]])
 
@@ -217,9 +220,22 @@ def p_expression_bool_false(p):
 
 
 def p_expression_var(p):
-    'expression : ID'
+    '''
+    expression : ID
+    '''
     debug('VAR', p[1])
     p[0] = mAST(action='get', params=[p[1]])
+
+
+def p_expression_subvar(p):
+    'expression : subid'
+    p[0] = p[1]
+
+def p_subid_var(p):
+    'subid : ID PERIOD ID'
+    
+    p[0] = mAST(action='getsub', params=[p[1],p[3]])
+
 
 #[\d+] , C[1]
 # expression is ID, C[a]

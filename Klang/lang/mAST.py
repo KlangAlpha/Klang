@@ -31,7 +31,12 @@ class mAST:
             print(' '.join(str(mAST.resolve(x)) for x in list(self.params)))
         elif self.action == 'func':
             p =  [mAST.resolve(x) for x in list(self.params[1])]
-            result=getpyglobals(self.params[0])(*p)
+
+            f = mAST.resolve(self.params[0])
+            if isinstance(self.params[0], mAST):
+                result=f(*p)
+            else: 
+                result=getpyglobals(f)(*p)
 
         elif self.action == 'assign':#存到全局变量
             result = symbols[self.params[0]] = mAST.resolve(self.params[1])
@@ -48,6 +53,14 @@ class mAST:
             result = symbols.get(self.params[0], None)
             if result is None: #试着从python获取变量
                 result= getpyglobals(self.params[0])
+
+        elif self.action == 'getsub':
+            result1= getpyglobals(self.params[0])
+            if result1 is None:
+                result = result1
+            else:
+                result = result1.__getattribute__(self.params[1])
+
         elif self.action == 'get_slice':
             ret = symbols.get(self.params[0], None)
             if ret is None: #试着从python获取变量
