@@ -1,7 +1,10 @@
 # Klang
 stock K-line language 
+
 Klang 是Kline语言,即股票语言,支持方便快捷的股票编程,可以轻松搞定股票公式
+
 是股票编程和量化交易的必备工具
+
 Klang 最大的亮点是支持中文编程,可以看最后的完整例子
 
 # 在线试用
@@ -83,9 +86,8 @@ REF(C,5) # 5周期前的收盘价，5日前收盘价
 from Klang.lang import kparser,setPY,Kexec
 
 # Klang和python的桥梁，支持函数,变量共享
-* 具体使用方法 参见 testparse.py
+# 具体使用方法 参见 testparse.py
 
-```
 def getpyglobals(name):
     return globals().get(name)
 
