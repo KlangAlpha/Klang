@@ -1,9 +1,13 @@
 # Klang
 stock K-line language 
-股票K线语言
+Klang 是Kline语言,即股票语言,支持方便快捷的股票编程,可以轻松搞定股票公式
+是股票编程和量化交易的必备工具
+Klang 最大的亮点是支持中文编程,可以看最后的完整例子
 
 # 在线试用
-你可以在线体验 Klang 编程, 且内置了多个选股公式 [Online](http://klang.zhanluejia.net.cn/online.html)
+* 内置中文编程公式
+你可以在线体验 Klang 编程, 无需安装,网站内置了多个选股公式 [Online](http://klang.org.cn/online.html)
+
 
 # Klang 是股票K线形态语言,基于 python3
 * 语言解释器采用 python的 ply库，他采用了flex，yacc语法的实现
@@ -11,14 +15,18 @@ stock K-line language
 * 支持 同花顺、通达信、文华财经等的公式, 感谢funcat 移植到了 Python 版本
 * 支持结构形态 感谢talib
 * Klang 语言是基于Python语法拓展了部分自己的语法，并且编写了快捷的股票公式 
+* 支持网页直接使用,交互方便
+* 支持中文编程,一看就懂
 
 # install
+* 安装过程中遇到talib错误，需要搜索talib源代码解决
 ```
 git clone https://github.com/asmcos/Klang
 cd Klang
 pip3 install -r requirements.txt 
 python3 setup.py install
 ```
+
 
 # 应用示例 python  版本
 * 第一次会下载数据,预计需要几分钟
@@ -74,8 +82,10 @@ REF(C,5) # 5周期前的收盘价，5日前收盘价
 ```
 from Klang.lang import kparser,setPY,Kexec
 
-# 共享Klang和python的变量，函数等
+# Klang和python的桥梁，支持函数,变量共享
+* 具体使用方法 参见 testparse.py
 
+```
 def getpyglobals(name):
     return globals().get(name)
 
@@ -86,6 +96,7 @@ def setpyglobals(name,val):
 setPY(getpyglobals,setpyglobals) 
 
 ```
+
 ###  执行 K语言语句
 * 赋值
 ```
