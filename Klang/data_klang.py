@@ -1,45 +1,30 @@
-import baostock as bs
 import pandas as pd
 import os
 import json
 from threading import Lock
-bs.login()
-
+import requests
+import time
 
 filename_sl = os.path.expanduser("~/.klang_stock_list.csv")
 filename_st = os.path.expanduser("~/.klang_stock_trader.csv")
 
-
+#hostname="http://klang.org.cn"
+hostname="http://klang.zhanluejia.net.cn"
 mutex = Lock()
 
 #
 #stock list
 #
 def updatestocklist(stname=filename_sl):
-    bs.login()
-    rs = bs.query_stock_industry()
 
-    # 打印结果集
-    industry_list = []
-    while (rs.error_code == '0') & rs.next():
-        # 获取一条记录，将记录合并在一起
-        row = rs.get_row_data()
-        kdata = bs.query_history_k_data_plus(row[1], 
-                                      'date,open,high,low,close,volume', 
-                                      start_date='2021-05-20',
-                                      frequency='d')
-        stockd =kdata.get_data()
-        if len(stockd) < 3:
-            continue
-        print(row)
-        industry_list.append(row)
-    result = pd.DataFrame(industry_list, columns=rs.fields)
+    json = requests.get(hostname+"/industries").json()
+    df = pd.io.json.json_normalize(json)
+    df = df.drop(columns=['_id','updatedAt','id','createdAt'])
     # 结果集输出到csv文件
-    result.to_csv(stname, index=False)    
+    df.to_csv(stname, index=False,columns=['updateDate','code','code_name','industry','industryClassification'])    
 
 def updatestockdata(Kl):
 
-    bs.login()
     stocklist = Kl.stocklist
     df_dict = []
     for stock in stocklist:
@@ -105,15 +90,25 @@ def load_stock_trader(Kl,name=filename_st):
 #从bs获取日K数据
 def get_day(name,code,start,end,setindex=False):
     mutex.acquire()
-    rs = bs.query_history_k_data_plus(code, 
-                                      'date,open,high,low,close,volume,code,turn,amount', 
-                                      start_date=start,
-                                      end_date=end,frequency='d' )
-    datas = rs.get_data()
+    try:
+        json = requests.get(hostname+"/dayks",
+            params={"code":code,"end":end,"limit":200},timeout=1000).json()
+    except:
+        time.sleep(2)
+        json = requests.get(hostname+"/dayks",
+            params={"code":code,"end":end,"limit":200},timeout=1000).json()
+   
+    df = pd.io.json.json_normalize(json)
+    if len(df) < 2:
+       mutex.release()
+       return []
+    df = df.drop(columns=['_id','codedate','id'])
+    datas = df.sort_values(by="date",ascending=True)
+
+
+
     mutex.release()
 
-    if len(datas) < 2:
-        return []
     #print(len(datas),datas.date[datas.index[-1]])
     if setindex == True:
         datas['datetime'] = datas['date']

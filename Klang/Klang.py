@@ -3,7 +3,7 @@
 # Klang 提供了全局的股票数据，和获取股票数据的方法
 # Kdatas 是提供了单只股票的数据和计算方法
 #
-from . import data_zhanluejia as zhanluejia
+from . import data_klang as datakl
 from . import data_baostock as bs 
 from .common import * #start,end date
 import copy
@@ -11,7 +11,7 @@ import threading
 
 class Klang():
     def __init__(self):
-        self.data_engine  = bs 
+        self.data_engine  = bs #datakl #klang 
         self.start_date   = start #common.py
         self.end_date     = end   #common.py
         self.df_all       = [] #所有的股票,name:股票名称，code：股票代码，df，股票数据
@@ -106,7 +106,7 @@ def Klang_init():
     global Kl
 
     #初始化股票列表，并且把name，code放到 df_all，此时df为加载
-    Kl.stocklist = bs.init_stock_list(Kl)
+    Kl.stocklist = Kl.data_engine.init_stock_list(Kl)
 
     #异步加载df 放到df_all
     t = threading.Thread(target=Kl.get_all_day)
