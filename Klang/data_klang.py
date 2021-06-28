@@ -31,8 +31,8 @@ def updatestockdata(Kl):
         code ,name = getstockinfo(stock)
         #print('正在获取',name,'代码',code)
         df = get_day(name,code,Kl.start_date,Kl.end_date)
-        if len(df) > 0:
-           df_dict.append({'df':df.to_dict(),'name':name,'code':code})
+        #if len(df) > 0:
+        df_dict.append({'df':df.to_dict(),'name':name,'code':code})
 
     save_stock_trader(df_dict)
     load_stock_trader(Kl)
@@ -99,7 +99,7 @@ def get_day(name,code,start,end,setindex=False):
             params={"code":code,"end":end,"limit":200},timeout=1000).json()
    
     df = pd.io.json.json_normalize(json)
-    if len(df) < 2:
+    if len(df) == 0:
        mutex.release()
        return []
     df = df.drop(columns=['_id','codedate','id'])
@@ -151,8 +151,8 @@ def get_all_day(Kl):
         code ,name = getstockinfo(stock)
         #print('正在获取',name,'代码',code)
         df = get_day(name,code,Kl.start_date,Kl.end_date)
-        if len(df) > 0:
-           df_dict.append({'df':df.to_dict(),'name':name,'code':code})
+        #if len(df) > 0:
+        df_dict.append({'df':df.to_dict(),'name':name,'code':code})
 
     save_stock_trader(df_dict)
     load_stock_trader(Kl)
