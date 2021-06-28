@@ -83,8 +83,9 @@ def load_stock_trader(Kl,name=filename_st):
             name = stock['name']
             # save df to list
             df = pd.DataFrame.from_dict(stock['df'])
-            df['datetime'] = df['date']
-            df = df.set_index('date')
+            if len(df) > 2:
+                df['datetime'] = df['date']
+                df = df.set_index('date')
             Kl.df_all[number]["df"] = df
             number += 1
 
