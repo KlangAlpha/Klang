@@ -13,14 +13,14 @@ class Klang():
     def __init__(self):
         self.data_engine  = bs #datakl #klang 
         self.start_date   = start #common.py
-        self.end_date     = end   #common.py
+        self.end_date     = end   #common.py 全部数据的最后交易周期
         self.df_all       = [] #所有的股票,name:股票名称，code：股票代码，df，股票数据
         self.stocklist    = []
         self.stockindex   = {} #股票代码对应的索引需要
         self.currentindex = 0  #当前选择的股票在数组中的序号
         self.currentdf    = {} #当前选择的股票pandas格式数据
         self.dfstart      = "2021-01-01"
-        self.dfend        = end
+        self.dfend        = end #当前要计算的交易周期
         self.reload       = False
 
 
@@ -73,6 +73,8 @@ class Klang():
     获取所有的A股的日K数据
     """
     def get_all_day(self):
+        self.dfend = gettoday()
+        self.end_date = gettoday()
         self.data_engine.get_all_day(self)   
 
     """
@@ -81,16 +83,20 @@ class Klang():
     股票列表存储到stock_list.csv文件
     """
     def updatestocklist(self):
-        bs.updatestocklist()
-        self.stocklist = bs.init_stock_list(self)
+        self.data_engine.updatestocklist()
+        self.stocklist = self.data_engine.init_stock_list(self)
 
     """
     升级所有股票的日K数据
     """
     def updatestockdata(self):
-        bs.updatestockdata(self)
+        self.dfend = gettoday()
+        self.end_date = gettoday()
+        self.data_engine.updatestockdata(self)
 
     def updateall(self):
+        self.dfend = gettoday()
+        self.end_date = gettoday()
         self.updatestocklist()
         self.updatestockdata()
 

@@ -17,8 +17,10 @@ args = parser.parse_args()
 end = args.end
 start = args.start
 
+def gettoday():
+    today = datetime.now()
+    return str(today.year) + '-' +str(today.month) +'-'+ str(today.day)
 
-today = datetime.now()
 if end== '0':
-    end = str(today.year) + '-' +str(today.month) +'-'+ str(today.day)
+    end = gettoday()
 
