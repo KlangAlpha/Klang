@@ -32,7 +32,12 @@ def updatestocklist(stname=filename_sl):
         if len(stockd) < 3:
             continue
         print(row)
+        row.append("")
+        row.append("")
         industry_list.append(row)
+    fields = rs.fields
+    fields.append('tdxbk')
+    fields.append('tdxgn')
     result = pd.DataFrame(industry_list, columns=rs.fields)
     # 结果集输出到csv文件
     result.to_csv(stname, index=False)    
@@ -133,8 +138,8 @@ def get_day(name,code,start,end,setindex=False):
 # 2019-12-09,sz.002094,青岛金王,化工,申万一级行业
 # 时间，股票代码，名称，类别
 def getstockinfo(stock):
-    d,code,name,skip1,skip2 = stock.split(',')
-    return code,name
+    d,code,name,skip1,skip2,tdxbk,tdxgn = stock.split(',')
+    return code,name,tdxbk,tdxgn
 
 
 #
@@ -153,7 +158,7 @@ def get_all_day(Kl):
 
     print("正在从网上下载股票数据,时间将会有点长")
     for stock in stocklist:
-        code ,name = getstockinfo(stock)
+        code ,name,tdxbk,tdxgn = getstockinfo(stock)
         #print('正在获取',name,'代码',code)
         df = get_day(name,code,Kl.start_date,Kl.end_date)
         if len(df) > 0:
