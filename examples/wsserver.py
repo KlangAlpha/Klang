@@ -51,7 +51,10 @@ def setpyglobals(name,val):
 setPY(getpyglobals,setpyglobals)
 
 def getstockinfo(name=0):
-    return Kl.currentdf['name'], Kl.currentdf['code'],Kl.currentdf['df']['hqltsz'].iloc[-1]
+    return Kl.currentdf['name'], Kl.currentdf['code'],\
+            Kl.currentdf['df']['hqltsz'].iloc[-1],\
+            Kl.currentdf['tdxbk'],\
+            Kl.currentdf['tdxgn']
  
 
 def kloopexec(webindex,content):
@@ -86,8 +89,9 @@ def await_run(coroutine):
 
 # 因为DISPLAY是需要在Klang执行，所以需要await_run执行 sync消息
 def DISPLAY(value):
-    name,code,hqltsz = getstockinfo()
-    message = {"type":"display","name":name,"code":code,"value":str(value),"hqltsz":hqltsz}
+    name,code,hqltsz,tdxbk,tdxgn = getstockinfo()
+    message = {"type":"display","name":name,"code":code,\
+        "value":str(value),"hqltsz":hqltsz,'tdxbk':tdxbk,'tdxgn':tdxgn}
     msg = json.dumps(message)
     await_run(USERS[current].send(msg))
 

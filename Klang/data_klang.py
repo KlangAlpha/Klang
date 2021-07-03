@@ -1,3 +1,10 @@
+#
+# klang.org.cn 提供的股票数据
+# 数据来自baostock + tdx
+# 为了加速Klang运行，数据会被存到本地文件
+# 并且加载到内存
+#
+
 import pandas as pd
 import os
 import json
@@ -9,7 +16,7 @@ filename_sl = os.path.expanduser("~/.klang_stock_list.csv")
 filename_st = os.path.expanduser("~/.klang_stock_trader.csv")
 
 hostname="http://klang.org.cn"
-#hostname="http://klang.zhanluejia.net.cn"
+hostname="http://klang.zhanluejia.net.cn"
 mutex = Lock()
 
 #
@@ -18,7 +25,7 @@ mutex = Lock()
 def updatestocklist(stname=filename_sl):
 
     json = requests.get(hostname+"/industries").json()
-    df = pd.io.json.json_normalize(json)
+    df = pd.json_normalize(json)
     df = df.drop(columns=['_id','updatedAt','id','createdAt'])
     # 结果集输出到csv文件
     df.to_csv(stname, index=False,columns=['updateDate','code','code_name','industry','industryClassification','tdxbk','tdxgn'])    
@@ -28,13 +35,13 @@ def updatestockdata(Kl):
     stocklist = Kl.stocklist
     df_dict = []
     for stock in stocklist:
-        code ,name = getstockinfo(stock)
+        code ,name ,tdxbk,tdxgn= getstockinfo(stock)
         #print('正在获取',name,'代码',code)
         df = get_day(name,code,Kl.start_date,Kl.end_date)
         if len(df) > 0:
-            df_dict.append({'df':df.to_dict(),'name':name,'code':code})
+            df_dict.append({'df':df.to_dict(),'name':name,'code':code,'tdxbk':tdxbk,'tdxgn':tdxgn})
         else:
-            df_dict.append({'df':{},'name':name,'code':code})
+            df_dict.append({'df':{},'name':name,'code':code,'tdxbk':tdxbk,'tdxgn':tdxgn})
 
     save_stock_trader(df_dict)
     load_stock_trader(Kl)
@@ -56,7 +63,7 @@ def init_stock_list(Kl,offset=0):
     for stock in stocklist:
             code ,name ,tdxbk,tdxgn = getstockinfo(stock)
             Kl.stockindex[code] = number
-            Kl.df_all.append({"name":name,"df":None,"code":code,"block":tdxbk,"gn":tdxgn}) 
+            Kl.df_all.append({"name":name,"df":None,"code":code,"tdxbk":tdxbk,"tdxgn":tdxgn}) 
             number += 1
         
 
@@ -79,8 +86,8 @@ def load_stock_trader(Kl,name=filename_st):
     number = 0
     for stock in df_dict:
             # save order for index
-            code = stock['code']
-            name = stock['name']
+            #code = stock['code']
+            #name = stock['name']
             # save df to list
             df = pd.DataFrame.from_dict(stock['df'])
             if len(df) > 2:
@@ -156,9 +163,9 @@ def get_all_day(Kl):
         #print('正在获取',name,'代码',code)
         df = get_day(name,code,Kl.start_date,Kl.end_date)
         if len(df) > 0:
-            df_dict.append({'df':df.to_dict(),'name':name,'code':code})
+            df_dict.append({'df':df.to_dict(),'name':name,'code':code,'tdxbk':tdxbk,'tdxgn':tdxgn})
         else:
-            df_dict.append({'df':{},'name':name,'code':code})
+            df_dict.append({'df':{},'name':name,'code':code,'tdxbk':tdxbk,'tdxgn':tdxgn})
                 
     save_stock_trader(df_dict)
     load_stock_trader(Kl)

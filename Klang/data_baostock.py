@@ -1,3 +1,9 @@
+
+# 获取股票 来自baostock 网站
+# 其中通达信板块数据 此模块没有引入
+# 如果通达信模块有问题，不影响baostock使用
+
+
 import baostock as bs
 import pandas as pd
 import os
@@ -5,10 +11,8 @@ import json
 from threading import Lock
 bs.login()
 
-
 filename_sl = os.path.expanduser("~/.klang_stock_list.csv")
 filename_st = os.path.expanduser("~/.klang_stock_trader.csv")
-
 
 mutex = Lock()
 
@@ -31,9 +35,9 @@ def updatestocklist(stname=filename_sl):
         stockd =kdata.get_data()
         if len(stockd) < 3:
             continue
+        row.append("")
+        row.append("")
         print(row)
-        row.append("")
-        row.append("")
         industry_list.append(row)
     fields = rs.fields
     fields.append('tdxbk')
@@ -48,11 +52,11 @@ def updatestockdata(Kl):
     stocklist = Kl.stocklist
     df_dict = []
     for stock in stocklist:
-        code ,name = getstockinfo(stock)
+        code ,name ,tdxbk,tdxgn = getstockinfo(stock)
         #print('正在获取',name,'代码',code)
         df = get_day(name,code,Kl.start_date,Kl.end_date)
         if len(df) > 0:
-           df_dict.append({'df':df.to_dict(),'name':name,'code':code})
+           df_dict.append({'df':df.to_dict(),'name':name,'code':code,'tdxbk':tdxbk,'tdxgn':tdxgn})
 
     save_stock_trader(df_dict)
     load_stock_trader(Kl)
@@ -72,9 +76,9 @@ def init_stock_list(Kl,offset=0):
     number = 0
     Kl.df_all = []
     for stock in stocklist:
-            code ,name = getstockinfo(stock)
+            code ,name,tdxbk,tdxgn = getstockinfo(stock)
             Kl.stockindex[code] = number
-            Kl.df_all.append({"name":name,"df":None,"code":code}) 
+            Kl.df_all.append({"name":name,"df":None,"code":code,'tdxbk':tdxbk,'tdxgn':tdxgn}) 
             number += 1
         
 
@@ -162,7 +166,7 @@ def get_all_day(Kl):
         #print('正在获取',name,'代码',code)
         df = get_day(name,code,Kl.start_date,Kl.end_date)
         if len(df) > 0:
-           df_dict.append({'df':df.to_dict(),'name':name,'code':code})
+           df_dict.append({'df':df.to_dict(),'name':name,'code':code,'tdxbk':tdxbk,'tdxgn':tdxgn})
 
     save_stock_trader(df_dict)
     load_stock_trader(Kl)

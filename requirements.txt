@@ -1,5 +1,5 @@
 numpy
-pandas
+pandas>=1.2.5
 TA-Lib
 baostock
 backtrader

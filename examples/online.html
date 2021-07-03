@@ -204,7 +204,9 @@
             <th scope="col">name</th>
             <th scope="col">code</th>
             <th scope="col">值</th>
-            <th scope="col">流通市值(亿)</th>
+            <th scope="col">流通值(亿)</th>
+            <th scope="col">板块</th>
+            <th scope="col">概念板块</th>
             </tr>
             </thead>
              <tbody>
@@ -214,6 +216,8 @@
                 <td><a v-bind:href="'https://gu.qq.com/'+item.code" target=_blank ><font color=blue>{{item.code}}</font></a></td>
                 <td>{{item.value}}</td>
                 <td>{{item.hqltsz}}</td>
+                <td>{{item.tdxbk}}</td>
+                <td>{{item.tdxgn}}</td>
                 </tr>
                 </tbody>
             </table> 
@@ -349,7 +353,8 @@
                     case 'display':
                         code = data.code.replace(".","")
                         hqltsz = data.hqltsz.toFixed(2)
-
+                        tdxbk = data.tdxbk
+                        tdxgn = data.tdxgn
 
                         if (ltszcheck.checked == true && hqltsz < 100.0){
                             break;
@@ -360,9 +365,9 @@
 
                         value = data.value
                         if (String(parseFloat(value)) != "NaN"){ //NaN 是无法直接比较的
-                            value = parseFloat(value).toFixed(4)
+                            value = parseFloat(value).toFixed(2)
                         }
-                        vue.$data.result.push({name:data.name,code:code,value:value,hqltsz:hqltsz})
+                        vue.$data.result.push({name:data.name,code:code,value:value,hqltsz:hqltsz,tdxbk:tdxbk,tdxgn:tdxgn})
                         break;
                     default:
                         console.error(

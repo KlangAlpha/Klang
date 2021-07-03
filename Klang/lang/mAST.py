@@ -1,3 +1,10 @@
+#
+# klang 解释器
+# 所有语法分析后，由mAST执行
+
+import sys
+import linecache
+
 DEBUG_MODE = False
 symbols = {}
 
@@ -16,6 +23,14 @@ def debug(*params):
     if DEBUG_MODE:
         print("[DBG] %s" % (' : '.join(str(x) for x in params),))
 
+def PrintException():
+    exc_type, exc_obj, tb = sys.exc_info()
+    f = tb.tb_frame
+    lineno = tb.tb_lineno
+    filename = f.f_code.co_filename
+    linecache.checkcache(filename)
+    line = linecache.getline(filename, lineno, f.f_globals)
+    print ('EXCEPTION IN ({}, LINE {} "{}"): {}'.format(filename, lineno, line.strip(), exc_obj))
 
 class mAST:
     action = None
@@ -76,8 +91,9 @@ class mAST:
                     Kl.code(df["code"])
                     for x in self.params:
                         mAST.resolve(x)
-                except Exception as e:
-                    print("ERROR",str(e))
+                except :
+                    print("Klang ERROR")
+                    PrintException()
 
         elif self.action == 'loop':
             for i in self.params[1]:
