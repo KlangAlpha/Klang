@@ -92,7 +92,7 @@ class mAST:
                     for x in self.params:
                         mAST.resolve(x)
                 except :
-                    print("Klang ERROR")
+                    print("Klang ERROR",df['code'],df['name'])
                     PrintException()
 
         elif self.action == 'loop':
