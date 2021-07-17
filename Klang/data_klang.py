@@ -139,6 +139,7 @@ def get_day(name,code,start,end,setindex=False):
 # 2019-12-09,sz.002094,青岛金王,化工,申万一级行业
 # 时间，股票代码，名称，类别
 def getstockinfo(stock):
+    stock = stock.strip()
     d,code,name,skip1,skip2,tdxbk,tdxgn = stock.split(',')
     return code,name,tdxbk,tdxgn
 
