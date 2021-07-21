@@ -46,6 +46,9 @@ def updatestocklist(stname=filename_sl):
     # 结果集输出到csv文件
     result.to_csv(stname, index=False)    
 
+def get_chouma(code):
+    return 50
+
 def updatestockdata(Kl):
 
     bs.login()

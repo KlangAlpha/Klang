@@ -11,7 +11,7 @@ import threading
 
 class Klang():
     def __init__(self):
-        self.data_engine  = bs #datakl #klang 
+        self.data_engine  = datakl #klang 
         self.start_date   = start #common.py
         self.end_date     = end   #common.py 全部数据的最后交易周期
         self.df_all       = [] #所有的股票,name:股票名称，code：股票代码，df，股票数据
@@ -68,6 +68,10 @@ class Klang():
         self.currentdf['df'] = df
  
     setdate = date
+
+    def chouma(self):
+        code = self.df_all[self.currentindex]['code']
+        return self.data_engine.get_chouma(code)
     
     """
     获取所有的A股的日K数据
