@@ -16,19 +16,28 @@ filename_sl = os.path.expanduser("~/.klang_stock_list.csv")
 filename_st = os.path.expanduser("~/.klang_stock_trader.csv")
 
 hostname="http://klang.org.cn"
-hostname="http://klang.zhanluejia.net.cn"
+#hostname="http://klang.zhanluejia.net.cn"
 mutex = Lock()
 
 #
 #stock list
 #
+cm_dict = {}
+
 def updatestocklist(stname=filename_sl):
 
     json = requests.get(hostname+"/industries").json()
+    for i in json:
+        cm_dict[i['code']] = i.get('chouma','50')
     df = pd.json_normalize(json)
     df = df.drop(columns=['_id','updatedAt','id','createdAt'])
     # 结果集输出到csv文件
     df.to_csv(stname, index=False,columns=['updateDate','code','code_name','industry','industryClassification','tdxbk','tdxgn'])    
+
+
+def get_chouma(code):
+    return cm_dict.get(code,"50")
+
 
 def updatestockdata(Kl):
 
@@ -66,6 +75,11 @@ def init_stock_list(Kl,offset=0):
             Kl.df_all.append({"name":name,"df":None,"code":code,"tdxbk":tdxbk,"tdxgn":tdxgn}) 
             number += 1
         
+
+    # 初始化筹码
+    json = requests.get(hostname+"/industries").json()
+    for i in json:
+        cm_dict[i['code']] = i.get('chouma','50')
 
     return stocklist
 

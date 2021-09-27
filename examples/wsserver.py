@@ -56,6 +56,8 @@ def getstockinfo(name=0):
             Kl.currentdf['tdxbk'],\
             Kl.currentdf['tdxgn']
  
+def get_chouma(code=0):
+    return Kl.chouma()
 
 def kloopexec(webindex,content):
     code = "webindex =" + str(webindex) + "\n"
@@ -90,8 +92,9 @@ def await_run(coroutine):
 # 因为DISPLAY是需要在Klang执行，所以需要await_run执行 sync消息
 def DISPLAY(value):
     name,code,hqltsz,tdxbk,tdxgn = getstockinfo()
+    chouma = Kl.chouma()
     message = {"type":"display","name":name,"code":code,\
-        "value":str(value),"hqltsz":hqltsz,'tdxbk':tdxbk,'tdxgn':tdxgn}
+        "value":str(value),"hqltsz":hqltsz,'tdxbk':tdxbk,'tdxgn':tdxgn,'chouma':chouma}
     msg = json.dumps(message)
     await_run(USERS[current].send(msg))
 
