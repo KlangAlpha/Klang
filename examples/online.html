@@ -214,7 +214,7 @@
              <tbody>
                 <tr v-for="(item,index) in result">
                 <th scope="row" >{{index+1}}</th>
-                <td><a v-bind:href="'http://finance.sina.com.cn/realstock/company/'+item.code+'/nc.shtml'" target=_blank>{{item.name}}</a></td>
+                <td><a v-bind:href="'http://klang.org.cn/kline.html?code='+item.code" target=_blank>{{item.name}}</a></td>
                 <td><a v-bind:href="'https://gu.qq.com/'+item.code" target=_blank ><font color=blue>{{item.code}}</font></a></td>
                 <td>{{item.value}}</td>
                 <td>{{item.hqltsz}}</td>
