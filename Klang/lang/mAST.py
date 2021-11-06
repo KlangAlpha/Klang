@@ -19,6 +19,13 @@ class setPY():
         getpyglobals = getpy
         setpyglobals = setpy
 
+        setpyglobals('str',str)
+        setpyglobals('int',int)
+        setpyglobals('float',float)
+        setpyglobals('min',min)
+        setpyglobals('max',max)
+        setpyglobals('len',len)
+
 def debug(*params):
     if DEBUG_MODE:
         print("[DBG] %s" % (' : '.join(str(x) for x in params),))

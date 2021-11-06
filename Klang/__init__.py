@@ -8,8 +8,8 @@ from .Kdatas import *            #2.
 from .talib_api import *
 from .tdx import *
 
-#2021.07.21
-version="0.2.1"
+#2021.11.06
+version="0.2.2"
 
 #1. kdatas set kl
 setstock(Kl)
