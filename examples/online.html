@@ -369,9 +369,9 @@
                         }
 
                         value = data.value
-                        if (String(parseFloat(value)) != "NaN"){ //NaN 是无法直接比较的
+                        /*if (String(parseFloat(value)) != "NaN"){ //NaN 是无法直接比较的
                             value = parseFloat(value).toFixed(2)
-                        }
+                        }*/
                         vue.$data.result.push({name:data.name,code:code,value:value,hqltsz:hqltsz,tdxbk:tdxbk,tdxgn:tdxgn,chouma:chouma})
                         break;
                     default:
