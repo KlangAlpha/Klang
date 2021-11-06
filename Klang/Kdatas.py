@@ -52,7 +52,9 @@ class KdataBase(object):
     #返回最后一天的数据
     @property
     def value(self):
-        return self.data[-1]
+        ret = self.data[-1]
+        if self.dtype == float:
+            return round(ret,3)
 
     def __bool__(self):
         return bool(self.data[-1])
@@ -180,7 +182,7 @@ class KdataBase(object):
             kb._data = d1 * d2
             return kb
         else: #int float
-            return self.value * other
+            return round(self.value * other,3)
 
     # / 
     def __truediv__(self, other):
@@ -191,7 +193,7 @@ class KdataBase(object):
             kb._data = d1 / d2
             return kb
         else:
-            return self.value / other
+            return round(self.value / other,3)
 
     def __rtruediv__(self, other):
         #s1 , s2 = match_size(self.data,other.data)
@@ -201,7 +203,7 @@ class KdataBase(object):
             kb._data = d2 / d1
             return kb
         else:
-            return other / self.value
+            return round(other / self.value,3)
 
 
     __div__ = __truediv__
