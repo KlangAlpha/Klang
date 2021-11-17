@@ -1,6 +1,6 @@
 #
 # Ta-lib
-#
+# 本模块 talib的部分,主要是基础算法
 
 import talib
 import numpy as np
@@ -54,7 +54,14 @@ def WMA(X,N):
     ret._data = talib.WMA(X.data,N)
     return ret
 
-#默认浮动率 0.1
+#######################
+# Klang 自己的公式
+#######################
+
+# 返回A，B 是否接近
+# 默认浮动率 0.1
+# 也就是默认浮动10%为接近值
+ 
 def APPROX(A,B,f_rate=0.1):
 
     if a <= b and a * (1+f_rate) >= b:

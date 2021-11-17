@@ -9,7 +9,6 @@ import pandas as pd
 import os
 import json
 from threading import Lock
-bs.login()
 
 filename_sl = os.path.expanduser("~/.klang_stock_list.csv")
 filename_st = os.path.expanduser("~/.klang_stock_trader.csv")
@@ -66,6 +65,7 @@ def updatestockdata(Kl):
 
 
 def init_stock_list(Kl,offset=0):
+    bs.login()
     if not os.path.exists(filename_sl):
         print('正在下载股票库列表....')
         updatestocklist(filename_sl)

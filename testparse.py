@@ -4,7 +4,7 @@ from Klang.lang import kparser,setPY,Kexec
 from Klang import (Kl,
     C,O,V,H,L, CLOSE,HIGH,
     MA,CROSS,BARSLAST,HHV,COUNT,
-    MAX,MIN,MACD)
+    MAX,MIN,MACD,TRANSVERSE)
 
 
 def getpyglobals(name):
@@ -57,6 +57,20 @@ print(str(e)+":"+str(1))
 
 Kexec(testblock1)
 print(a)
+
+
+
+Kexec("""\n
+kloop
+
+info = getstockinfo(0)
+istran = TRANSVERSE(H,L,60,15)
+if istran:
+    print(info,istran)
+
+endp
+""")
+
 
 while True:
     # 通过Klang谁知一个变量    
