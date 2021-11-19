@@ -12,7 +12,12 @@ from .tdx import *
 # 返回 波动范围
 
 def volatility(h1,l1,N):
+    #周期不够，用当前h1周期计算
+    if N > len(h1):
+        N = len(h1)
+
     max_h = HHV(h1,N)
+
     min_l = LLV(l1,N)
     
     return ((max_h - min_l) / min_l ) * 100
