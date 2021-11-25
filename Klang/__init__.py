@@ -5,12 +5,12 @@
 
 from .Klang import Kl,Klang_init #1.
 from .Kdatas import *            #2.
+from .Kfeature import *          #3. 形态识别，特征计算
 from .talib_api import *         # 引用talib库的 基础算法
 from .tdx import *               # tdx公式算法
-from .kshape import *            # 形态识别
 
-#2021.11.06
-version="0.2.2"
+#2021.11.25
+version="0.2.3"
 
 #1. Kl 是全局使用的变量 
 # 共享 Kl 给 kdatas 
