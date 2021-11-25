@@ -20,6 +20,7 @@ Klang 最大的亮点是支持中文编程,可以看最后的完整例子
 * Klang 语言是基于Python语法拓展了部分自己的语法，并且编写了快捷的股票公式 
 * 支持网页直接使用,交互方便
 * 支持中文编程,一看就懂
+* 增加了股票特征计算
 
 # install
 * 安装过程中遇到talib错误，需要搜索talib源代码解决
@@ -176,4 +177,34 @@ python3 wsserver.py
 ```
 
 # 更新
-* 2021.7.3 增加了板块和概念信息，板块来自通达信 
+* 2021.7.3 增加了板块和概念信息，板块来自通达信
+
+
+# 文件说明
+```
+├── Klang
+│   ├── Kdatas.py               # 封装数据接口
+│   ├── Kfeature.py             # 股票特征计算,形态计算
+│   ├── Klang.py                # 主类
+│   ├── __init__.py         
+│   ├── common.py               # 公共设置
+│   ├── data_baostock.py        # 股票数据接口
+│   ├── data_klang.py           # 股票数据接口 klang.org.cn
+│   ├── lang                    # Klang 编程语言目录
+│   │   ├── __init__.py
+│   │   ├── klex.py
+│   │   ├── kparse.py
+│   │   └── mAST.py             # 语言的解释
+│   ├── talib_api.py            # 应用封装talib
+│   └── tdx.py                  # 兼容 通达信公式
+├── LICENSE
+├── README.md
+├── examples
+│   ├── online.html             # 在线使用的代码
+│   └── wsserver.py             # 通过websocket和后台联系
+├── requirements.txt
+├── setup.py
+├── test.py
+└── testparse.py
+
+``` 

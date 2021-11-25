@@ -1,6 +1,7 @@
 #
-# kshape 主要是编写形态结构
+# feature 主要是股票形态和特征计算
 #
+
 from .Kdatas import * 
 from .talib_api import *
 from .tdx import * 
