@@ -52,7 +52,7 @@ class SequenceTransformer():
         for fname in executing_fns:
               ftrs[fname + '.' + x.name] = self._transform_fn(fname,x.values)
 
-        print(ftrs)
+        return ftrs
 
     def _transform_fn(self,fname,v):
         f = self.fns[fname]
