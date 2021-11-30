@@ -14,6 +14,8 @@
 from .Kdatas import * 
 from .talib_api import *
 from .tdx import * 
+import talib
+import numpy as np
 
 # 波动率函数
 # h 指 最高值
@@ -448,3 +450,12 @@ def _categorical_min_freq_key_hash_code(x:list):
 @listify_type
 def _none_rate(x:list):
     return len([a for a in x if a is not None])/len(x)
+
+
+################
+# stock calc
+###############
+@set_property("name","ma","stypes",[1])
+def _ma(x:list,param=5):
+    # param is N  peroid
+    return talib.MA(np.array(x,dtype=np.float64),param)[-1]

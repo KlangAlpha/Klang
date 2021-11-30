@@ -58,7 +58,7 @@ class SequenceTransformer():
         f = self.fns[fname]
         try:
             param = f.get('param')
-            if param:
+            if param is not None:
                 return f.get('func')(v,param)
             return f.get('func')(v)
 
