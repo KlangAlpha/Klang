@@ -5,7 +5,7 @@
 
 from .Klang import Kl,Klang_init #1.
 from .Kdatas import *            #2.
-from .Kfeature import *          #3. 形态识别，特征计算
+from .KSeq2Feature import *      #3. 特征计算
 from .talib_api import *         # 引用talib库的 基础算法
 from .tdx import *               # tdx公式算法
 

@@ -1,11 +1,11 @@
-import .Kfeature as fc
+from . import Kfeature as fc
 
 class SequenceTransformer():
-    def __init__(self,calculators:list = None):
+    def __init__(self,calculators:list = None,addcalc = None):
         all_fns = {}
         for fn in dir(fc):
-            if callable(getattr(fc,fn)) and 'name' in getattr(fc,fn).__dict__:
-                all_fns[getattr(fc,fn).__dict__['name']] = getattr(fc,fn)
+            if callable(getattr(fc,fn)) and 'stypes' in getattr(fc,fn).__dict__ :
+                all_fns[getattr(fc,fn).__dict__['name']] = {'func':getattr(fc,fn),'name':getattr(fc,fn).__dict__['name']}
 
 
         if calculators is None:
@@ -13,9 +13,20 @@ class SequenceTransformer():
         else:
             self.fns = {}
             for c in calculators:
-                if c in all_fns:
-                    self.fns[c] = all_fns[c]
+                 name = c.get('name')
+                 self.fns[name] = all_fns[name]
+                 if c.get('param'):
+                    self.fns[name]['param'] = c.get('param')
 
+        if addcalc is not None:
+            for c in addcalc:
+                name = c.get('name')
+                fname = c.get('fname')
+                self.fns[fname] = {
+                    'func':all_fns[name].get('func'),
+                    'name':fname,
+                    'param':c.get('param')
+                }
 
 
         # 按类型 整理
@@ -23,7 +34,7 @@ class SequenceTransformer():
         self.type_fns = {0:[],1:[],2:[]}
 
         for fname,func in self.fns.items():
-            for i in func.__dict__['stypes']:
+            for i in func.get('func').__dict__['stypes']:
                 self.type_fns[i].append(fname)
 
     def get_feature_names(self):
@@ -31,7 +42,7 @@ class SequenceTransformer():
         get feature names
         :return:
         """
-        return list(self.fns.keys()) #list(self.valid_fnames)
+        return list(self.fns.keys()) 
 
 
 
@@ -39,15 +50,18 @@ class SequenceTransformer():
         ftrs = {}
         executing_fns = self.type_fns[stype]
         for fname in executing_fns:
-              ftrs[fname] = (self._transform_fn(fname,x.values))
+              ftrs[fname + '.' + x.name] = self._transform_fn(fname,x.values)
 
         print(ftrs)
 
     def _transform_fn(self,fname,v):
         f = self.fns[fname]
         try:
-            return f(v)
+            param = f.get('param')
+            if param:
+                return f.get('func')(v,param)
+            return f.get('func')(v)
+
         except ZeroDivisionError:
             return 0
-
 
