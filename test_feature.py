@@ -55,7 +55,7 @@ def get_features(df,code):
 
 Klang_init()
 
-for df in Kl.df_all[:200]:
+for df in Kl.df_all:
     try:
         Kl.code(df['code'])
         print("****",df['code'],df['name'],C,"****")
