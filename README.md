@@ -177,6 +177,7 @@ python3 wsserver.py
 ```
 
 # 更新
+* 2021.12.1 增加了特征提取公式
 * 2021.7.3 增加了板块和概念信息，板块来自通达信
 
 
@@ -207,4 +208,5 @@ python3 wsserver.py
 ├── test.py
 └── testparse.py
 
-``` 
+```
+ 
