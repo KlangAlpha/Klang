@@ -1,5 +1,5 @@
 import pandas as pd
-from Klang import Kl
+from Klang import Kl,Klang_init,C
 from Klang import SequenceTransformer
 
 
@@ -13,7 +13,7 @@ df = Kl.data_engine.get_day("五矿稀土",'sz.000831','2021-01-01','2021-12-01'
 
 
 
-def get_feature(df1,target):
+def get_feature(df1,target,code):
 
     st_close = SequenceTransformer(addcalc=[
     {'name':'ma','fname':'ma10','param':10},
@@ -21,7 +21,7 @@ def get_feature(df1,target):
     {'name':'ma','fname':'ma30','param':30},
     ])
 
-    print(st_close.transform(scaler_data(df1['close'])))
+    retclose =  st_close.transform(scaler_data(df1['close']))
 
 
     st_vol = SequenceTransformer(calculators=[
@@ -29,17 +29,38 @@ def get_feature(df1,target):
         ],addcalc=[
         {'name':'ma','fname':'ma20','param':20},
     ])
-    print(st_vol.transform(scaler_data(df1['vol'])))
+    retvol = st_vol.transform(scaler_data(df1['vol']))
 
-    print(target)
+    retclose.update(retvol)
+    retclose.update(target)
+    retclose.update({'code':code,'datetime':df1['datetime'].values[-1]})
+
+    return retclose
     #df1['date'].values[-1])
 
-for i in range(60,len(df)-10):
+all_list = []
+def get_features(df,code):
+    
+    for i in range(60,len(df)-10):
 
-    m = max(df['close'].values[i+1:i+10]) / df['close'].values[i]
-    if m > 1.1:
-        target = 1
-    else :
-        target = 0 
-    get_feature(df.iloc[:i,],{'target':target})
+        m = max(df['close'].values[i+1:i+10]) / df['close'].values[i]
+        if m > 1.1:
+            target = 1
+        else :
+            target = 0 
+        ret = get_feature(df.iloc[:i,],{'target':target},code)
+        all_list.append(ret)
+
+    print(all_list[-1])
+
+Klang_init()
+
+for df in Kl.df_all:
+    try:
+        Kl.code(df['code'])
+        print("****",df['code'],df['name'],C,"****")
+        #df2 = Kl.data_engine.get_day(df['name'],df['code'],'2021-01-01','2021-12-01')
+        get_features(df['df'],df['code'])
+    except:
+        pass
 
