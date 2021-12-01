@@ -61,6 +61,7 @@ for df in Kl.df_all:
         print("****",df['code'],df['name'],C,"****")
         #df2 = Kl.data_engine.get_day(df['name'],df['code'],'2021-01-01','2021-12-01')
         get_features(df['df'],df['code'])
-    except:
+    except KeyboardInterrupt:
+        break
+    except :
         pass
-
