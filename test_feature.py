@@ -55,13 +55,18 @@ def get_features(df,code):
 
 Klang_init()
 
-for df in Kl.df_all:
+for df in Kl.df_all[:200]:
     try:
         Kl.code(df['code'])
         print("****",df['code'],df['name'],C,"****")
         #df2 = Kl.data_engine.get_day(df['name'],df['code'],'2021-01-01','2021-12-01')
         get_features(df['df'],df['code'])
     except KeyboardInterrupt:
+        df_ret = pd.DataFrame(all_list)
+        df_ret.to_csv("~/.test_feat.csv")
         break
     except :
         pass
+    
+df_ret = pd.DataFrame(all_list)
+df_ret.to_csv("~/.test_feat.csv")
