@@ -13,10 +13,19 @@ class SequenceTransformer():
         else:
             self.fns = {}
             for c in calculators:
-                 name = c.get('name')
-                 self.fns[name] = all_fns[name]
+
+                 if c.get("fname"):
+                    name = c.get("fname")
+                 else:
+                    name = c.get("name")
+                       
+                 self.fns[name] = all_fns[c.get("name")]
                  if c.get('param'):
                     self.fns[name]['param'] = c.get('param')
+                 if c.get('compare'):
+                    self.fns[name]['compare'] = c.get('compare')
+
+                 self.fns[name]['name'] = name
 
         if addcalc is not None:
             for c in addcalc:
@@ -25,7 +34,8 @@ class SequenceTransformer():
                 self.fns[fname] = {
                     'func':all_fns[name].get('func'),
                     'name':fname,
-                    'param':c.get('param')
+                    'param':c.get('param'),
+                    'compare':c.get('compare'),
                 }
 
 
@@ -59,8 +69,14 @@ class SequenceTransformer():
         try:
             param = f.get('param')
             if param is not None:
-                return f.get('func')(v,param)
-            return f.get('func')(v)
+                ret = f.get('func')(v,param)
+            else:
+                ret = f.get('func')(v)
+
+            # 如果设置了做比较参考需要计算比较结果
+            if f.get('compare') is not None:
+                ret = (ret - v[f.get('compare')]) / v[f.get('compare')] 
+            return ret
 
         except ZeroDivisionError:
             return 0
