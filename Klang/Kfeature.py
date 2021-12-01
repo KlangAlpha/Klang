@@ -459,3 +459,11 @@ def _none_rate(x:list):
 def _ma(x:list,param=5):
     # param is N  peroid
     return talib.MA(np.array(x,dtype=np.float64),param)[-1]
+
+@set_property("name","macd","stypes",[1])
+def _macd(x:list,param=(12,21,9)):
+    fastperiod, slowperiod, signalperiod = param
+    diff,dea,macd = talib.MACD(np.array(x,dtype=np.float64), fastperiod, slowperiod, signalperiod)
+    macd = macd * 2
+
+    return macd[-1]
