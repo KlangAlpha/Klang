@@ -1,11 +1,14 @@
 #test lex parse
 
 from Klang.lang import kparser,setPY,Kexec
-from Klang import (Kl,
+from Klang import (Kl,Klang,
     C,O,V,H,L, CLOSE,HIGH,
     MA,CROSS,BARSLAST,HHV,COUNT,
-    MAX,MIN,MACD,TRANSVERSE)
+    MAX,MIN,MACD)
 
+from Klang.Kfeature import TRANSVERSE
+ 
+Klang.Klang_init()
 
 def getpyglobals(name):
     return globals().get(name)

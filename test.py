@@ -8,8 +8,10 @@ from Klang import (
     ABS,
     EVERY, EXIST
 )
+Klang.Klang_init()
 
 Kl = Klang.Kl
+
 code = Kl.code
 date = Kl.date
 

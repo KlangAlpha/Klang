@@ -37,6 +37,10 @@ from Klang import (Kl,
     IF, IIF,
     MACD,APPROX)
 
+from Klang.Klang import Klang_init
+
+Klang_init()
+
 code = Kl.code
 date = Kl.date
 
