@@ -9,13 +9,51 @@ def scaler_data(x):
     return ret
 
  
-df = Kl.data_engine.get_day("五矿稀土",'sz.000831','2021-01-01','2021-12-01')
+#df = Kl.data_engine.get_day("五矿稀土",'sz.000831','2021-01-01','2021-12-01')
+fields = [
+       {'name':'fist_location_of_max'}, #第一次最大值出现的位置
+       {'name':'fist_location_of_min'}, #第一次最小值出现的位置
+       {'name':'ndex_mass_quantile_50'},
+       {'name':'ndex_mass_quantile_75'},
+       {'name':'_ndex_mass_quantile_25'},
+       {'name':'kurtosis'}, #峰度
+       {'name':'last_location_of_max'}, #最后一次最大值出现的位置
+       {'name':'last_location_of_min'}, #做后一次最小值出现的位置
+       {'name':'ma'}, # ma，默认是5 
+       {'name':'macd'}, # macd，返回macd值
+       {'name':'max'},  #周期内最大值
+       {'name':'mean'}, # 周期内平均值
+       {'name':'min_change'}, 
+       {'name':'min'}, #最小值
+       {'name':'none_rate'},
+       {'name':'number_peaks_1'}, #峰值数
+       {'name':'number_peaks_2'}, 
+       {'name':'number_peaks_3'},
+       {'name':'percentage_below_mean'}, #<平均值的占比
+       {'name':'ratio_value_number_to_seq_length'},#相同项目占比 
+       {'name':'skewness'},#斜率 ，偏度
+       {'name':'standard_deviation'}, #标准方差 
+       {'name':'variance'}, #方差 
+       ]
+       #'rise', #涨幅,一般是与前一日相比
+       #'freq_of_max', #最大值出现的次数 
+       #'freq_of_min', #最小值出现的次数
+       #'length',  #总长度
+       #'duplicates_count', #相同值的个数
+       #'uniqueCount', #不同值的个数
+       #'ma10', 'ma20', 'ma30', # 股票MA 计算通过参数获取不同的值
+       #'median', #周期内中间位置的值，和平均值是不同的，这个是值周期的中间
+       #'median_mean_distance', # 平均值和周期中间的差值距离
+       #'percentage_of_most_reoccuring_value_to_all_values', #
+       #'percentage_of_most_reoocuring_value_to_all_datapoints', #
+
+
 
 
 
 def get_feature(df1,target,code):
 
-    st_close = SequenceTransformer(addcalc=[
+    st_close = SequenceTransformer(calculators=fields,addcalc=[
     {'name':'ma','fname':'ma10','param':10},
     {'name':'ma','fname':'ma20','param':20},
     {'name':'ma','fname':'ma30','param':30},
