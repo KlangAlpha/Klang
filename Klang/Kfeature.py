@@ -399,7 +399,7 @@ def _mean_change(x):
 
 @set_property("name","min_change","stypes",[1])
 @filter_none
-def _mean_change(x):
+def _min_change(x):
     x_rolled = _shift(x,1)
     x_diff = [xi-xj for xi,xj in zip(x,x_rolled)]
     return _min(x_diff)
