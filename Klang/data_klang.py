@@ -15,8 +15,8 @@ import time
 filename_sl = os.path.expanduser("~/.klang_stock_list.csv")
 filename_st = os.path.expanduser("~/.klang_stock_trader.csv")
 
-#hostname="http://klang.org.cn"
-hostname="http://klang.zhanluejia.net.cn"
+hostname="http://klang.org.cn"
+#hostname="http://klang.zhanluejia.net.cn"
 mutex = Lock()
 
 #
@@ -124,6 +124,7 @@ def get_day(name,code,start,end,setindex=False):
    
     #df = pd.io.json.json_normalize(json)
     df = pd.json_normalize(json)
+    df = df[df['volume']>0.0]
     if len(df) < 1:
        mutex.release()
        return []
