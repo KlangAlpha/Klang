@@ -124,10 +124,11 @@ def get_day(name,code,start,end,setindex=False):
    
     #df = pd.io.json.json_normalize(json)
     df = pd.json_normalize(json)
-    df = df[df['volume']>0.0]
     if len(df) < 1:
        mutex.release()
        return []
+
+    df = df[df['volume']>0.0]
     df = df.drop(columns=['_id','codedate','id'])
     datas = df.sort_values(by="date",ascending=True)
 
