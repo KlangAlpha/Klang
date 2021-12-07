@@ -127,8 +127,15 @@ def get_day(name,code,start,end,setindex=False):
     if len(df) < 1:
        mutex.release()
        return []
+    
+    print(name,code)
+    df = df[df['volume']>0.0]
+    # 删除后再次判断
+    if len(df) < 1:
+       mutex.release()
+       return []
 
-    #df = df[df['volume']>0.0]
+
     df = df.drop(columns=['_id','codedate','id'])
     datas = df.sort_values(by="date",ascending=True)
 
