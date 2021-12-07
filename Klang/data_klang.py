@@ -128,7 +128,7 @@ def get_day(name,code,start,end,setindex=False):
        mutex.release()
        return []
     
-    print(name,code)
+    #print(name,code)
     df = df[df['volume']>0.0]
     # 删除后再次判断
     if len(df) < 1:
