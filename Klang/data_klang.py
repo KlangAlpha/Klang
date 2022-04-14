@@ -24,7 +24,6 @@ mutex = Lock()
 #stock list
 #
 cm_dict = {}
-stock_json_list = []
 
 def updatestocklist(stname=filename_sl):
 
@@ -54,7 +53,8 @@ def updatestockdata(Kl):
     for stock in stocklist:
         code ,name ,tdxbk,tdxgn= getstockinfo(stock)
         #print('正在获取',name,'代码',code)
-        df = get_day(name,code,Kl.start_date,Kl.end_date,append=True)
+        json = get_day(name,code,Kl.start_date,Kl.end_date,json=True)
+        stock_json_list.append(json)
         #if len(df) > 0:
         #    df_dict.append({'df':df.to_dict(),'name':name,'code':code,'tdxbk':tdxbk,'tdxgn':tdxgn})
         #else:
@@ -63,9 +63,8 @@ def updatestockdata(Kl):
     #save_stock_trader(df_dict)
     #load_stock_trader(Kl)
 
-    save_stock_trader_json()
+    save_stock_trader_json(stock_json_list)
     load_stock_trader_json(Kl)
-    stock_json_list = []
 
 
 #
@@ -77,7 +76,7 @@ def save_stock_trader(df_dict):
     f.write(content)
     f.close()
 
-def save_stock_trader_json():
+def save_stock_trader_json(stock_json_list):
     content = json.dumps(stock_json_list)    
     f = open(filename_jsont,"w+")
     f.write(content)
@@ -102,7 +101,6 @@ def load_stock_trader(Kl,name=filename_st):
             number += 1
 
 def load_stock_trader_json(Kl,name=filename_jsont):
-    global stock_json_list
 
     content = open(name).read()
 
@@ -118,30 +116,31 @@ def load_stock_trader_json(Kl,name=filename_jsont):
             Kl.df_all[number]["df"] = df
             number += 1
 
-    stock_json_list = []
 
 # 从klang获取日K数据
 # append,是否追加到 股票列表
 #
-def get_day(name,code,start,end,setindex=False,append=False):
+def get_day(name,code,start,end,setindex=False,json=False):
     
     print(name,code)
 
     mutex.acquire()
     try:
-        json = requests.get(hostname+"/dayks",
+        json_data = requests.get(hostname+"/dayks",
             params={"code":code,"end":end,"limit":200},timeout=1000).json()
     except:
         time.sleep(2)
-        json = requests.get(hostname+"/dayks",
+        json_data = requests.get(hostname+"/dayks",
             params={"code":code,"end":end,"limit":200},timeout=1000).json()
    
     mutex.release()
     
+    if json==True:
+        return json_data
    
-    return json_to_df(json,setindex,append)
+    return json_to_df(json_data,setindex)
  
-def json_to_df(json,setindex=False,append=False):
+def json_to_df(json,setindex=False):
 
     df = pd.json_normalize(json)
     if len(df) < 1:
@@ -169,9 +168,6 @@ def json_to_df(json,setindex=False,append=False):
     except:
         datas['hqltsz'] = 0.0001 #没有交易量
     datas.rename(columns={'volume':'vol'},inplace = True) 
-
-    if append == True:
-        stock_json_list.append(json)
 
     return datas
 
