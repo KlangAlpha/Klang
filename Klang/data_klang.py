@@ -160,7 +160,7 @@ def json_to_df(json,setindex=False):
        return []
 
 
-    df = df.drop(columns=['_id','id'])
+    #df = df.drop(columns=['_id','id'])
     datas = df.sort_values(by="date",ascending=True)
 
 
