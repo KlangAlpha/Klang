@@ -14,6 +14,7 @@ import time
 
 filename_sl = os.path.expanduser("~/.klang_stock_list.csv")
 filename_st = os.path.expanduser("~/.klang_stock_trader.csv")
+filename_jsont = os.path.expanduser("~/.klang_stock_trader.json")
 
 hostname="http://klang.org.cn"
 #hostname="http://klang.zhanluejia.net.cn"
@@ -23,6 +24,7 @@ mutex = Lock()
 #stock list
 #
 cm_dict = {}
+stock_json_list = []
 
 def updatestocklist(stname=filename_sl):
 
@@ -38,50 +40,33 @@ def updatestocklist(stname=filename_sl):
 def get_chouma(code):
     return cm_dict.get(code,"50")
 
-
+#
+# extern to Klang
+# 此接口有外部调用
+#
 def updatestockdata(Kl):
+    global  stock_json_list
 
     stocklist = Kl.stocklist
     df_dict = []
+    stock_json_list = []
+    
     for stock in stocklist:
         code ,name ,tdxbk,tdxgn= getstockinfo(stock)
         #print('正在获取',name,'代码',code)
-        df = get_day(name,code,Kl.start_date,Kl.end_date)
-        if len(df) > 0:
-            df_dict.append({'df':df.to_dict(),'name':name,'code':code,'tdxbk':tdxbk,'tdxgn':tdxgn})
-        else:
-            df_dict.append({'df':{},'name':name,'code':code,'tdxbk':tdxbk,'tdxgn':tdxgn})
+        df = get_day(name,code,Kl.start_date,Kl.end_date,append=True)
+        #if len(df) > 0:
+        #    df_dict.append({'df':df.to_dict(),'name':name,'code':code,'tdxbk':tdxbk,'tdxgn':tdxgn})
+        #else:
+        #    df_dict.append({'df':{},'name':name,'code':code,'tdxbk':tdxbk,'tdxgn':tdxgn})
 
-    save_stock_trader(df_dict)
-    load_stock_trader(Kl)
+    #save_stock_trader(df_dict)
+    #load_stock_trader(Kl)
 
+    save_stock_trader_json()
+    load_stock_trader_json(Kl)
+    stock_json_list = []
 
-def init_stock_list(Kl,offset=0):
-    if not os.path.exists(filename_sl):
-        print('正在下载股票库列表....')
-        updatestocklist(filename_sl)
-        print("股票列表下载完成")
-
-    print("正在从文件",filename_sl,"加载股票列表")
-    stocklist = open(filename_sl).readlines()
-    stocklist = stocklist[1+int(offset):] #删除第一行
-
-    # 初始化 code到index 对应表
-    number = 0
-    Kl.df_all = []
-    for stock in stocklist:
-            code ,name ,tdxbk,tdxgn = getstockinfo(stock)
-            Kl.stockindex[code] = number
-            Kl.df_all.append({"name":name,"df":None,"code":code,"tdxbk":tdxbk,"tdxgn":tdxgn}) 
-            number += 1
-        
-
-    # 初始化筹码
-    json = requests.get(hostname+"/industries").json()
-    for i in json:
-        cm_dict[i['code']] = i.get('chouma','50')
-
-    return stocklist
 
 #
 # all stock trader day K data
@@ -89,6 +74,12 @@ def init_stock_list(Kl,offset=0):
 def save_stock_trader(df_dict):
     content = json.dumps(df_dict)    
     f = open(filename_st,"w+")
+    f.write(content)
+    f.close()
+
+def save_stock_trader_json():
+    content = json.dumps(stock_json_list)    
+    f = open(filename_jsont,"w+")
     f.write(content)
     f.close()
 
@@ -110,9 +101,32 @@ def load_stock_trader(Kl,name=filename_st):
             Kl.df_all[number]["df"] = df
             number += 1
 
+def load_stock_trader_json(Kl,name=filename_jsont):
+    global stock_json_list
 
-#从bs获取日K数据
-def get_day(name,code,start,end,setindex=False):
+    content = open(name).read()
+
+    stock_json_list  = json.loads(content)
+    number = 0
+    for stock in stock_json_list:
+            # save order for index
+            # save df to list
+            df = json_to_df(stock)
+            if len(df) > 2:
+                df['datetime'] = df['date']
+                df = df.set_index('date')
+            Kl.df_all[number]["df"] = df
+            number += 1
+
+    stock_json_list = []
+
+# 从klang获取日K数据
+# append,是否追加到 股票列表
+#
+def get_day(name,code,start,end,setindex=False,append=False):
+    
+    print(name,code)
+
     mutex.acquire()
     try:
         json = requests.get(hostname+"/dayks",
@@ -122,26 +136,26 @@ def get_day(name,code,start,end,setindex=False):
         json = requests.get(hostname+"/dayks",
             params={"code":code,"end":end,"limit":200},timeout=1000).json()
    
-    #df = pd.io.json.json_normalize(json)
+    mutex.release()
+    
+   
+    return json_to_df(json,setindex,append)
+ 
+def json_to_df(json,setindex=False,append=False):
+
     df = pd.json_normalize(json)
     if len(df) < 1:
-       mutex.release()
        return []
     
-    #print(name,code)
     df = df[df['volume']>0.0]
     # 删除后再次判断
     if len(df) < 1:
-       mutex.release()
        return []
 
 
     df = df.drop(columns=['_id','id'])
     datas = df.sort_values(by="date",ascending=True)
 
-
-
-    mutex.release()
 
     #print(len(datas),datas.date[datas.index[-1]])
     if setindex == True:
@@ -155,6 +169,9 @@ def get_day(name,code,start,end,setindex=False):
     except:
         datas['hqltsz'] = 0.0001 #没有交易量
     datas.rename(columns={'volume':'vol'},inplace = True) 
+
+    if append == True:
+        stock_json_list.append(json)
 
     return datas
 
@@ -173,23 +190,42 @@ def getstockinfo(stock):
 #
 def get_all_day(Kl):
     stocklist = Kl.stocklist
-    df_dict = []
     # 如果文件存在,可以直接从文件加载数据
     # 要强制从网上加载数据,可以设置reload=True
-    if os.path.exists(filename_st) and not Kl.reload:
-        print("正在从文件",filename_st,"加载数据")
-        load_stock_trader(Kl)
+    if os.path.exists(filename_jsont) and not Kl.reload:
+        print("正在从文件",filename_jsont,"加载数据")
+        load_stock_trader_json(Kl)
         return 
 
     print("正在从网上下载股票数据,时间将会有点长")
+    updatestockdata(Kl)
+
+def init_stock_list(Kl,offset=0):
+    if not os.path.exists(filename_sl):
+        print('正在下载股票库列表....')
+        updatestocklist(filename_sl)
+        print("股票列表下载完成")
+
+    print("正在从文件",filename_sl,"加载股票列表")
+    stocklist = open(filename_sl).readlines()
+    stocklist = stocklist[1+int(offset):] #删除第一行
+
+    #stocklist = stocklist[:100]
+    # 初始化 code到index 对应表
+    number = 0
+    Kl.df_all = []
     for stock in stocklist:
-        code ,name,tdxbk,tdxgn = getstockinfo(stock)
-        #print('正在获取',name,'代码',code)
-        df = get_day(name,code,Kl.start_date,Kl.end_date)
-        if len(df) > 0:
-            df_dict.append({'df':df.to_dict(),'name':name,'code':code,'tdxbk':tdxbk,'tdxgn':tdxgn})
-        else:
-            df_dict.append({'df':{},'name':name,'code':code,'tdxbk':tdxbk,'tdxgn':tdxgn})
-                
-    save_stock_trader(df_dict)
-    load_stock_trader(Kl)
+            code ,name ,tdxbk,tdxgn = getstockinfo(stock)
+            Kl.stockindex[code] = number
+            Kl.df_all.append({"name":name,"df":None,"code":code,"tdxbk":tdxbk,"tdxgn":tdxgn}) 
+            number += 1
+        
+
+    # 初始化筹码
+    json = requests.get(hostname+"/industries").json()
+    for i in json:
+        cm_dict[i['code']] = i.get('chouma','50')
+
+    return stocklist
+
+
