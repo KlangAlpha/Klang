@@ -53,8 +53,8 @@ def updatestockdata(Kl):
     for stock in stocklist:
         code ,name ,tdxbk,tdxgn= getstockinfo(stock)
         #print('正在获取',name,'代码',code)
-        json = get_day(name,code,Kl.start_date,Kl.end_date,json=True)
-        stock_json_list.append(json)
+        json,name,code = get_day(name,code,Kl.start_date,Kl.end_date,json=True)
+        stock_json_list.append([json,name,code])
         #if len(df) > 0:
         #    df_dict.append({'df':df.to_dict(),'name':name,'code':code,'tdxbk':tdxbk,'tdxgn':tdxgn})
         #else:
@@ -109,7 +109,10 @@ def load_stock_trader_json(Kl,name=filename_jsont):
     for stock in stock_json_list:
             # save order for index
             # save df to list
-            df = json_to_df(stock)
+            jsondata = stock[0]
+            # name = stock[1]
+            # code = stock[2]
+            df = json_to_df(jsondata)
             if len(df) > 2:
                 df['datetime'] = df['date']
                 df = df.set_index('date')
@@ -136,7 +139,12 @@ def get_day(name,code,start,end,setindex=False,json=False):
     mutex.release()
     
     if json==True:
-        return json_data
+        for d in json_data:
+            del d["id"]
+            del d["_id"]
+            del d["name"]
+            del d["code"]
+        return json_data,name,code
    
     return json_to_df(json_data,setindex)
  
