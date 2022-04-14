@@ -54,7 +54,7 @@ testblock1 =\
 a,b,c = MACD(C)
 a = 1
 e = C[1]
-Kl.date('2021-01-01','2021-06-22')
+Kl.date('2021-10-01','2022-05-22')
 print(str(e)+":"+str(1))
 """
 

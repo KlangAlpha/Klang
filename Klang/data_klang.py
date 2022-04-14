@@ -136,7 +136,7 @@ def get_day(name,code,start,end,setindex=False):
        return []
 
 
-    df = df.drop(columns=['_id','codedate','id'])
+    df = df.drop(columns=['_id','id'])
     datas = df.sort_values(by="date",ascending=True)
 
 
