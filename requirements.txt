@@ -1,9 +1,8 @@
 numpy
-pandas>=1.2.5
-TA-Lib
+pandas
 baostock
-backtrader
 matplotlib
 requests
 ply
 websockets
+TA-Lib
