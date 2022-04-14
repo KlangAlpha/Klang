@@ -227,6 +227,8 @@ class Kdatas(KdataBase):
      #返回最后一天的数据
     @property
     def value(self):
+        if len(self.data) <1:
+            return None
         return self.dtype(self.data[-1])
 
     #比较currentindex值的目的是切换股票的时候刷新
