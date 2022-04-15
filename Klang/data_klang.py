@@ -43,7 +43,6 @@ def updatestocklist(stname=filename_sl):
     # 结果集输出到csv文件
     df.to_csv(stname, index=False,columns=['updateDate','code','code_name','industry','industryClassification','tdxbk','tdxgn'])    
 
-
 def get_chouma(code):
     return cm_dict.get(code,"50")
 
@@ -64,26 +63,13 @@ def updatestockdata(Kl):
         #print('正在获取',name,'代码',code)
         json,name,code = get_day(name,code,Kl.start_date,Kl.end_date,json=True)
         stock_json_list.append([json,name,code])
-        #if len(df) > 0:
-        #    df_dict.append({'df':df.to_dict(),'name':name,'code':code,'tdxbk':tdxbk,'tdxgn':tdxgn})
-        #else:
-        #    df_dict.append({'df':{},'name':name,'code':code,'tdxbk':tdxbk,'tdxgn':tdxgn})
-
-    #save_stock_trader(df_dict)
-    #load_stock_trader(Kl)
 
     save_stock_trader_json(stock_json_list)
     load_stock_trader_json(Kl)
 
-
 #
 # all stock trader day K data
 #
-def save_stock_trader(df_dict):
-    content = json.dumps(df_dict)    
-    f = open(filename_st,"w+")
-    f.write(content)
-    f.close()
 
 @profile
 def save_stock_trader_json(stock_json_list):
@@ -91,24 +77,6 @@ def save_stock_trader_json(stock_json_list):
     f = open(filename_jsont,"w+")
     f.write(content)
     f.close()
-
-# load stock data from file
-def load_stock_trader(Kl,name=filename_st):
-    content = open(name).read()
-
-    df_dict = json.loads(content)
-    number = 0
-    for stock in df_dict:
-            # save order for index
-            #code = stock['code']
-            #name = stock['name']
-            # save df to list
-            df = pd.DataFrame.from_dict(stock['df'])
-            if len(df) > 2:
-                df['datetime'] = df['date']
-                df = df.set_index('date')
-            Kl.df_all[number]["df"] = df
-            number += 1
 
 @profile
 def load_stock_trader_json(Kl,name=filename_jsont):
@@ -140,7 +108,7 @@ def load_stock_trader_json(Kl,name=filename_jsont):
 @profile
 def get_day(name,code,start,end,setindex=False,json=False):
     
-    print(name,code)
+    #print(name,code)
 
     mutex.acquire()
     try:

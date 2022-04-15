@@ -71,14 +71,13 @@ def kloopexec(webindex,content):
 def cmd_call(data):
     code = data['content']
     pw   = data['pw']
+    import os
     if code == "reset_all" and pw == "Klang":
         #Kl.updateall()
-        t = threading.Thread(target=Kl.updateall)
-        t.start()
+        os.system("python3 Klang/update_data.py updateall")
     if code == "reset_stock"  and pw == "Klang" :
         #异步加载df 放到df_all
-        t = threading.Thread(target=Kl.updatestockdata)
-        t.start()
+        os.system("python3 Klang/update_data.py updatestockdata")
 
 ###################web socket######################
 USERS = {}
