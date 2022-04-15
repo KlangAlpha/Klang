@@ -9,8 +9,8 @@ from .KSeq2Feature import *      #3. 特征计算
 from .talib_api import *         # 引用talib库的 基础算法
 from .tdx import *               # tdx公式算法
 
-#2021.12.01
-version="0.2.4"
+#2022.04.15
+version="0.2.5"
 
 #1. Kl 是全局使用的变量 
 # 共享 Kl 给 kdatas 
