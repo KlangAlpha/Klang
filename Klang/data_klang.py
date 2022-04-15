@@ -12,6 +12,12 @@ from threading import Lock
 import requests
 import time
 
+from memory_profiler import profile
+
+#加上注释，就使用内存分析功能
+#删除注释，就关闭了内存分析功能
+profile = lambda x: x
+
 filename_sl = os.path.expanduser("~/.klang_stock_list.csv")
 filename_st = os.path.expanduser("~/.klang_stock_trader.csv")
 filename_jsont = os.path.expanduser("~/.klang_stock_trader.json")
@@ -20,11 +26,13 @@ hostname="http://klang.org.cn"
 #hostname="http://klang.zhanluejia.net.cn"
 mutex = Lock()
 
+
 #
 #stock list
 #
 cm_dict = {}
 
+@profile
 def updatestocklist(stname=filename_sl):
 
     json = requests.get(hostname+"/industries").json()
@@ -43,6 +51,7 @@ def get_chouma(code):
 # extern to Klang
 # 此接口有外部调用
 #
+@profile
 def updatestockdata(Kl):
     global  stock_json_list
 
@@ -76,6 +85,7 @@ def save_stock_trader(df_dict):
     f.write(content)
     f.close()
 
+@profile
 def save_stock_trader_json(stock_json_list):
     content = json.dumps(stock_json_list)    
     f = open(filename_jsont,"w+")
@@ -100,29 +110,34 @@ def load_stock_trader(Kl,name=filename_st):
             Kl.df_all[number]["df"] = df
             number += 1
 
+@profile
 def load_stock_trader_json(Kl,name=filename_jsont):
 
     content = open(name).read()
 
     stock_json_list  = json.loads(content)
-    number = 0
-    for stock in stock_json_list:
+    count = len(stock_json_list)
+    while count:
             # save order for index
             # save df to list
+            stock = stock_json_list.pop(0)
             jsondata = stock[0]
             # name = stock[1]
-            # code = stock[2]
+            code = stock[2]
             df = json_to_df(jsondata)
             if len(df) > 2:
                 df['datetime'] = df['date']
                 df = df.set_index('date')
+            number = Kl.stockindex[code]
             Kl.df_all[number]["df"] = df
-            number += 1
+            count = len(stock_json_list)
+
 
 
 # 从klang获取日K数据
 # append,是否追加到 股票列表
 #
+@profile
 def get_day(name,code,start,end,setindex=False,json=False):
     
     print(name,code)
@@ -138,23 +153,25 @@ def get_day(name,code,start,end,setindex=False,json=False):
    
     mutex.release()
     
+    for d in json_data:
+        del d["id"]
+        del d["_id"]
+        del d["name"]
+        del d["code"]
+        
     if json==True:
-        for d in json_data:
-            del d["id"]
-            del d["_id"]
-            del d["name"]
-            del d["code"]
         return json_data,name,code
    
     return json_to_df(json_data,setindex)
- 
+
+@profile 
 def json_to_df(json,setindex=False):
 
     df = pd.json_normalize(json)
     if len(df) < 1:
        return []
-    
-    df = df[df['volume']>0.0]
+
+    df = df[df['volume']>0.0] 
     # 删除后再次判断
     if len(df) < 1:
        return []
@@ -182,6 +199,7 @@ def json_to_df(json,setindex=False):
 # 从文件中一行数据 格式化分析出信息
 # 2019-12-09,sz.002094,青岛金王,化工,申万一级行业
 # 时间，股票代码，名称，类别
+@profile
 def getstockinfo(stock):
     stock = stock.strip()
     d,code,name,skip1,skip2,tdxbk,tdxgn = stock.split(',')
@@ -192,6 +210,7 @@ def getstockinfo(stock):
 # 从网上下载数据或者从文件加载股票数据    
 # 加载后数据存放在(Kl.df_all)
 #
+@profile
 def get_all_day(Kl):
     stocklist = Kl.stocklist
     # 如果文件存在,可以直接从文件加载数据
@@ -204,6 +223,7 @@ def get_all_day(Kl):
     print("正在从网上下载股票数据,时间将会有点长")
     updatestockdata(Kl)
 
+@profile
 def init_stock_list(Kl,offset=0):
     if not os.path.exists(filename_sl):
         print('正在下载股票库列表....')
