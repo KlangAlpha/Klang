@@ -74,10 +74,10 @@ def cmd_call(data):
     import os
     if code == "reset_all" and pw == "Klang":
         #Kl.updateall()
-        os.system("python3 Klang/update_data.py updateall")
+        os.system("python3 Klang/update_data.py updateall &")
     if code == "reset_stock"  and pw == "Klang" :
         #异步加载df 放到df_all
-        os.system("python3 Klang/update_data.py updatestockdata")
+        os.system("python3 Klang/update_data.py updatestockdata &")
 
 ###################web socket######################
 USERS = {}
