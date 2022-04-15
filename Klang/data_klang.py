@@ -12,7 +12,7 @@ from threading import Lock
 import requests
 import time
 
-from memory_profiler import profile
+#from memory_profiler import profile
 
 #加上注释，就使用内存分析功能
 #删除注释，就关闭了内存分析功能
