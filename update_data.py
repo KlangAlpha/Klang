@@ -9,7 +9,7 @@ print(sys.argv[1])
 
 Kl.stocklist = Kl.data_engine.init_stock_list(Kl)
 
-if sys.argv[1] == "updatestockdata":
+if len(sys.argv)> 0 and sys.argv[1] == "updatestockdata":
     Kl.updatestockdata()
 else :
     Kl.updateall()

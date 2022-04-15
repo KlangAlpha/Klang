@@ -7,6 +7,7 @@
 
 import pandas as pd
 import os
+import shutil
 import json
 from threading import Lock
 import requests
@@ -19,7 +20,6 @@ import time
 profile = lambda x: x
 
 filename_sl = os.path.expanduser("~/.klang_stock_list.csv")
-filename_st = os.path.expanduser("~/.klang_stock_trader.csv")
 filename_jsont = os.path.expanduser("~/.klang_stock_trader.json")
 
 hostname="http://klang.org.cn"
@@ -55,52 +55,43 @@ def updatestockdata(Kl):
     global  stock_json_list
 
     stocklist = Kl.stocklist
-    df_dict = []
-    stock_json_list = []
     
-    for stock in stocklist:
-        code ,name ,tdxbk,tdxgn= getstockinfo(stock)
+    f = open(filename_jsont)
+
+    for i in stocklist:
+        content  = f.readline()
+        if len(content) < 8:
+            break
+        stock    = json.loads(content[:-1])
+        code     = stock[0]
+        name     = stock[1]
+        jsondata = stock[2]
         #print('正在获取',name,'代码',code)
-        json,name,code = get_day(name,code,Kl.start_date,Kl.end_date,json=True)
-        stock_json_list.append([json,name,code])
 
-    save_stock_trader_json(stock_json_list)
-    load_stock_trader_json(Kl)
-
-#
-# all stock trader day K data
-#
-
-@profile
-def save_stock_trader_json(stock_json_list):
-    content = json.dumps(stock_json_list)    
-    f = open(filename_jsont,"w+")
-    f.write(content)
+        df = json_to_df(jsondata)
+        if len(df) > 2:
+           df['datetime'] = df['date']
+           df = df.set_index('date')
+        number = Kl.stockindex[code]
+        Kl.df_all[number]["df"] = df
+ 
     f.close()
 
-@profile
-def load_stock_trader_json(Kl,name=filename_jsont):
 
-    content = open(name).read()
+# 从服务器下载数据 同步存储到文件
+def downloadstockdata(Kl):
+    #创建临时文件
+    f = open(filename_jsont+".tmp","w+")
+    for stock in Kl.stocklist:
+        code ,name ,tdxbk,tdxgn= getstockinfo(stock)
+        jsondata,name,code = get_day(name,code,Kl.start_date,Kl.end_date,json=True)
+        content = json.dumps([code,name,jsondata])    
+        f.write(content+"\n")
+        f.flush()
+    f.close()
 
-    stock_json_list  = json.loads(content)
-    count = len(stock_json_list)
-    while count:
-            # save order for index
-            # save df to list
-            stock = stock_json_list.pop(0)
-            jsondata = stock[0]
-            # name = stock[1]
-            code = stock[2]
-            df = json_to_df(jsondata)
-            if len(df) > 2:
-                df['datetime'] = df['date']
-                df = df.set_index('date')
-            number = Kl.stockindex[code]
-            Kl.df_all[number]["df"] = df
-            count = len(stock_json_list)
-
-
+    #下载完成，生存目标文件         
+    shutil.move(filename_jsont+".tmp",filename_jsont)
 
 # 从klang获取日K数据
 # append,是否追加到 股票列表
@@ -185,10 +176,11 @@ def get_all_day(Kl):
     # 要强制从网上加载数据,可以设置reload=True
     if os.path.exists(filename_jsont) and not Kl.reload:
         print("正在从文件",filename_jsont,"加载数据")
-        load_stock_trader_json(Kl)
+        updatestockdata(Kl)
         return 
 
     print("正在从网上下载股票数据,时间将会有点长")
+    downloadstockdata(Kl)
     updatestockdata(Kl)
 
 @profile

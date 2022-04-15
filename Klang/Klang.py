@@ -96,6 +96,7 @@ class Klang():
     def updatestockdata(self):
         self.dfend = gettoday()
         self.end_date = gettoday()
+        self.data_engine.downloadstockdata(self)
         self.data_engine.updatestockdata(self)
 
     def updateall(self):
