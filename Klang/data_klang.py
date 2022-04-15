@@ -117,6 +117,7 @@ def get_day(name,code,start,end,setindex=False,json=False):
         del d["_id"]
         del d["name"]
         del d["code"]
+        del d["codedate"]
         
     if json==True:
         return json_data,name,code
