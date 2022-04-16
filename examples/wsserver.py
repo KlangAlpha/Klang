@@ -10,6 +10,12 @@ from threading import Lock
 logging.basicConfig()
 
 import threading
+import sys 
+
+if len(sys.argv) > 1:
+    port = int(sys.argv[1])
+else:
+    port = 9099
 
 ######################klang #######################
 from Klang.lang import kparser,setPY,Kexec
@@ -187,7 +193,7 @@ async def counter(websocket, path):
     finally:
         await unregister(webindex)
         
-start_server = websockets.serve(counter, "0.0.0.0", 9099)
+start_server = websockets.serve(counter, "0.0.0.0", port)
 
 asyncio.get_event_loop().run_until_complete(start_server)
 asyncio.get_event_loop().run_forever()
