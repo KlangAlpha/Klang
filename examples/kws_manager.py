@@ -30,6 +30,14 @@ server_user={
 #用户列表
 USERS = {}
 
+#msg format
+msg = {
+    "type"    :"",
+    "content" :{
+        "value": "",
+    },
+}
+
 # server 和klang执行服务器交互
 # Klang msg type
 K_REG     = "K_REG"
