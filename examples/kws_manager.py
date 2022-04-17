@@ -202,16 +202,22 @@ asyncio.get_event_loop().run_forever()
 #klang server
 import asyncio
 import websockets
+server_host = 'ws://localhost:9099/klang'
+#server_host = 'wss://klang.org.cn:8099/klang'
 
 async def conn_server():
-    async with websockets.connect('ws://localhost:8765/klang') as websocket:
-        name = input("What's your name? ")
-
-        await websocket.send(name)
-        print(f"> {name}")
-
-        greeting = await websocket.recv()
-        print(f"< {greeting}")
-        input(">")
+    while True:
+        try:
+            async with websockets.connect(server_host) as websocket:
+                print("connect success!",server_host)
+                while True:
+                    msg = await websocket.recv()
+                    await websocket.send('msg')
+        except BaseException as e:
+            if isinstance(e, KeyboardInterrupt):
+                break
+   
+        print("connect server error,try again ",server_host)
+        await asyncio.sleep(2)
 
 asyncio.get_event_loop().run_until_complete(conn_server())
