@@ -61,6 +61,11 @@ class KlangMSG():
         pass
     def send(self):
         pass
+    def parse(self,msg):
+        if msg.type == K_RET:
+            pass
+        if msg.type == K_DONE:
+            pass
     def server_increase(self,websocket):
         mutexsu.acquire()
         mutexsu.release()
@@ -89,6 +94,9 @@ class UserMSG():
         pass
     def send(self):
         pass
+    def parse(self,msg):
+        pass
+
     def user_increase(self,websocket):
         mutexsu.acquire()
         mutexsu.release()
@@ -195,14 +203,8 @@ async def listen(websocket, path):
     while True:
         data = await websocket.recv()
         msg = json.loads(data)
-        
-        if msg.type == K_EXE:
-            pass
-        if msg.type == K_DONE:
-            pass
+        websocket.handler.parse(msg)        
 
-        await websocket.send(greeting)
-        websocket.handler.print(f"> {greeting}")
 
     webindex = await register(websocket) #webindex is fixed name,use by *.html
 
