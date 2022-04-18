@@ -29,13 +29,6 @@ server_user={
 #用户列表
 USERS = {}
 
-#msg format
-msg = {
-    "type"    :"",
-    "content" :{
-        "value": "",
-    },
-}
 
 mutex = Lock ()
 mutexsu = Lock () #server and user 操作
@@ -53,24 +46,36 @@ K_RET          = "K_RET"  #服务器返回给管理者
 class KlangMSG():
     def __init__(self):
         pass
-    def pack(self):
-        pass
-    def unpack(self):
-        pass
-    def recv(self):
-        pass
-    def send(self):
-        pass
+    def pack_exe(self,exe):
+        msg = {
+            "type":"K_EXE"
+        }
+        msg.update(exe)
+        data = json.dumps(msg)
+        self.websocket.send(data)
+
+    def pack_cmd(self,cmd):
+        msg = {
+            "type":"K_CMD"
+        }
+        msg.update(cmd)
+        data = json.dumps(msg)
+        self.websocket.send(data)
+    
+ 
     def parse(self,msg):
         if msg.type == K_RET:
             pass
         if msg.type == K_DONE:
             pass
-    def server_increase(self,websocket):
+    def list_increase(self,websocket):
         mutexsu.acquire()
+        server_list.append(websocket)
         mutexsu.release()
-    def server_decrease(self):
+
+    def list_decrease(self):
         mutexsu.acquire()
+        server_list.remove(self.websocket)
         mutexsu.release()
 #
 # 浏览器用户和管理者交互
@@ -86,28 +91,37 @@ U_INFO    = "U_INFO"  #服务器发给用户，用户信息和服务器信息
 class UserMSG():
     def __init__(self):
         pass
-    def pack(self):
-        pass
-    def unpack(self):
-        pass
-    def recv(self):
-        pass
-    def send(self):
-        pass
+    def pack_info(self,info):
+        msg = {
+            "type":"U_INFO"
+        }
+        msg.update(info)
+        data = json.dumps(msg)
+        self.websocket.send(data)
+
+    def pack_ret(self,ret):
+        msg = {
+            "type":"U_RET",
+        }
+        msg.update(ret)
+        data = json.dumps(msg)
+        self.websocket.send(data)
+
     def parse(self,msg):
-        pass
+        if msg.type == U_EXE:
+            pass
+        if msg.type == U_CMD:
+            pass
 
-    def user_increase(self,websocket):
+    def list_increase(self,websocket):
         mutexsu.acquire()
+        user_list.append(websocket)
         mutexsu.release()
 
-    def use_decrease(self):
+    def list_decrease(self):
         mutexsu.acquire()
+        user_list.remove(self.websocket)
         mutexsu.release()
-
-index = 0
-busy  = 0
-current = 0 # default display user
 
 def await_run(coroutine):
     try:
@@ -191,39 +205,24 @@ async def listen(websocket, path):
 
     if (path == "/" or path ==  "/user"):
         websocket.handler = UserMSG()
-        websocket.handler.user_increase(websocket)
+        websocket.handler.list_increase(websocket)
     if (path == "/klang"): 
         websocket.handler = KlangMSG()
-        websocket.handler.server_increase(websocket)
+        websocket.handler.list_increase(websocket)
 
     # send msg to all USERS
     # send_notices()
 
     # 新链接
-    while True:
-        data = await websocket.recv()
-        msg = json.loads(data)
-        websocket.handler.parse(msg)        
-
-
-    webindex = await register(websocket) #webindex is fixed name,use by *.html
-
-    print("register ",webindex,USERS)
     try:
-        async for message in websocket:
-            data = json.loads(message)
-            if data["action"] == "execute":
-                await execute(data,webindex)
-
-            if data["action"] == "cmd":
-                cmd_call(data)     
+        async for data in websocket: 
+            msg = json.loads(data)
+            websocket.handler.parse(msg)        
     except:
-        if current == webindex:
-            current = 0
-            busy = 0
-        await unregister(webindex)
+        websocket.handler.list_decrease()
+
     finally:
-        await unregister(webindex)
+        websocket.handler.list_decrease()
 
 #data = asyncio.wait_for(s.recv(), timeout=10)
 
