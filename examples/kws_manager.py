@@ -6,7 +6,7 @@ import asyncio
 import json
 import logging
 import websockets
-from threading import Lock
+from threading import Lock,Thread
 logging.basicConfig()
 
 import threading
@@ -20,7 +20,6 @@ else:
 ###################web socket######################
 # 服务器列表
 server_list=[
-    (127.0.0.1,9091),    
 ]
 #服务器和用户对应表
 server_user={
@@ -38,15 +37,18 @@ msg = {
     },
 }
 
+mutex = Lock ()
+mutexsu = Lock () #server and user 操作
+
 # server 和klang执行服务器交互
 # Klang msg type
-K_REG     = "K_REG"
-K_UNREG   = "K_UNREG"
-K_LIVE    = "K_LIVE"
-K_EXE     = "K_EXE"
-K_DONE    = "K_DONE"
-K_CMD     = "K_CMD"
-K_RET     = "K_RET"
+#K_REG          = "K_REG"   #服务器发送给管理这服务器上线
+#K_UNREG        = "K_UNREG" #服务器发送给管理者服务器离开
+K_HEARTBEAT    = "K_HEART" #心跳包 
+K_EXE          = "K_EXE"  #管理者发送给服务器
+K_DONE         = "K_DONE" #服务器返回给管理者
+K_CMD          = "K_CMD"  #管理者发送给服务器
+K_RET          = "K_RET"  #服务器返回给管理者
 
 class KlangMSG():
     def __init__(self):
@@ -59,16 +61,22 @@ class KlangMSG():
         pass
     def send(self):
         pass
+    def server_increase(self,websocket):
+        mutexsu.acquire()
+        mutexsu.release()
+    def server_decrease(self):
+        mutexsu.acquire()
+        mutexsu.release()
 #
-# 浏览器用户和server交互
+# 浏览器用户和管理者交互
 #
 # USER msg type
-U_REG     = "U_REG"
-U_UNREG   = "U_UNREG"
-U_LIVE    = "U_LIVE"
-U_EXE     = "U_EXE"
-U_CMD     = "U_CMD"
-U_RET     = "U_RET"
+# U_REG     = "U_REG"   #用户发给管理者，用户上线
+# U_UNREG   = "U_UNREG" #用户发给管理者，用户掉线
+U_EXE     = "U_EXE"   #用户发给管理者，用户要执行代码
+U_CMD     = "U_CMD"   #用户发给管理者，要更新数据
+U_RET     = "U_RET"   #服务器发给用户，执行的结果
+U_INFO    = "U_INFO"  #服务器发给用户，用户信息和服务器信息
 
 class UserMSG():
     def __init__(self):
@@ -81,10 +89,16 @@ class UserMSG():
         pass
     def send(self):
         pass
+    def user_increase(self,websocket):
+        mutexsu.acquire()
+        mutexsu.release()
+
+    def use_decrease(self):
+        mutexsu.acquire()
+        mutexsu.release()
 
 index = 0
 busy  = 0
-mutex = Lock ()
 current = 0 # default display user
 
 def await_run(coroutine):
@@ -115,7 +129,6 @@ async def notice(message):
     msg = json.dumps(message)
     await asyncio.wait([USERS[user].send(msg) for user in USERS])
 
-mutexuser = Lock ()
 
 async def register(websocket):
     global USERS,index
@@ -126,7 +139,6 @@ async def register(websocket):
     await notify_users()
     return index - 1
 
-async def unregister(index):
     mutexuser.acquire()
     if USERS.get(index,None) != None:
         del USERS[index]
@@ -171,17 +183,27 @@ async def listen(websocket, path):
 
     if (path == "/" or path ==  "/user"):
         websocket.handler = UserMSG()
+        websocket.handler.user_increase(websocket)
     if (path == "/klang"): 
         websocket.handler = KlangMSG()
-    # 新链接
-    while 1:
-        name = await websocket.recv()
-        websocket.handler.print(f"< {name}")
+        websocket.handler.server_increase(websocket)
 
-        greeting = f"Hello {name}!"
+    # send msg to all USERS
+    # send_notices()
+
+    # 新链接
+    while True:
+        data = await websocket.recv()
+        msg = json.loads(data)
+        
+        if msg.type == K_EXE:
+            pass
+        if msg.type == K_DONE:
+            pass
 
         await websocket.send(greeting)
         websocket.handler.print(f"> {greeting}")
+
     webindex = await register(websocket) #webindex is fixed name,use by *.html
 
     print("register ",webindex,USERS)
@@ -200,32 +222,12 @@ async def listen(websocket, path):
         await unregister(webindex)
     finally:
         await unregister(webindex)
-        
+
+#data = asyncio.wait_for(s.recv(), timeout=10)
+
 start_server = websockets.serve(listen, "0.0.0.0", port)
 
 asyncio.get_event_loop().run_until_complete(start_server)
 asyncio.get_event_loop().run_forever()
 
 
-#klang server
-import asyncio
-import websockets
-server_host = 'ws://localhost:9099/klang'
-#server_host = 'wss://klang.org.cn:8099/klang'
-
-async def conn_server():
-    while True:
-        try:
-            async with websockets.connect(server_host) as websocket:
-                print("connect success!",server_host)
-                while True:
-                    msg = await websocket.recv()
-                    await websocket.send('msg')
-        except BaseException as e:
-            if isinstance(e, KeyboardInterrupt):
-                break
-   
-        print("connect server error,try again ",server_host)
-        await asyncio.sleep(2)
-
-asyncio.get_event_loop().run_until_complete(conn_server())
