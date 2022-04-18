@@ -21,10 +21,9 @@ else:
 # 服务器列表
 server_list=[
 ]
-#服务器和用户对应表
-server_user={
+#用户列表
+user_list=[]
 
-}
 
 #用户列表
 USERS = {}
@@ -109,7 +108,14 @@ class UserMSG():
 
     def parse(self,msg):
         if msg.type == U_EXE:
-            pass
+            ws = find_server()
+            if (ws != None):
+                ws.exe_user = self.websocket
+                msg.type=K_EXE
+                ws.pack_exe(msg)
+            else:
+                busy_msg = {}
+                self.websocket.send(busy_msg)
         if msg.type == U_CMD:
             pass
 
