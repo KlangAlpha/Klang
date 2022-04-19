@@ -12,7 +12,7 @@ logging.basicConfig()
 import threading
 import sys 
 
-sys.path.append("/home/yuandian/Klang")
+#sys.path.append("/home/xxx/Klang")
 
 if len(sys.argv) > 1:
     port = int(sys.argv[1])
@@ -159,7 +159,7 @@ class KlangMSG():
  
     async def parse(self,msg):
         if msg["type"] == K_EXE:
-            pass    
+            await execute(self,msg)    
         if msg["type"] == K_DONE:
             mutex.acquire()
             self.state = 0
@@ -169,7 +169,7 @@ class KlangMSG():
     async def done(self):
         msg ={"type":K_DONE}
         data = json.dumps(msg)
-        self.websocket.send(data)
+        await self.websocket.send(data)
 
 #klang server
 server_host = 'ws://localhost:9099/klang'

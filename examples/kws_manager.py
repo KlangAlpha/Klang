@@ -55,13 +55,13 @@ class KlangMSG():
         self.websocket = websocket
         self.state = 0 #空闲的
 
-    def pack_exe(self,exe):
+    async def pack_exe(self,exe):
         msg = {
             "type":"K_EXE"
         }
         msg.update(exe)
         data = json.dumps(msg)
-        self.websocket.send(data)
+        await self.websocket.send(data)
 
     def pack_cmd(self,cmd):
         msg = {
@@ -131,7 +131,7 @@ class UserMSG():
                 ws.handler.exe_user = self.websocket
                 msg["type"]=K_EXE
                 ws.handler.state = 1                
-                ws.handler.pack_exe(msg)
+                await ws.handler.pack_exe(msg)
             else:
                 busy_msg = {"type":U_RET,"code":1001,"errmsg":"没有空闲服务服务器请稍后"}
                 data = json.dumps(busy_msg)
