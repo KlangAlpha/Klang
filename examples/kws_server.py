@@ -10,9 +10,9 @@ from threading import Lock
 logging.basicConfig()
 
 import threading
-import sys 
+import sys,os 
 
-#sys.path.append("/home/xxx/Klang")
+sys.path.append(os.path.expanduser("~") + "/Klang")
 
 if len(sys.argv) > 1:
     port = int(sys.argv[1])

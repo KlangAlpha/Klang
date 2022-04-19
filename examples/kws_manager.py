@@ -75,7 +75,7 @@ class KlangMSG():
     async def parse(self,msg):
         if msg["type"] == K_RET:
             msg["type"] = U_RET
-            self.exe_user.send(msg) #转发给用户
+            await self.exe_user.send(msg) #转发给用户
 
         if msg["type"] == K_DONE:
             mutex.acquire()
