@@ -90,11 +90,18 @@
     </div>
 
     <div class="form-check" style="margin-right:20px;margin-left:10px;">
-    
-    <input class="form-check-input" type="checkbox" value="" id="flexbusy" checked disabled>
-    <label class="form-check-label" for="flexbusy">
-        busy
-    </label>
+            <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            {{servers.length}} Servers
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li v-for="(s,index) in servers">
+                <a class="dropdown-item" href="#" v-if="s==1" ><font color="#ef0000"> server{{index}}</font></a>
+                <a class="dropdown-item" href="#" v-if="s==0" > server{{index}}</a>
+            </li>
+          </ul>
+        </li>
+ 
     </div>
    
 
@@ -241,11 +248,13 @@
     <script>
    var hostname = window.location.hostname
    var host = window.location.host
-     if (hostname == ""){
+     if (hostname == "" || hostname=="127.0.0.1" || hostname=="localhost"){
         hostname = "127.0.0.1"
         apihost = "http://127.0.0.1:1337"
+        wshost = "ws://localhost:9099/user"
      } else {
         apihost = "//data.klang.org.cn"
+        wshost = "wss://klang.org.cn:8099/user"
      }
    
       const VueApp = {
@@ -253,7 +262,7 @@
             return {
                 online:0,
                 usercount:0,
-                busy:0,
+                servers:[],
                 result:[],
                 url:apihost+"/strategies",
                 codes:[{title:"均线向上",content:"ma1=MA(C,5);\nma2=MA(C,10);\nma3=MA(C,20);\nif ma1[-1] > ma2[-1] and ma2[-1]>ma3[-1]:\n        DISPLAY(C);"},
@@ -289,22 +298,23 @@
                 connstate = document.querySelector('#flexCheckCheckedDisabled'),
                 ltszcheck = document.querySelector('#ltszCheck'),
                 STcheck = document.querySelector('#STCheck'),
-                websocket = new WebSocket("wss://"+hostname+":8099/");
+                websocket = new WebSocket(wshost);
 
                 preOne = document.querySelector('#preOne'),
                 content.value = preOne.textContent
                 connstate.checked = false
             run.onclick = function (event) {
-                if (flexbusy.checked == true){
-                    alert("正在执行任务")
+                if (vue.$data.servers.indexOf(0) == -1){
+                    alert("没有空闲服务器请稍等")
                     return
                 }
+
                 if (connstate.checked == false){
                     alert("请先链接,或者刷新页面链接服务器")
                     return 
                 }
                 vue.$data.result = []
-                websocket.send(JSON.stringify({action: 'execute',content:content.value,loop:true}));
+                websocket.send(JSON.stringify({type: 'U_EXE',content:content.value,loop:true}));
             }
 
             function CopyN(arg1){
@@ -329,7 +339,7 @@
                 connstate.checked = true 
                 console.log(data)
                 switch (data.type) {
-                    case 'busy':
+                    case 'U_RET':
                         if (data.op == false){
                             alert("系统正在执行其他任务，请稍等");
                         }
@@ -343,16 +353,10 @@
                             vue.$data.busy = 0
                         }
                         break;
-                    case 'users':
-                        vue.$data.usercount = data.count
+                    case 'U_INFO':
+                        vue.$data.usercount = data.users
                         vue.$data.online = 1
-                        if (data.busy == 0){
-                            flexbusy.checked= false 
-                            vue.$data.busy = 0
-                        } else {
-                            flexbusy.checked= true
-                            vue.$data.busy = 1
-                        }
+                        vue.$data.servers = data.servers
                         break;
                     case 'display':
                         code = data.code.replace(".","")

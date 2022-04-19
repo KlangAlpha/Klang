@@ -12,6 +12,8 @@ logging.basicConfig()
 import threading
 import sys 
 
+sys.path.append("/home/xxx/Klang")
+
 if len(sys.argv) > 1:
     port = int(sys.argv[1])
 else:
