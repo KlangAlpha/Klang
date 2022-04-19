@@ -15,7 +15,7 @@ import sys
 if len(sys.argv) > 1:
     port = int(sys.argv[1])
 else:
-    port = 9099
+    port = 9088 # nginx 9099-> 9088
 
 
 def PrintException():
@@ -75,7 +75,9 @@ class KlangMSG():
     async def parse(self,msg):
         if msg["type"] == K_RET:
             msg["type"] = U_RET
-            await self.exe_user.send(msg) #转发给用户
+            msg["retcode"] = "DISPLAY"
+            data = json.dumps(msg)
+            await self.exe_user.send(data) #转发给用户
 
         if msg["type"] == K_DONE:
             mutex.acquire()
@@ -121,7 +123,7 @@ class UserMSG():
         }
         msg.update(ret)
         data = json.dumps(msg)
-        self.websocket.send(data)
+        await self.websocket.send(data)
 
     async def parse(self,msg):
         if msg["type"] == U_EXE:
@@ -133,7 +135,7 @@ class UserMSG():
                 ws.handler.state = 1                
                 await ws.handler.pack_exe(msg)
             else:
-                busy_msg = {"type":U_RET,"code":1001,"errmsg":"没有空闲服务服务器请稍后"}
+                busy_msg = {"type":U_RET,"retcode":"ERROR","errmsg":"没有空闲服务服务器请稍后"}
                 data = json.dumps(busy_msg)
                 await self.websocket.send(data)
             mutex.release()

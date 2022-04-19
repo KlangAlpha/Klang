@@ -12,12 +12,7 @@ logging.basicConfig()
 import threading
 import sys,os 
 
-sys.path.append(os.path.expanduser("~") + "/Klang")
-
-if len(sys.argv) > 1:
-    port = int(sys.argv[1])
-else:
-    port = 9099
+#sys.path.append(os.path.expanduser("~") + "/Klang")
 
 ######################klang #######################
 from Klang.lang import kparser,setPY,Kexec
@@ -172,8 +167,8 @@ class KlangMSG():
         await self.websocket.send(data)
 
 #klang server
-server_host = 'ws://localhost:9099/klang'
-#server_host = 'wss://klang.org.cn:8099/klang'
+#server_host = 'ws://localhost:9099/klang'
+server_host = 'wss://klang.org.cn:8099/klang'
 
 async def conn_server():
 
