@@ -80,9 +80,10 @@ class KlangMSG():
             await self.exe_user.send(data) #转发给用户
 
         if msg["type"] == K_DONE:
-            mutex.acquire()
+            
             await send_notices()
-            await self.exe_user.done()
+            await self.exe_user.handler.done()
+            mutex.acquire()
             self.state = 0
             self.exe_user = None
             mutex.release()
