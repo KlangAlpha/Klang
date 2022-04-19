@@ -17,6 +17,17 @@ if len(sys.argv) > 1:
 else:
     port = 9099
 
+
+def PrintException():
+    import linecache
+    exc_type, exc_obj, tb = sys.exc_info()
+    f = tb.tb_frame
+    lineno = tb.tb_lineno
+    filename = f.f_code.co_filename
+    linecache.checkcache(filename)
+    line = linecache.getline(filename, lineno, f.f_globals)
+    print ('EXCEPTION IN ({}, LINE {} "{}"): {}'.format(filename, lineno, line.strip(), exc_obj))
+
 ###################web socket######################
 # 服务器列表
 server_list=[
@@ -116,14 +127,15 @@ class UserMSG():
         if msg["type"] == U_EXE:
             mutex.acquire()
             ws = find_server()
-            if (ws != None): #找到空闲服务器
+            if ws is not None: #找到空闲服务器
                 ws.handler.exe_user = self.websocket
                 msg["type"]=K_EXE
                 ws.handler.state = 1                
                 ws.handler.pack_exe(msg)
             else:
                 busy_msg = {"type":U_RET,"code":1001,"errmsg":"没有空闲服务服务器请稍后"}
-                await self.websocket.send(busy_msg)
+                data = json.dumps(busy_msg)
+                await self.websocket.send(data)
             mutex.release()
 
         if msg["type"] == U_CMD:
@@ -159,7 +171,7 @@ async def send_notices():
 
 def find_server():
     for w in server_list:
-        if w.state == 0:
+        if w.handler.state == 0:
             return w
     return None
 
@@ -187,6 +199,7 @@ async def listen(websocket, path):
             await websocket.handler.parse(msg)        
     except Exception as e:
         websocket.handler.list_decrease()
+        PrintException()
         print(e)
     finally:
         websocket.handler.list_decrease()

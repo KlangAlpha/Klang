@@ -12,7 +12,7 @@ logging.basicConfig()
 import threading
 import sys 
 
-sys.path.append("/home/xxx/Klang")
+sys.path.append("/home/yuandian/Klang")
 
 if len(sys.argv) > 1:
     port = int(sys.argv[1])
@@ -52,6 +52,7 @@ Klang_init()
 code = Kl.code
 date = Kl.date
 
+ws = None
 
 def getpyglobals(name):
     return globals().get(name)
@@ -71,9 +72,8 @@ def getstockinfo(name=0):
 def get_chouma(code=0):
     return Kl.chouma()
 
-def kloopexec(webindex,content):
-    code = "webindex =" + str(webindex) + "\n"
-    code += "kloop \n" + content + "\nendp;"
+def kloopexec(content):
+    code = "kloop \n" + content + "\nendp;"
     return code
 
 def cmd_call(data):
@@ -88,11 +88,7 @@ def cmd_call(data):
         os.system("python3 Klang/update_data.py updatestockdata &")
 
 ###################web socket######################
-USERS = {}
-index = 0
-busy = 0
 mutex = Lock ()
-current = 0 # default display user
 
 def await_run(coroutine):
     try:
@@ -104,89 +100,97 @@ def await_run(coroutine):
 def DISPLAY(value):
     name,code,hqltsz,tdxbk,tdxgn = getstockinfo()
     chouma = Kl.chouma()
-    message = {"type":"display","name":name,"code":code,\
+    message = {"type":K_RET,"name":name,"code":code,\
         "value":str(value),"hqltsz":hqltsz,'tdxbk':tdxbk,'tdxgn':tdxgn,'chouma':chouma}
     msg = json.dumps(message)
-    await_run(USERS[current].send(msg))
+    await_run(ws.send(msg))
 
-def users_event():
-    return json.dumps({"type": "users", "count": len(USERS),"busy":busy})
-
-
-async def notify_users():
-    if USERS:  # asyncio.wait doesn't accept an empty list
-        message = users_event()
-        await asyncio.wait([USERS[user].send(message) for user in USERS])
-
-async def notice(message):
-    msg = json.dumps(message)
-    await asyncio.wait([USERS[user].send(msg) for user in USERS])
-
-mutexuser = Lock ()
-
-async def register(websocket):
-    global USERS,index
-    mutexuser.acquire()
-    USERS[index] = websocket
-    index += 1 
-    mutexuser.release()
-    await notify_users()
-    return index - 1
-
-async def unregister(index):
-    mutexuser.acquire()
-    if USERS.get(index,None) != None:
-        del USERS[index]
-    mutexuser.release()
-    await notify_users()
-
-
-async def execute(data,webindex):
-    global busy,current
+async def execute(handler,data):
     print(data)
-    # 1. 判断是否在执行中
-    if busy == 1: #同时只能有一人之行
-        await notice({"type":"busy","value":True,"op" :False})
-        return
 
-    # 2. 判断是否加loop循环之行
+    # 1. 判断是否加loop循环之行
     if data.get("loop") is not None:
-        code = kloopexec(webindex,data['content'])
+        code = kloopexec(data['content'])
     else:
-        code = "webindex="+str(webindex)+"\n" + data['content']+"\n"
+        code = data['content']+"\n"
 
-    # 3. 执行 busy lock 执行锁
+    # 2. 执行 busy lock 执行锁
     mutex.acquire()
 
-    current = webindex
-    busy = 1
-    await notice({"type":"busy","value":True})
     Kexec(code)
     # unlock
 
     mutex.release()   #之行完成，解锁，发通知给web用户
     print('执行完成')
 
-    # 4. 执行完成 
-    await notice({"type":"busy","value":False})
-    current = 0
-    busy = 0
+    # 3. 执行完成 
+    await handler.done()
 
+# server 和klang执行服务器交互
+# Klang msg type
+#K_REG          = "K_REG"   #服务器发送给管理这服务器上线
+#K_UNREG        = "K_UNREG" #服务器发送给管理者服务器离开
+K_HEARTBEAT    = "K_HEART" #心跳包 
+K_EXE          = "K_EXE"  #管理者发送给服务器
+K_DONE         = "K_DONE" #服务器返回给管理者
+K_CMD          = "K_CMD"  #管理者发送给服务器
+K_RET          = "K_RET"  #服务器返回给管理者
 
+class KlangMSG():
+    def __init__(self,websocket):
+        self.websocket = websocket
+
+    def pack_exe(self,exe):
+        msg = {
+            "type":"K_EXE"
+        }
+        msg.update(exe)
+        data = json.dumps(msg)
+        self.websocket.send(data)
+
+    def pack_cmd(self,cmd):
+        msg = {
+            "type":"K_CMD"
+        }
+        msg.update(cmd)
+        data = json.dumps(msg)
+        self.websocket.send(data)
+    
+ 
+    async def parse(self,msg):
+        if msg["type"] == K_EXE:
+            pass    
+        if msg["type"] == K_DONE:
+            mutex.acquire()
+            self.state = 0
+            self.exe_user = None
+            mutex.release()
+            
+    async def done(self):
+        msg ={"type":K_DONE}
+        data = json.dumps(msg)
+        self.websocket.send(data)
 
 #klang server
 server_host = 'ws://localhost:9099/klang'
 #server_host = 'wss://klang.org.cn:8099/klang'
 
 async def conn_server():
+
+    global ws #for DISPALY
+
     while True:
         try:
             async with websockets.connect(server_host) as websocket:
                 print("connect success!",server_host)
+                websocket.handler = KlangMSG(websocket)
+                ws = websocket
 
                 while True:
-                    msg = await websocket.recv()
-                    await websocket.send('msg')
+                    data = await websocket.recv()
+                    msg = json.loads(data)
+                    await websocket.handler.parse(msg)
+
         except BaseException as e:
             if isinstance(e, KeyboardInterrupt):
                 break
