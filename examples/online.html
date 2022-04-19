@@ -89,22 +89,20 @@
     <span class="visually-hidden">...</span>
     </div>
 
-    <div class="form-check" style="margin-right:20px;margin-left:10px;">
-            <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            {{servers.length}} Servers
-          </a>
-          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <li v-for="(s,index) in servers">
-                <a class="dropdown-item" href="#" v-if="s==1" ><font color="#ef0000"> server{{index}}</font></a>
-                <a class="dropdown-item" href="#" v-if="s==0" > server{{index}}</a>
-            </li>
-          </ul>
-        </li>
- 
-    </div>
    
-
+    <ul class="navbar-nav me-auto mb-2 mb-lg-0" style="margin-left:10px; margin-right:20px; padding-inline-start: 500px;">
+      <li class="nav-item dropdown">
+       <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+         {{servers.length}} Servers
+       </a>
+       <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+         <li v-for="(s,index) in servers">
+             <a class="dropdown-item" href="#" v-if="s==1" ><font color="#ef0000"> server{{index}}</font></a>
+             <a class="dropdown-item" href="#" v-if="s==0" > server{{index}}</a>
+         </li>
+       </ul>
+     </li>
+     </ul>
     
 
  
