@@ -85,8 +85,8 @@
       </ul>
 
 
-    <div class="spinner-border spinner-border-sm text-primary" role="status" v-if="busy">
-    <span class="visually-hidden">...</span>
+    <div class="spinner-border spinner-border-sm text-primary" role="status" v-if="work">
+    <span class="visually-hidden">.</span>
     </div>
 
    
@@ -260,6 +260,7 @@
             return {
                 online:0,
                 usercount:0,
+                work:0,
                 servers:[],
                 result:[],
                 url:apihost+"/strategies",
@@ -312,6 +313,7 @@
                     return 
                 }
                 vue.$data.result = []
+                vue.$data.work = true
                 websocket.send(JSON.stringify({type: 'U_EXE',content:content.value,loop:true}));
             }
 
@@ -368,6 +370,9 @@
                         vue.$data.usercount = data.users
                         vue.$data.online = 1
                         vue.$data.servers = data.servers
+                        break;
+                    case 'U_DONE':
+                        vue.$data.work = 0
                         break;
                     case 'display':
                         code = data.code.replace(".","")

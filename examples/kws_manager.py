@@ -81,6 +81,8 @@ class KlangMSG():
 
         if msg["type"] == K_DONE:
             mutex.acquire()
+            await send_notices()
+            await self.exe_user.done()
             self.state = 0
             self.exe_user = None
             mutex.release()
@@ -105,6 +107,7 @@ U_EXE     = "U_EXE"   #用户发给管理者，用户要执行代码
 U_CMD     = "U_CMD"   #用户发给管理者，要更新数据
 U_RET     = "U_RET"   #服务器发给用户，执行的结果
 U_INFO    = "U_INFO"  #服务器发给用户，用户信息和服务器信息
+U_DONE    = "U_DONE"  #服务器发给用户，用户执行完成
 
 class UserMSG():
     def __init__(self,websocket):
@@ -125,6 +128,13 @@ class UserMSG():
         data = json.dumps(msg)
         await self.websocket.send(data)
 
+    async def done(self):
+        msg = {
+            "type":"U_DONE",
+        }
+        data = json.dumps(msg)
+        await self.websocket.send(data)
+
     async def parse(self,msg):
         if msg["type"] == U_EXE:
             mutex.acquire()
@@ -132,7 +142,8 @@ class UserMSG():
             if ws is not None: #找到空闲服务器
                 ws.handler.exe_user = self.websocket
                 msg["type"]=K_EXE
-                ws.handler.state = 1                
+                ws.handler.state = 1  
+                await send_notices()              
                 await ws.handler.pack_exe(msg)
             else:
                 busy_msg = {"type":U_RET,"retcode":"ERROR","errmsg":"没有空闲服务服务器请稍后"}
