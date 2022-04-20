@@ -193,11 +193,11 @@ def find_server():
 async def listen(websocket, path):
 
     if (path == "/" or path ==  "/user"):
-        print("A new user connect")
+        print("A new user connect",websocket.remote_address)
         websocket.handler = UserMSG(websocket)
         websocket.handler.list_increase()
     if (path == "/klang"): 
-        print("A new server connect")
+        print("A new server connect",websocket.remote_address)
         websocket.handler = KlangMSG(websocket)
         websocket.handler.list_increase()
 
@@ -207,9 +207,9 @@ async def listen(websocket, path):
     # 新链接
     try:
         async for data in websocket: 
-            print(data)
             msg = json.loads(data)
-
+            if msg.type != K_RET:
+                print(msg)
             await websocket.handler.parse(msg)        
     except Exception as e:
         websocket.handler.list_decrease()
