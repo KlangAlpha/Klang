@@ -208,7 +208,7 @@ async def listen(websocket, path):
     try:
         async for data in websocket: 
             msg = json.loads(data)
-            if msg.type != K_RET:
+            if msg["type"] != K_RET:
                 print(msg)
             await websocket.handler.parse(msg)        
     except Exception as e:
