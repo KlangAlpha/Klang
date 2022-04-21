@@ -85,6 +85,7 @@ def downloadstockdata(Kl):
     for stock in Kl.stocklist:
         code ,name ,tdxbk,tdxgn= getstockinfo(stock)
         jsondata,name,code = get_day(name,code,Kl.start_date,Kl.end_date,json=True)
+        #print(code,name)
         content = json.dumps([code,name,jsondata])    
         f.write(content+"\n")
         f.flush()

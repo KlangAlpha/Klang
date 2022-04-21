@@ -249,7 +249,7 @@
      if (hostname == "" || hostname=="127.0.0.1" || hostname=="localhost"){
         hostname = "127.0.0.1"
         apihost = "http://127.0.0.1:1337"
-        wshost = "ws://localhost:9099/user"
+        wshost = "ws://localhost:9088/user"
      } else {
         apihost = "//data.klang.org.cn"
         wshost = "wss://klang.org.cn:8099/user"
@@ -329,10 +329,10 @@
                 content.value = ""
             }
             resetcmd.onclick = function (event) {
-                websocket.send(JSON.stringify({action: 'cmd',content:"reset_all",pw:"Klang"}));
+                websocket.send(JSON.stringify({type: 'U_CMD',content:"UPDATEALL",pw:"Klang"}));
             }
             resetstock.onclick = function (event) {
-                websocket.send(JSON.stringify({action: 'cmd',content:"reset_stock",pw:"Klang"}));
+                websocket.send(JSON.stringify({action: 'U_CMD',content:"UPDATEALL",pw:"Klang"}));
             }
             websocket.onmessage = function (event) {
                 data = JSON.parse(event.data);

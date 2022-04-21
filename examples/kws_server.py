@@ -71,17 +71,11 @@ def kloopexec(content):
     code = "kloop \n" + content + "\nendp;"
     return code
 
-def cmd_call(data):
-    code = data['content']
-    pw   = data['pw']
-    import os
-    if code == "reset_all" and pw == "Klang":
-        #Kl.updateall()
-        os.system("python3 Klang/update_data.py updateall &")
-    if code == "reset_stock"  and pw == "Klang" :
-        #异步加载df 放到df_all
-        os.system("python3 Klang/update_data.py updatestockdata &")
-
+def updateall(msg):
+    #pw   = msg['pw']
+    print("update",msg)
+    t = threading.Thread(target=Kl.updateall)
+    t.start()
 ###################web socket######################
 mutex = Lock ()
 
@@ -160,14 +154,17 @@ class KlangMSG():
             self.state = 0
             self.exe_user = None
             mutex.release()
-            
+        if msg["type"] == K_CMD:
+            if msg["content"] == "UPDATEALL":
+                updateall(msg)
+
     async def done(self):
         msg ={"type":K_DONE}
         data = json.dumps(msg)
         await self.websocket.send(data)
 
 #klang server
-#server_host = 'ws://localhost:9099/klang'
+#server_host = 'ws://localhost:9088/klang'
 server_host = 'wss://klang.org.cn:8099/klang'
 
 async def conn_server():

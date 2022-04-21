@@ -86,30 +86,26 @@ class Klang():
     A 股目前有4000多只股票    
     股票列表存储到stock_list.csv文件
     """
-    def updatestocklist(self):
-        self.data_engine.updatestocklist()
-        self.stocklist = self.data_engine.init_stock_list(self)
 
     """
     升级所有股票的日K数据
     """
-    def updatestockdata(self):
-        self.dfend = gettoday()
-        self.end_date = gettoday()
-        self.data_engine.downloadstockdata(self)
-        self.data_engine.updatestockdata(self)
 
     def updateall(self):
         self.dfend = gettoday()
         self.end_date = gettoday()
-        self.updatestocklist()
-        self.updatestockdata()
+        self.stocklist = self.data_engine.init_stock_list(self)
+        self.data_engine.updatestockdata(self)
 
         #set default stock
         self.date(start='2021-01-01')
         self.currentdf = Kl.df_all[0]    
 
+    def downloadall(self):
+        self.data_engine.updatestocklist() #下载列表到文件
+        self.stocklist = self.data_engine.init_stock_list(self) #加载
 
+        self.data_engine.downloadstockdata(self)
 
 Kl = Klang()
 
