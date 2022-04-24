@@ -7,9 +7,11 @@ Klang 是Kline语言,即股票语言,支持方便快捷的股票编程,可以轻
 
 Klang 最大的亮点是支持中文编程,可以看最后的完整例子
 
+任何问题欢迎访问[问答社区](https://forum.klang.org.cn)
+
 # 在线试用
 * 内置中文编程公式
-你可以在线体验 Klang 编程, 无需安装,网站内置了多个选股公式 [Online](http://klang.org.cn/online.html)
+你可以在线体验 Klang 编程, 无需安装,网站内置了多个选股公式 [Online](https://klang.org.cn/online.html)
 
 
 # Klang 是股票K线形态语言,基于 python3
@@ -209,4 +211,5 @@ python3 wsserver.py
 └── testparse.py
 
 ```
- 
+
+
