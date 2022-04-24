@@ -153,7 +153,26 @@ Kexec(testblock)
 * 计算结果回传到网页界面显示
 
 ```
-python3 wsserver.py
+python3 kws_manager.py 
+python3 kws_server.py
+```
+
+两个服务同时启动，可以Linux使用 "&" 放到后台
+```
+python3 kws_manager.py
+```
+
+* 如果kws_server.py启动出错可以有2中方法。
+* 方法一、 安装Klang
+
+```
+python3 setup install
+```
+
+* 方法二、 打开kws_server.py里面注释,路径为Klang放置的地方
+```
+#sys.path.append(os.path.expanduser("~") + "/Klang")
+
 ```
 
 浏览 online.html 即可运算公式了
