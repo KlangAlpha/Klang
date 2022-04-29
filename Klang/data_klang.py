@@ -22,7 +22,7 @@ profile = lambda x: x
 filename_sl = os.path.expanduser("~/.klang_stock_list.csv")
 filename_jsont = os.path.expanduser("~/.klang_stock_trader.json")
 
-hostname="http://klang.org.cn"
+hostname="https://klang.org.cn"
 #hostname="http://klang.zhanluejia.net.cn"
 mutex = Lock()
 
