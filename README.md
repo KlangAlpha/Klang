@@ -210,7 +210,6 @@ python3 setup install
 │   ├── Klang.py                # 主类
 │   ├── __init__.py         
 │   ├── common.py               # 公共设置
-│   ├── data_baostock.py        # 股票数据接口
 │   ├── data_klang.py           # 股票数据接口 klang.org.cn
 │   ├── lang                    # Klang 编程语言目录
 │   │   ├── __init__.py
@@ -221,7 +220,7 @@ python3 setup install
 │   └── tdx.py                  # 兼容 通达信公式
 ├── LICENSE
 ├── README.md
-├── examples
+├── server
 │   ├── online.html             # 在线使用的代码
 │   └── wsserver.py             # 通过websocket和后台联系
 ├── requirements.txt

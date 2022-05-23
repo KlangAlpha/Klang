@@ -1,6 +1,7 @@
 #
 # klang.org.cn 提供的股票数据
 # 数据来自baostock + tdx
+# 数据提供模块来自 Kdata 项目
 # 为了加速Klang运行，数据会被存到本地文件
 # 并且加载到内存
 #
@@ -13,17 +14,12 @@ from threading import Lock
 import requests
 import time
 
-#from memory_profiler import profile
 
-#加上注释，就使用内存分析功能
-#删除注释，就关闭了内存分析功能
-profile = lambda x: x
 
 filename_sl = os.path.expanduser("~/.klang_stock_list.csv")
 filename_jsont = os.path.expanduser("~/.klang_stock_trader.json")
 
 hostname="https://klang.org.cn/api"
-#hostname="http://klang.zhanluejia.net.cn"
 mutex = Lock()
 
 
@@ -32,7 +28,6 @@ mutex = Lock()
 #
 cm_dict = {}
 
-@profile
 def updatestocklist(stname=filename_sl):
 
     json = requests.get(hostname+"/industries").json()
@@ -50,7 +45,6 @@ def get_chouma(code):
 # extern to Klang
 # 此接口有外部调用
 #
-@profile
 def updatestockdata(Kl):
     global  stock_json_list
 
@@ -97,7 +91,6 @@ def downloadstockdata(Kl):
 # 从klang获取日K数据
 # append,是否追加到 股票列表
 #
-@profile
 def get_day(name,code,start,end,setindex=False,json=False):
     
     #print(name,code)
@@ -126,7 +119,6 @@ def get_day(name,code,start,end,setindex=False,json=False):
    
     return json_to_df(json_data,setindex)
 
-@profile 
 def json_to_df(json,setindex=False):
 
     df = pd.json_normalize(json)
@@ -161,7 +153,6 @@ def json_to_df(json,setindex=False):
 # 从文件中一行数据 格式化分析出信息
 # 2019-12-09,sz.002094,青岛金王,化工,申万一级行业
 # 时间，股票代码，名称，类别
-@profile
 def getstockinfo(stock):
     stock = stock.strip()
     d,code,name,skip1,skip2,tdxbk,tdxgn = stock.split(',')
@@ -172,7 +163,6 @@ def getstockinfo(stock):
 # 从网上下载数据或者从文件加载股票数据    
 # 加载后数据存放在(Kl.df_all)
 #
-@profile
 def get_all_day(Kl):
     stocklist = Kl.stocklist
     # 如果文件存在,可以直接从文件加载数据
