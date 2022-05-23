@@ -61,10 +61,10 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="http://www.klang.org.cn">主页</a>
+          <a class="nav-link active" aria-current="page" href="https://www.klang.org.cn">主页</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/gushen/index.html">股神</a>
+          <a class="nav-link" href="#">股神</a>
         </li>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -262,7 +262,7 @@
                 work:0,
                 servers:[],
                 result:[],
-                url:apihost+"/strategies",
+                url:apihost+"/api/strategies",
                 codes:[{title:"均线向上",content:"ma1=MA(C,5);\nma2=MA(C,10);\nma3=MA(C,20);\nif ma1[-1] > ma2[-1] and ma2[-1]>ma3[-1]:\n        DISPLAY(C);"},
                        {title:"收盘价金叉60日均线",content:"ret = CROSS(C,MA(C,60))\nif ret:\n    DISPLAY(C);\n"}]
             }
@@ -277,7 +277,7 @@
             axios
                 .get(that.url)
                 .then(function(response){
-                        that.codes = response.data
+                  that.codes = response.data;                 
                 })
         },
         methods: {

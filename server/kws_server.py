@@ -166,6 +166,7 @@ class KlangMSG():
 #klang server
 #server_host = 'ws://localhost:9088/klang'
 server_host = 'wss://klang.org.cn:8099/klang'
+server_host = 'ws://klang.org.cn:9099/klang'
 
 async def conn_server():
 
