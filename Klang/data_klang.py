@@ -22,7 +22,7 @@ profile = lambda x: x
 filename_sl = os.path.expanduser("~/.klang_stock_list.csv")
 filename_jsont = os.path.expanduser("~/.klang_stock_trader.json")
 
-hostname="https://klang.org.cn"
+hostname="https://klang.org.cn/api"
 #hostname="http://klang.zhanluejia.net.cn"
 mutex = Lock()
 
@@ -39,7 +39,7 @@ def updatestocklist(stname=filename_sl):
     for i in json:
         cm_dict[i['code']] = i.get('chouma','50')
     df = pd.json_normalize(json)
-    df = df.drop(columns=['_id','updatedAt','id','createdAt'])
+    df = df.drop(columns=['id','updatedAt','id','createdAt'])
     # 结果集输出到csv文件
     df.to_csv(stname, index=False,columns=['updateDate','code','code_name','industry','industryClassification','tdxbk','tdxgn'])    
 
@@ -115,10 +115,11 @@ def get_day(name,code,start,end,setindex=False,json=False):
     
     for d in json_data:
         del d["id"]
-        del d["_id"]
         del d["name"]
         del d["code"]
-        del d["codedate"]
+        del d["publishedAt"]
+        del d["createdAt"]
+        del d["updatedAt"]
         
     if json==True:
         return json_data,name,code

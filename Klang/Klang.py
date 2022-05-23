@@ -4,7 +4,6 @@
 # Kdatas 是提供了单只股票的数据和计算方法
 #
 from . import data_klang as datakl
-from . import data_baostock as bs 
 from .common import * #start,end date
 import copy
 import threading
