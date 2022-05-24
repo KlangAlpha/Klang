@@ -6,41 +6,53 @@
 # 并且加载到内存
 #
 
-import pandas as pd
+
 import os
 import shutil
 import json
-from threading import Lock
 import requests
 import time
+import pandas as pd
+from .common import end
+from threading import Lock
 
+hostname="https://data.klang.org.cn/api"
 
+class DataAPI():
+    def __init__(self,host=hostname):
+        self.host = host
 
-filename_sl = os.path.expanduser("~/.klang_stock_list.csv")
+    def get_stocklist(self):
+        url = self.host + "/stocklists"
+        return requests.get(url)
+
+    def get_factor(self,factorname,date=end):
+        url = self.host + "/getfactors"
+        return requests.get(url,params={'factorname':factorname,'date':date})
+
 filename_jsont = os.path.expanduser("~/.klang_stock_trader.json")
+filename_sl = os.path.expanduser("~/.klang_stock_list.csv")
 
-hostname="https://klang.org.cn/api"
+filename_jsont = os.path.normpath(filename_jsont)
+filename_sl = os.path.normpath(filename_sl)
+
 mutex = Lock()
-
 
 #
 #stock list
-#
-cm_dict = {}
+#['code','name','SCR','tdxbk','tdxgn']
+stocklist=[]
+stockindex={}
+kapi = DataAPI()
 
-def updatestocklist(stname=filename_sl):
 
-    json = requests.get(hostname+"/industries").json()
-    for i in json:
-        cm_dict[i['code']] = i.get('chouma','50')
-    df = pd.json_normalize(json)
-    df = df.drop(columns=['id','updatedAt','id','createdAt'])
-    # 结果集输出到csv文件
-    df.to_csv(stname, index=False,columns=['updateDate','code','code_name','industry','industryClassification','tdxbk','tdxgn'])    
+def get_scr(code):
+    index = stockindex[code]
+    stock = stocklist[index]
+    return stock.get('SCR',"50")
 
 def get_chouma(code):
-    return cm_dict.get(code,"50")
-
+    return get_scr(code)
 #
 # extern to Klang
 # 此接口有外部调用
@@ -66,7 +78,10 @@ def updatestockdata(Kl):
         if len(df) > 2:
            df['datetime'] = df['date']
            df = df.set_index('date')
-        number = Kl.stockindex[code]
+        
+        number = Kl.stockindex.get(code,None)
+        if number is None:
+            continue 
         Kl.df_all[number]["df"] = df
  
     f.close()
@@ -77,7 +92,7 @@ def downloadstockdata(Kl):
     #创建临时文件
     f = open(filename_jsont+".tmp","w+")
     for stock in Kl.stocklist:
-        code ,name ,tdxbk,tdxgn= getstockinfo(stock)
+        code ,name = stock['code'],stock['name']
         jsondata,name,code = get_day(name,code,Kl.start_date,Kl.end_date,json=True)
         #print(code,name)
         content = json.dumps([code,name,jsondata])    
@@ -150,21 +165,13 @@ def json_to_df(json,setindex=False):
 
     return datas
 
-# 从文件中一行数据 格式化分析出信息
-# 2019-12-09,sz.002094,青岛金王,化工,申万一级行业
-# 时间，股票代码，名称，类别
-def getstockinfo(stock):
-    stock = stock.strip()
-    d,code,name,skip1,skip2,tdxbk,tdxgn = stock.split(',')
-    return code,name,tdxbk,tdxgn
 
 
 #
 # 从网上下载数据或者从文件加载股票数据    
 # 加载后数据存放在(Kl.df_all)
 #
-def get_all_day(Kl):
-    stocklist = Kl.stocklist
+def get_all_day(Kl):    
     # 如果文件存在,可以直接从文件加载数据
     # 要强制从网上加载数据,可以设置reload=True
     if os.path.exists(filename_jsont) and not Kl.reload:
@@ -176,32 +183,65 @@ def get_all_day(Kl):
     downloadstockdata(Kl)
     updatestockdata(Kl)
 
-@profile
+def add_factor(name,order):
+    result = kapi.get_factor(name).json()
+    for i in result:
+        code = i['code']
+        index = stockindex.get(code,None)
+        if index is None:
+            continue        
+        stocklist[index][name] = i['value'].split(",")[0]
+    # tdxgn 有多个字段用 ',' 分开，所以要处理
+
+def updatestocklist(stname=filename_sl):
+
+    listjson = kapi.get_stocklist().json()
+    index = 0
+    for i in listjson:
+        stocklist.append({"code":i['code'],"name":i['name'],"df":None})
+        stockindex[i['code']] = index
+        index += 1
+
+    print("正在加载因子:筹码，板块 ")
+    add_factor("SCR",2)
+    add_factor("tdxbk",3)
+    add_factor("tdxgn",4)
+    print("因子加载完成")
+
+    df = pd.json_normalize(stocklist)
+    
+    # 结果集输出到csv文件
+    df.to_csv(stname, index=False,columns=['code','name','SCR','tdxbk','tdxgn'])  
+
+
 def init_stock_list(Kl,offset=0):
+    global stockindex,stocklist
+   
     if not os.path.exists(filename_sl):
         print('正在下载股票库列表....')
         updatestocklist(filename_sl)
         print("股票列表下载完成")
 
+    stocklist  = []
     print("正在从文件",filename_sl,"加载股票列表")
-    stocklist = open(filename_sl).readlines()
-    stocklist = stocklist[1+int(offset):] #删除第一行
+    stocklines = open(filename_sl,encoding='utf-8').readlines()
+    stocklines = stocklines[1:] #删除第一行
+
+    index = 0
+    for i in stocklines:
+        i = i.strip()
+        code,name,scr,tdxbk,tdxgn = i.split(',')
+        stocklist.append({"code":code,"name":name,"df":None,'SCR':scr,"tdxbk":tdxbk,"tdxgn":tdxgn})
+        stockindex[code] = index
+        index += 1
 
     #stocklist = stocklist[:100]
     # 初始化 code到index 对应表
-    number = 0
+
     Kl.df_all = []
     for stock in stocklist:
-            code ,name ,tdxbk,tdxgn = getstockinfo(stock)
-            Kl.stockindex[code] = number
-            Kl.df_all.append({"name":name,"df":None,"code":code,"tdxbk":tdxbk,"tdxgn":tdxgn}) 
-            number += 1
-        
-
-    # 初始化筹码
-    json = requests.get(hostname+"/industries").json()
-    for i in json:
-        cm_dict[i['code']] = i.get('chouma','50')
+            Kl.stockindex = stockindex
+            Kl.df_all.append(stock) 
 
     return stocklist
 
