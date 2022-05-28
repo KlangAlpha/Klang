@@ -33,9 +33,16 @@ pip3 install -r requirements.txt
 python3 setup.py install
 ```
 
+# 下载数据, 也可以直接使用不下载数据，下载数据约10分钟。
+* 可以跳过，直接运行
+```
+python3 update_data.py
+```
+
 
 # 应用示例 python  版本
 * 第一次会下载数据,预计需要几分钟
+
 ```
 from Klang import *
 
