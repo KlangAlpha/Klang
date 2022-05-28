@@ -18,17 +18,19 @@ from threading import Lock
 
 hostname="https://data.klang.org.cn/api"
 
+session = requests.Session()
+
 class DataAPI():
     def __init__(self,host=hostname):
         self.host = host
 
     def get_stocklist(self):
         url = self.host + "/stocklists"
-        return requests.get(url)
+        return session.get(url)
 
     def get_factor(self,factorname,date=end):
         url = self.host + "/getfactors"
-        return requests.get(url,params={'factorname':factorname,'date':date})
+        return session.get(url,params={'factorname':factorname,'date':date})
 
 filename_jsont = os.path.expanduser("~/.klang_stock_trader.json")
 filename_sl = os.path.expanduser("~/.klang_stock_list.csv")
@@ -112,11 +114,11 @@ def get_day(name,code,start,end,setindex=False,json=False):
 
     mutex.acquire()
     try:
-        json_data = requests.get(hostname+"/dayks",
+        json_data = session.get(hostname+"/dayks",
             params={"code":code,"end":end,"limit":200},timeout=1000).json()
     except:
         time.sleep(2)
-        json_data = requests.get(hostname+"/dayks",
+        json_data = session.get(hostname+"/dayks",
             params={"code":code,"end":end,"limit":200},timeout=1000).json()
    
     mutex.release()
