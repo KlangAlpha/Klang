@@ -56,7 +56,7 @@ def REFDATE(X,A):
 例如：　CROSS(MA(CLOSE，5)，MA(CLOSE，10))　表示5日均线与10日均线交金叉。
 """
 def _cross(a,b):
-    if a[1] < b[1] and a >= b:
+    if a[-2] < b[-2] and a[-1] >= b[-1]:
         return 1
     return 0
 
