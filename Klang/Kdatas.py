@@ -55,6 +55,7 @@ class KdataBase(object):
         ret = self.data[-1]
         if self.dtype == float:
             return round(ret,3)
+        return ret
 
     def __bool__(self):
         return bool(self.data[-1])
