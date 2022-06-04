@@ -66,7 +66,7 @@ def CROSS(A,B):
         result.insert(0,_cross(A[-i].data,B[-i].data))
 
     #补全最后一个
-    result.instert(0,0)
+    result.insert(0,0)
     ret = KdataBase(data=result,dtype=bool)
     return ret
 
