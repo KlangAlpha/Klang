@@ -44,9 +44,9 @@ def match_size(*datas_list):
 #股票数据重新定义以方便计算
 
 class KdataBase(object):
-    def __init__(self,index=0,data=[]):
+    def __init__(self,index=0,data=[],dtype=float):
         self._data = data
-        self.dtype = float
+        self.dtype = dtype
         self.index = index
 
     #返回最后一天的数据

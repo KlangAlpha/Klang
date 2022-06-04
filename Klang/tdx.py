@@ -56,14 +56,18 @@ def REFDATE(X,A):
 例如：　CROSS(MA(CLOSE，5)，MA(CLOSE，10))　表示5日均线与10日均线交金叉。
 """
 def _cross(a,b):
-    return a[-2] < b[-2] and a[-1] >= b[-1]
+    if a[1] < b[1] and a >= b:
+        return 1
+    return 0
 
 def CROSS(A,B):
     result = []
     for i in range(0,len(A)-1):
         result.insert(0,_cross(A[-i].data,B[-i].data))
-    
-    ret = KdataBase(data=result)
+
+    #补全最后一个
+    result.instert(0,0)
+    ret = KdataBase(data=result,dtype=bool)
     return ret
 
 def BARSCOUNT(X):
