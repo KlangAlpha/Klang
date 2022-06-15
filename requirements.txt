@@ -6,3 +6,4 @@ requests
 ply
 websockets
 TA-Lib
+progress

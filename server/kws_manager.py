@@ -6,6 +6,7 @@ import asyncio
 import json
 import logging
 import websockets
+import traceback
 from threading import Lock,Thread
 logging.basicConfig()
 
@@ -32,6 +33,11 @@ def PrintException():
 # 服务器列表
 server_list=[
 ]
+
+# 回测服务器列表
+kbtserver_list=[
+]
+
 #用户列表
 user_list=[]
 
@@ -80,13 +86,13 @@ class KlangMSG():
             await self.exe_user.send(data) #转发给用户
 
         if msg["type"] == K_DONE:
-            
-            await send_notices()
+                        
             await self.exe_user.handler.done()
             mutex.acquire()
             self.state = 0
             self.exe_user = None
             mutex.release()
+            await send_notices()
             
     def list_increase(self):
         mutexsu.acquire()
@@ -98,6 +104,17 @@ class KlangMSG():
         if self.websocket in server_list:
             server_list.remove(self.websocket)
         mutexsu.release()
+
+class KlangbtMSG(KlangMSG):
+    def list_increase(self):
+        mutexsu.acquire()
+        kbtserver_list.append(self.websocket)
+        mutexsu.release()
+    def list_decrease(self):
+        mutexsu.acquire()
+        if self.websocket in kbtserver_list:
+            kbtserver_list.remove(self.websocket)
+        mutexsu.release()        
 #
 # 浏览器用户和管理者交互
 #
@@ -139,7 +156,8 @@ class UserMSG():
     async def parse(self,msg):
         if msg["type"] == U_EXE:
             mutex.acquire()
-            ws = find_server()
+            stype = msg.get("stype",0)
+            ws = find_server(stype)
             if ws is not None: #找到空闲服务器
                 ws.handler.exe_user = self.websocket
                 msg["type"]=K_EXE
@@ -178,7 +196,7 @@ async def updateall(msg):
 
 async def send_notices():
     server_state = []
-    for s in server_list:
+    for s in server_list+kbtserver_list:
         server_state.append(s.handler.state)
     msg = json.dumps({
         "type":U_INFO,
@@ -192,10 +210,16 @@ async def send_notices():
             print("Use send failed remove from list")
             user.handler.list_decrease()
 
-def find_server():
-    for w in server_list:
+def find_server(stype):
+
+    server = server_list
+    if stype == 1:
+        server = kbtserver_list
+
+    for w in server:
         if w.handler.state == 0:
             return w
+
     return None
 
 
@@ -209,6 +233,12 @@ async def listen(websocket, path):
         print("A new server connect",websocket.remote_address)
         websocket.handler = KlangMSG(websocket)
         websocket.handler.list_increase()
+
+    if (path == "/kbtserver"): 
+        print("A backtest server connect",websocket.remote_address)
+        websocket.handler = KlangbtMSG(websocket)
+        websocket.handler.list_increase()
+
 
     # send msg to all USERS
     await send_notices()
@@ -224,12 +254,14 @@ async def listen(websocket, path):
         websocket.handler.list_decrease()
         PrintException()
         print(e)
+        traceback.print_stack()
     finally:
         websocket.handler.list_decrease()
+        
 
 #data = asyncio.wait_for(s.recv(), timeout=10)
 
-start_server = websockets.serve(listen, "0.0.0.0", port)
+start_server = websockets.serve(listen, "0.0.0.0", port,ping_interval=5000,ping_timeout=5000)
 print("Websocket manager start port:",port)
 asyncio.get_event_loop().run_until_complete(start_server)
 asyncio.get_event_loop().run_forever()

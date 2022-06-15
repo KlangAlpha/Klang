@@ -27,7 +27,7 @@ Klang 最大的亮点是支持中文编程,可以看最后的完整例子
 # install
 * 安装过程中遇到talib错误，需要搜索talib源代码解决
 ```
-git clone https://github.com/asmcos/Klang
+git clone https://github.com/KlangAlpha/Klang
 cd Klang
 pip3 install -r requirements.txt 
 python3 setup.py install

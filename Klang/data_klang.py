@@ -15,6 +15,7 @@ import time
 import pandas as pd
 from .common import end
 from threading import Lock
+from progress.bar import Bar
 
 hostname="https://data.klang.org.cn/api"
 
@@ -93,6 +94,7 @@ def updatestockdata(Kl):
 def downloadstockdata(Kl):
     #创建临时文件
     f = open(filename_jsont+".tmp","w+")
+    bar = Bar('Downloading ',max=len(Kl.stocklist))
     for stock in Kl.stocklist:
         code ,name = stock['code'],stock['name']
         jsondata,name,code = get_day(name,code,Kl.start_date,Kl.end_date,json=True)
@@ -100,6 +102,8 @@ def downloadstockdata(Kl):
         content = json.dumps([code,name,jsondata])    
         f.write(content+"\n")
         f.flush()
+        bar.next()
+    bar.finish()
     f.close()
 
     #下载完成，生存目标文件         
