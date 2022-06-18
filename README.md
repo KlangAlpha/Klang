@@ -49,10 +49,12 @@ python3 update_data.py
 
 # 应用示例 python  版本
 * 第一次会下载数据,预计需要几分钟,推荐先用上面的步骤下载数据后再执行
+* 具体例子可以看 test.py,testparse.py
 
 ```
-from Klang import *
-
+from Klang import Klang,C,O
+Klang.Klang_init()
+Kl = Klang.Kl
 C/C[1]
 
 ```
@@ -101,7 +103,8 @@ REF(C,5) # 5周期前的收盘价，5日前收盘价
 
 ```
 from Klang.lang import kparser,setPY,Kexec
-
+from Klang import Klang
+Klang.Klang_init()
 # Klang和python的桥梁，支持函数,变量共享
 # 具体使用方法 参见 testparse.py
 
