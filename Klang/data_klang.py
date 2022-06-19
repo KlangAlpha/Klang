@@ -21,6 +21,19 @@ hostname="https://data.klang.org.cn/api"
 
 session = requests.Session()
 
+def gethostname():
+   
+    serveriplist = []
+    url = 'https://www.klang.org.cn/api/sysconfigs?keyword=data&filter=1'
+    resp = requests.get(url).json()
+    for i in resp:
+        if i['key'] == 'dataserver':
+            serveriplist = i['value'].split(',')
+    host = "http://" + serveriplist[0] + "/api"
+    return host
+    
+hostname = gethostname()
+
 class DataAPI():
     def __init__(self,host=hostname):
         self.host = host
