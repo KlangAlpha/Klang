@@ -71,6 +71,11 @@ class KdataBase(object):
         #Klang Don't None 类型，因此处理判断位None
         if index is None:
             return None
+        if isinstance(index,str):
+            try:
+                return self.data[index]
+            except:
+                return None
 
         if index < 0:
             index = -(index + 1)
