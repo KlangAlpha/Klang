@@ -317,8 +317,11 @@ def debug(*params):
 
 
 #parsetab.py -->outputdir
-
-kparser = yacc.yacc(debug=False,outputdir="/tmp")
+import os
+userpath = os.path.expanduser("~/")
+outdir = os.path.normpath(userpath)
+print(outdir)
+kparser = yacc.yacc(debug=False,outputdir=outdir)
 
 def Kexec(datas):
     result = kparser.parse(datas)

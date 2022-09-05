@@ -260,10 +260,12 @@ async def listen(websocket, path):
         
 
 #data = asyncio.wait_for(s.recv(), timeout=10)
+async def main():
 
-start_server = websockets.serve(listen, "0.0.0.0", port,ping_interval=5000,ping_timeout=5000)
-print("Websocket manager start port:",port)
-asyncio.get_event_loop().run_until_complete(start_server)
-asyncio.get_event_loop().run_forever()
+    print("Websocket manager start port:",port)
+    async with websockets.serve(listen, "0.0.0.0", port,ping_interval=5000,ping_timeout=5000):
+        await asyncio.Future()
+
+asyncio.run(main())
 
 

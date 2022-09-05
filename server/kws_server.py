@@ -164,9 +164,16 @@ class KlangMSG():
         await self.websocket.send(data)
 
 #klang server
+
+
 #server_host = 'ws://localhost:9088/klang'
 server_host = 'wss://klang.org.cn:8099/klang'
 server_host = 'ws://klang.org.cn:9099/klang'
+
+if len(sys.argv) > 1:
+    server_host = sys.argv[1]
+
+print(server_host)
 
 async def conn_server():
 
@@ -191,5 +198,5 @@ async def conn_server():
         print("connect server error,try again ",server_host)
         await asyncio.sleep(2)
 
-asyncio.get_event_loop().run_until_complete(conn_server())
+asyncio.run(conn_server())
 
