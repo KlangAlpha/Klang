@@ -20,7 +20,7 @@ def setpyglobals(name,val):
 setPY(getpyglobals,setpyglobals) 
 
 def getstockinfo(a):
-    return Kl.currentdf['name'] + "-" + Kl.currentdf['code']
+    return Kl.cur_name + "-" + Kl.cur_code
 
 
 pi=3.1415926
@@ -54,14 +54,14 @@ testblock1 =\
 a,b,c = MACD(C)
 a = 1
 e = C[1]
-Kl.date('2021-10-01','2022-05-22')
+Kl.date('2021-10-01','2022-10-22')
 print(str(e)+":"+str(1))
 """
 
+
+
 Kexec(testblock1)
 print(a)
-
-
 
 Kexec("""\n
 kloop

@@ -313,7 +313,7 @@
                 }
                 vue.$data.result = []
                 vue.$data.work = true
-                websocket.send(JSON.stringify({type: 'U_EXE',content:content.value,loop:true}));
+                websocket.send(JSON.stringify({type: 'U_EXE',content:content.value,loop:true,stype:0}));
             }
 
             function CopyN(arg1){

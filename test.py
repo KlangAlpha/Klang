@@ -20,7 +20,7 @@ date = Kl.date
 code('sh.601012')
 print(C)
 
-print(Kl.currentdf['df'])
+print(Kl.day_df)
 
 # 设置为茅台
 code('sh.600519')

@@ -59,10 +59,11 @@ def setpyglobals(name,val):
 setPY(getpyglobals,setpyglobals)
 
 def getstockinfo(name=0):
-    return Kl.currentdf['name'], Kl.currentdf['code'],\
-            Kl.currentdf['df']['hqltsz'].iloc[-1],\
-            Kl.currentdf['tdxbk'],\
-            Kl.currentdf['tdxgn']
+    code = Kl.cur_code
+    return Kl.stockdict[code]['name'], code,\
+            Kl.day_df['hqltsz'].iloc[-1],\
+            Kl.stockdict[code]['tdxbk'],\
+            Kl.stockdict[code]['tdxgn']
  
 def get_chouma(code=0):
     return Kl.chouma()
@@ -74,7 +75,7 @@ def kloopexec(content):
 def updateall(msg):
     #pw   = msg['pw']
     print("update",msg)
-    t = threading.Thread(target=Kl.updateall)
+    t = threading.Thread(target=Kl.downloadall)
     t.start()
 ###################web socket######################
 mutex = Lock ()
@@ -87,6 +88,7 @@ def await_run(coroutine):
 
 # 因为DISPLAY是需要在Klang执行，所以需要await_run执行 sync消息
 def DISPLAY(value):
+
     name,code,hqltsz,tdxbk,tdxgn = getstockinfo()
     chouma = Kl.chouma()
     message = {"type":K_RET,"name":name,"code":code,\
@@ -166,9 +168,9 @@ class KlangMSG():
 #klang server
 
 
-#server_host = 'ws://localhost:9088/klang'
-server_host = 'wss://klang.org.cn:8099/klang'
-server_host = 'ws://klang.org.cn:9099/klang'
+server_host = 'ws://localhost:9088/klang'
+#server_host = 'wss://klang.org.cn:8099/klang'
+#server_host = 'ws://klang.org.cn:9099/klang'
 
 if len(sys.argv) > 1:
     server_host = sys.argv[1]

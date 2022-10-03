@@ -25,8 +25,9 @@ df2 = df[(df.date >= '2020-10-01') &
 #
 
 def getstockdata(name):
-    if isinstance(kl.currentdf.get('df'),pandas.core.frame.DataFrame):
-        return kl.currentdf['df'][name]
+    if isinstance(kl.day_df,pandas.core.frame.DataFrame):
+        return kl.day_df[name]
+
     return []
         
 #做类似C/C[1]计算
@@ -224,11 +225,11 @@ class KdataBase(object):
 
 class Kdatas(KdataBase):
     def __init__(self,index=0):
-        self._data = []
-        self.currentindex = -1 #stock code index
+        self._data        = []
+        self.cur_code     = "00000" # 股票代码
         self.dfstart      = -1 #stock start date
         self.dfend        = -1 #stock end date
-        self.index = index     #C,C[1],C[2]
+        self.index        = index     #C,C[1],C[2]
     
      #返回最后一天的数据
     @property
@@ -240,14 +241,14 @@ class Kdatas(KdataBase):
     #比较currentindex值的目的是切换股票的时候刷新
     @property
     def data(self):
-        if len(self._data) == 0 or self.currentindex != kl.currentindex\
+        if len(self._data) == 0 or self.cur_code != kl.cur_code\
             or self.dfstart != kl.dfstart\
             or self.dfend   != kl.dfend:
 
             #reload
-            self.currentindex = kl.currentindex
-            self.dfstart = kl.dfstart
-            self.dfend   = kl.dfend
+            self.dfstart  = kl.dfstart
+            self.dfend    = kl.dfend
+            self.cur_code = kl.cur_code
 
             d = getstockdata(self.name).astype(self.dtype)
             index = len(d) - self.index

@@ -13,6 +13,10 @@ logging.basicConfig()
 import threading
 import sys 
 
+# K WS manager 9088
+# nginx ws 8099 -> 9088
+# nginx wss 9099 -> 9088
+
 if len(sys.argv) > 1:
     port = int(sys.argv[1])
 else:
@@ -31,25 +35,24 @@ def PrintException():
 
 ###################web socket######################
 # 服务器列表
-server_list=[
-]
-
-# 回测服务器列表
-kbtserver_list=[
-]
+# 0, 默认的，老的选股
+# 1, 回测
+# 2, 选股
+##############################
+server_list = {
+    0:[],
+    1:[],
+    2:[],        
+}
 
 #用户列表
 user_list=[]
-
-
 
 mutex = Lock ()
 mutexsu = Lock () #server and user 操作
 
 # server 和klang执行服务器交互
 # Klang msg type
-#K_REG          = "K_REG"   #服务器发送给管理这服务器上线
-#K_UNREG        = "K_UNREG" #服务器发送给管理者服务器离开
 K_HEARTBEAT    = "K_HEART" #心跳包 
 K_EXE          = "K_EXE"  #管理者发送给服务器
 K_DONE         = "K_DONE" #服务器返回给管理者
@@ -94,27 +97,16 @@ class KlangMSG():
             mutex.release()
             await send_notices()
             
-    def list_increase(self):
+    def list_increase(self,stype=0):
+        self.stype = stype
         mutexsu.acquire()
-        server_list.append(self.websocket)
+        server_list[stype].append(self.websocket)
         mutexsu.release()
 
     def list_decrease(self):
         mutexsu.acquire()
-        if self.websocket in server_list:
-            server_list.remove(self.websocket)
+        server_list[self.stype].remove(self.websocket)
         mutexsu.release()
-
-class KlangbtMSG(KlangMSG):
-    def list_increase(self):
-        mutexsu.acquire()
-        kbtserver_list.append(self.websocket)
-        mutexsu.release()
-    def list_decrease(self):
-        mutexsu.acquire()
-        if self.websocket in kbtserver_list:
-            kbtserver_list.remove(self.websocket)
-        mutexsu.release()        
 #
 # 浏览器用户和管理者交互
 #
@@ -196,8 +188,9 @@ async def updateall(msg):
 
 async def send_notices():
     server_state = []
-    for s in server_list+kbtserver_list:
-        server_state.append(s.handler.state)
+    for key in server_list.keys() :
+        for s in server_list[key]:
+            server_state.append(s.handler.state)
     msg = json.dumps({
         "type":U_INFO,
         "servers":server_state,
@@ -212,9 +205,7 @@ async def send_notices():
 
 def find_server(stype):
 
-    server = server_list
-    if stype == 1:
-        server = kbtserver_list
+    server = server_list[stype]
 
     for w in server:
         if w.handler.state == 0:
@@ -232,12 +223,11 @@ async def listen(websocket, path):
     if (path == "/klang"): 
         print("A new server connect",websocket.remote_address)
         websocket.handler = KlangMSG(websocket)
-        websocket.handler.list_increase()
+        websocket.handler.list_increase(0)
 
     if (path == "/kbtserver"): 
         print("A backtest server connect",websocket.remote_address)
-        websocket.handler = KlangbtMSG(websocket)
-        websocket.handler.list_increase()
+        websocket.handler.list_increase(1)
 
 
     # send msg to all USERS

@@ -93,13 +93,13 @@ class mAST:
 
         elif self.action == 'kloop':
             Kl  = getpyglobals('Kl')
-            for df in Kl.df_all:
+            for  stock in Kl.stocklist:
                 try:
-                    Kl.code(df["code"])
+                    Kl.code(stock["code"])
                     for x in self.params:
                         mAST.resolve(x)
                 except :
-                    print("Klang ERROR",df,Kl)
+                    print("Klang ERROR",Kl.cur_code,Kl.cur_name)
                     PrintException()
 
         elif self.action == 'loop':
