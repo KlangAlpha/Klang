@@ -33,6 +33,19 @@ __all__ = [
     "VOLUME", "V", "VOL",
     "DATETIME",
 
+    "MOPEN", "MO",
+    "MHIGH", "MH",
+    "MLOW", "ML",
+    "MCLOSE", "MC",
+    "MVOLUME", "MV", "MVOL",
+
+    "WOPEN", "WO",
+    "WHIGH", "WH",
+    "WLOW", "WL",
+    "WCLOSE", "WC",
+    "WVOLUME", "WV", "WVOL",
+ 
+
     "SMA",
     "MA",
     "EMA",

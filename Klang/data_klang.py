@@ -53,6 +53,11 @@ def get_path(name):
 data_path = get_path("~/.klang")
 os.makedirs(data_path, exist_ok=True)
 
+os.makedirs(get_path(data_path+"/day"), exist_ok=True)
+os.makedirs(get_path(data_path+"/week"), exist_ok=True)
+os.makedirs(get_path(data_path+"/month"), exist_ok=True)
+
+
 filename_sl = get_path("~/.klang/klang_stock_list.csv")
 file_updata_list = get_path("~/.klang/update_list.csv")
 
@@ -132,7 +137,7 @@ class GetData:
 
         # 可能是文件不存在的情况
         try:
-            f1 = open(get_path("~/.klang/"+code+ ext + ".json"),"r")
+            f1 = open(get_path("~/.klang/"+ ext + "/"+code+ ext + ".json"),"r")
             content1 = f1.read()
             f1.close()
 
@@ -143,8 +148,8 @@ class GetData:
             jsondata = []
 
         df = pd.json_normalize(content+jsondata)
-        df[~df.date.duplicated(keep='first')]
-        return json.loads(df.to_json(orient="records"))
+        df1 = df[~df.date.duplicated(keep='first')]
+        return json.loads(df1.to_json(orient="records"))
     
  
 
@@ -152,10 +157,10 @@ class GetData:
         ext_table = {"d":"day","w":"week","m":"month"}
         ext = ext_table.get(self.freq,"day")
 
-        if not os.path.exists(get_path("~/.klang/"+code+ ext + ".json")):
+        if not os.path.exists(get_path("~/.klang/"+ext +"/" +code+ ext + ".json")):
             return pd.DataFrame([])
 
-        f1 = open(get_path("~/.klang/"+code+ ext + ".json"),"r")
+        f1 = open(get_path("~/.klang/"+ ext + "/"+ code+ ext + ".json"),"r")
 
         content = f1.read()
         f1.close()
@@ -175,7 +180,6 @@ class GetData:
             params = {"code":code,"start":start,"limit":200}
         else:
             params = {"code":code,"end":end,"limit":200}
-
         mutex.acquire()
         try:
             json_data = session.get(hostname+ ext_path,
@@ -210,7 +214,7 @@ class GetData:
 
         # 2. 保存到本地硬盘，
         content = json.dumps([code,name,jsondata])
-        f1 = open(get_path("~/.klang/"+code+ ext + ".json"),"w+")
+        f1 = open(get_path("~/.klang/"+ ext +"/" + code+ ext + ".json"),"w+")
         f1.write(content)
         f1.close()
 
@@ -218,14 +222,14 @@ class GetData:
         if  stockupdate.get(code,None) is None:
             stockupdate[code] = {}
 
-        stockupdate[code]['day'] = get_date(0)
+        stockupdate[code][ext] = get_date(0)
         save_stockupdate()
-
+        return jsondata
 
     def get_data(self,Kl,code,start,end):
         df = self._read_file_data(code)
         if len(df) < 1:
-            jsondata = self.down_and_save (Kl,cide,start,end)
+            jsondata = self.down_and_save (Kl,code,start,end)
             df = json_to_df(jsondata,setindex=True)
 
         return df
@@ -236,27 +240,27 @@ class GetData:
         ext_table = {"d":"day","w":"week","m":"month"}
         ext = ext_table.get(self.freq,"day")
 
-        if not os.path.exists(get_path("~/.klang/"+code+ ext + ".json")):
+        if not os.path.exists(get_path("~/.klang/"+ext+"/" +code+ ext + ".json")):
             return self.get_data(Kl,code,Kl.start_date,Kl.end_date)
         
         today = get_date(0)
 
         name = Kl.stockdict[code]['name']
-        lastday = stockupdate.get(code,{}).get('day','2021-01-01')
+        lastday = stockupdate.get(code,{}).get(ext,'2021-01-01')
         if lastday == today:
             return 
         jsondata = self._read_server_data(code,lastday,Kl.end_date,json=True,append=True)
         jsondata = self.append_data(code,jsondata)
 
         content = json.dumps([code,name,jsondata])
-        f1 = open(get_path("~/.klang/"+code+"day.json"),"w+")
+        f1 = open(get_path("~/.klang/"+ ext +"/" +code+ ext+ ".json"),"w+")
         f1.write(content)
         f1.close()
 
         if  stockupdate.get(code,None) is None:
             stockupdate[code] = {}
 
-        stockupdate[code]['day'] = get_date(0)
+        stockupdate[code][ext] = get_date(0)
         
 
 # 下载所有的股票
@@ -268,8 +272,8 @@ def downloadstockdata(Kl,reload=False):
 
         code = stock['code']
         day_data.down_and_save(Kl,code,Kl.start_date,Kl.end_date)
-        #week_data.down_and_save(Kl,code,Kl.start_date,Kl.end_date)
-        #month_data.down_and_save(Kl,code,Kl.start_date,Kl.end_date)
+        week_data.down_and_save(Kl,code,Kl.start_date,Kl.end_date)
+        month_data.down_and_save(Kl,code,Kl.start_date,Kl.end_date)
 
         bar.next()
     bar.finish()
@@ -284,8 +288,8 @@ def updatestockdata(Kl,reload=False):
         code = stock['code']
 
         day_data.update_data(Kl,code)
-        #week_data.update_data(Kl,code)
-        #month_data.update_data(Kl,code)
+        week_data.update_data(Kl,code)
+        month_data.update_data(Kl,code)
 
         bar.next()
     bar.finish()
@@ -364,6 +368,6 @@ def init_stock_list(Kl,offset=0):
     return stocklist
 
 day_data   = GetData(freq="d")
-week_week  = GetData(freq="w")
+week_data  = GetData(freq="w")
 month_data = GetData(freq="m")
 

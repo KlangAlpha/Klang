@@ -238,7 +238,7 @@ class Kdatas(KdataBase):
             return None
         return self.dtype(self.data[-1])
 
-    #比较currentindex值的目的是切换股票的时候刷新
+    #比较code 值的目的是切换股票的时候刷新
     @property
     def data(self):
         if len(self._data) == 0 or self.cur_code != kl.cur_code\
@@ -258,7 +258,48 @@ class Kdatas(KdataBase):
                 self._data = []
         return self._data
 
-      
+
+class KWdatas(Kdatas):
+    def get_week_stockdata(self,name):
+        if isinstance(kl.week_df,pandas.core.frame.DataFrame):
+            return kl.week_df[name]
+        return []
+ 
+    @property
+    def data(self):
+        if len(self._data) == 0 or self.cur_code != kl.cur_code:
+
+            self.cur_code = kl.cur_code
+
+            d = self.get_week_stockdata(self.name).astype(self.dtype)
+            index = len(d) - self.index
+            if index > 0:
+                self._data = d[:index]
+            else :
+                self._data = []
+        return self._data
+
+class KMdatas(Kdatas):
+    def get_month_stockdata(self,name):
+        if isinstance(kl.month_df,pandas.core.frame.DataFrame):
+            return kl.month_df[name]
+        return []
+    @property
+    def data(self):
+        if len(self._data) == 0 or self.cur_code != kl.cur_code:
+
+            self.cur_code = kl.cur_code
+
+            d = self.get_month_stockdata(self.name).astype(self.dtype)
+            index = len(d) - self.index
+            if index > 0:
+                self._data = d[:index]
+            else :
+                self._data = []
+        return self._data
+
+
+     
 # create open high low close volume datetime
 # 建立全局的 o,O,OPEN,等关键词
 for name in ["open", "high", "low", "close", "volume", 'vol','amount','datetime']:
@@ -266,5 +307,19 @@ for name in ["open", "high", "low", "close", "volume", 'vol','amount','datetime'
     cls = type("{}Kdatas".format(name.capitalize()), (Kdatas, ), {"name": name, "dtype": dtype})
     obj = cls()
     for var in [name[0], name[0].upper(), name.upper()]:
+        globals()[var] = obj
+
+for name in ["open", "high", "low", "close", "volume", 'vol','amount','datetime']:
+    dtype = float if name != "datetime" else np.str_
+    cls = type("{}Kdatas".format(name.capitalize()), (KMdatas, ), {"name": name, "dtype": dtype})
+    obj = cls()
+    for var in ["w"+name[0], "W"+name[0].upper(), "W"+name.upper()]:
+        globals()[var] = obj
+
+for name in ["open", "high", "low", "close", "volume", 'vol','amount','datetime']:
+    dtype = float if name != "datetime" else np.str_
+    cls = type("{}Kdatas".format(name.capitalize()), (KMdatas, ), {"name": name, "dtype": dtype})
+    obj = cls()
+    for var in ["m"+name[0], "M"+name[0].upper(), "M"+name.upper()]:
         globals()[var] = obj
 

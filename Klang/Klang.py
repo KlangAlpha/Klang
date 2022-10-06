@@ -39,6 +39,13 @@ class Klang():
         df = df[self.dfstart:self.dfend] 
         self.day_df = df
 
+        wdf = self.data_engine.week_data.get_data(self,code,self.start_date,self.end_date)
+        self.week_df = wdf
+
+        mdf = self.data_engine.month_data.get_data(self,code,self.start_date,self.end_date)
+        self.month_df = mdf
+
+
     def date(self,start="2021-01-01",end=end):
 
         self.dfstart=start
@@ -47,6 +54,14 @@ class Klang():
         df = self.data_engine.day_data.get_data(self,self.cur_code,self.start_date,self.end_date)
         df = df[self.dfstart:self.dfend] 
         self.day_df = df
+
+        wdf = self.data_engine.week_data.get_data(self,self.cur_code,self.start_date,self.end_date)
+        self.week_df = wdf
+
+        mdf = self.data_engine.month_data.get_data(self,self.cur_code,self.start_date,self.end_date)
+        self.month_df = mdf
+
+
 
     # 筹码 scr
     def chouma(self):

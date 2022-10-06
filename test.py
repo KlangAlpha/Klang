@@ -1,5 +1,6 @@
 from Klang import (
     C,O,Klang,
+    MC,WC,MO,WO,
     REF,REFDATE,
     MA,
     SMA,
@@ -57,4 +58,4 @@ print(EVERY(C<O,2))
 print(ABS(C-O))
 
 print(EXIST(C<O,10))
-
+print(WC,MC)
