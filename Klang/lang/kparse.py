@@ -19,6 +19,7 @@ def p_function(p):
     '''
     function : function statement SEMI
              | function line_statement
+             | function statement_assign 
              | function kloop
              | empty
     '''
@@ -134,14 +135,13 @@ def p_statement_cond_postfix_assign(p):
         p[1][0], mAST(action='condition', params=[p[3], p[1][1], p[5]])
     ])
 
-
 def p_statement_cond(p):
     '''
-    line_statement : IF condition_list COLON statement SEMI %prec IFX
+    line_statement : IF condition_list COLON SEMI statement_assign SEMI %prec IFX
+                   | IF condition_list COLON statement SEMI %prec IFX
                    | IF condition_list COLON SEMI statement SEMI %prec IFX
                    | IF condition_list COLON SEMI statement_func SEMI %prec IFX
                    | IF condition_list COLON statement_func SEMI %prec IFX
-                   | IF condition_list COLON SEMI ID ASSIGN condition_list SEMI %prec IFX
     '''
     debug("IF", [str(x) for x in p[1:]])
     if len(p) < 7:
@@ -176,6 +176,16 @@ def p_statement_assign(p):
     '''
     debug('ASSIGN', p[1], p[3])
     p[0] = mAST(action='assign', params=[p[1], p[3]])
+
+
+def p_statement_assign1(p):
+    '''
+    statement_assign : ID ASSIGN condition_list 
+    '''
+    debug('ASSIGN', p[1], p[3])
+    p[0] = mAST(action='assign', params=[p[1], p[3]])
+
+
 
 def p_expression_list(p):
     '''
