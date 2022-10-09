@@ -6,6 +6,7 @@ import asyncio
 import json
 import logging
 import websockets
+import socket
 import traceback
 from threading import Lock,Thread
 logging.basicConfig()
@@ -253,7 +254,9 @@ async def listen(websocket, path):
 async def main():
 
     print("Websocket manager start port:",port)
-    async with websockets.serve(listen, "0.0.0.0", port,ping_interval=5000,ping_timeout=5000):
+    async with websockets.serve(listen, "0.0.0.0", port,ping_interval=5000,ping_timeout=5000) as s:
+        for sock in s.server.sockets:
+            sock.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1)
         await asyncio.Future()
 
 asyncio.run(main())
