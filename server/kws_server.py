@@ -96,6 +96,14 @@ def DISPLAY(value):
     msg = json.dumps(message)
     await_run(ws.send(msg))
 
+    # Windows 平台需要使用 run_once刷新要发送的数据，否则堆积发送数据直到下一个loop run发生
+    if sys.platform == 'win32':
+        try:
+            loop = asyncio.get_running_loop()
+            loop._run_once()
+        except:
+            pass
+
 async def execute(handler,data):
     print(data)
 
