@@ -23,7 +23,25 @@ from Klang import (Kl,
     LOW, L,
     CLOSE, C,
     VOLUME, V, VOL,
+    TURN,T,
     DATETIME,
+
+    WOPEN, WO,
+    WHIGH, WH,
+    WLOW, WL,
+    WCLOSE, WC,
+    WVOLUME, WV, WVOL,
+    WTURN,WT,
+    WDATETIME,
+ 
+
+    MOPEN, MO,
+    MHIGH, MH,
+    MLOW, ML,
+    MCLOSE, MC,
+    MVOLUME, MV, MVOL,
+    MTURN,MT,
+    MDATETIME,
 
     SMA,MA,EMA,WMA,
 
