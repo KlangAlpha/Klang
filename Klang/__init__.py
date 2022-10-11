@@ -9,8 +9,8 @@ from .KSeq2Feature import *      #3. 特征计算
 from .talib_api import *         # 引用talib库的 基础算法
 from .tdx import *               # tdx公式算法
 
-#2022.10.02
-version="0.9.0"
+#2022.10.11
+version="0.9.1"
 
 #1. Kl 是全局使用的变量 
 # 共享 Kl 给 kdatas 
@@ -31,20 +31,22 @@ __all__ = [
     "LOW", "L",
     "CLOSE", "C",
     "VOLUME", "V", "VOL",
+    "TURN","T",
     "DATETIME",
-
-    "MOPEN", "MO",
-    "MHIGH", "MH",
-    "MLOW", "ML",
-    "MCLOSE", "MC",
-    "MVOLUME", "MV", "MVOL",
 
     "WOPEN", "WO",
     "WHIGH", "WH",
     "WLOW", "WL",
     "WCLOSE", "WC",
     "WVOLUME", "WV", "WVOL",
+    "WTURN","WT",
  
+    "MOPEN", "MO",
+    "MHIGH", "MH",
+    "MLOW", "ML",
+    "MCLOSE", "MC",
+    "MVOLUME", "MV", "MVOL",
+    "MTURN","MT",
 
     "SMA",
     "MA",

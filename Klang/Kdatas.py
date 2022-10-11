@@ -302,21 +302,21 @@ class KMdatas(Kdatas):
      
 # create open high low close volume datetime
 # 建立全局的 o,O,OPEN,等关键词
-for name in ["open", "high", "low", "close", "volume", 'vol','amount','datetime']:
+for name in ["open", "high", "low", "close", "volume", 'vol','amount','datetime','turn']:
     dtype = float if name != "datetime" else np.str_
     cls = type("{}Kdatas".format(name.capitalize()), (Kdatas, ), {"name": name, "dtype": dtype})
     obj = cls()
     for var in [name[0], name[0].upper(), name.upper()]:
         globals()[var] = obj
 
-for name in ["open", "high", "low", "close", "volume", 'vol','amount','datetime']:
+for name in ["open", "high", "low", "close", "volume", 'vol','amount','datetime','turn']:
     dtype = float if name != "datetime" else np.str_
-    cls = type("{}Kdatas".format(name.capitalize()), (KMdatas, ), {"name": name, "dtype": dtype})
+    cls = type("{}Kdatas".format(name.capitalize()), (KWdatas, ), {"name": name, "dtype": dtype})
     obj = cls()
     for var in ["w"+name[0], "W"+name[0].upper(), "W"+name.upper()]:
         globals()[var] = obj
 
-for name in ["open", "high", "low", "close", "volume", 'vol','amount','datetime']:
+for name in ["open", "high", "low", "close", "volume", 'vol','amount','datetime','turn']:
     dtype = float if name != "datetime" else np.str_
     cls = type("{}Kdatas".format(name.capitalize()), (KMdatas, ), {"name": name, "dtype": dtype})
     obj = cls()
