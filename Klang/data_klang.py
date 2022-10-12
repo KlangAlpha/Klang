@@ -267,6 +267,7 @@ class GetData:
 def downloadstockdata(Kl):
 
     bar = Bar('Downloading ',max=len(Kl.stocklist))
+    bar.is_tty = lambda :True
     today = get_date(0)
     for stock in Kl.stocklist:
 
@@ -285,6 +286,7 @@ def downloadstockdata(Kl):
 def updatestockdata(Kl,check=True):
 
     bar = Bar('Downloading ',max=len(Kl.stocklist))
+    bar.is_tty = lambda :True
     today = get_date(0)
     for stock in Kl.stocklist:
         code = stock['code']
