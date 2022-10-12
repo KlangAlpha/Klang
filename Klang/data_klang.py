@@ -275,6 +275,7 @@ def downloadstockdata(Kl):
         week_data.down_and_save(Kl,code,Kl.start_date,Kl.end_date)
         month_data.down_and_save(Kl,code,Kl.start_date,Kl.end_date)
 
+        save_stockupdate()
         bar.next()
     bar.finish()
     save_stockupdate()
@@ -292,6 +293,7 @@ def updatestockdata(Kl,check=True):
         #week_data.update_data(Kl,code,check)
         #month_data.update_data(Kl,code,chedk)
 
+        save_stockupdate()
         bar.next()
     bar.finish()
     save_stockupdate()
@@ -303,7 +305,7 @@ def updatestockdata(Kl,check=True):
 # 加载后数据存放在(Kl.df_all)
 #
 def get_all_data(Kl):    
-    updatestockdata(Kl) # 检查更新和追加数据
+    updatestockdata(Kl,check=True) # 检查更新和追加数据
 
 def add_factor(name,order):
     result = kapi.get_factor(name).json()
