@@ -37,11 +37,11 @@ python3 setup.py install
 * 可以跳过，直接运行
 * 下载数据有2种方法，第一种是直接下载压缩包，第二种是使用API下载
 
-* 方法一、 推荐，适用于网络速一般的场景
+* 方法一、 推荐，适用于网络速一般的场景，只有日K
 ```
-python3 tools/download.py
+python3 tools/download.py 
 ```
-* 方法二、 通过API下载
+* 方法二、 通过API下载 首次安装必须使用update_data.py来下载日，周，月数据
 ```
 python3 update_data.py
 ```
@@ -73,7 +73,7 @@ Kl.code('sh.601012')
 * 默认数据是日K
 
 ```
-Kl.date(start='2022-04-02',end='2022-05-01')
+Kl.date(start='2022-04-02',end='2022-11-01')
 ```
 
 ### 显示收盘价

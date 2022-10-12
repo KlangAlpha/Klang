@@ -80,7 +80,11 @@ class Klang():
         self.data_engine.updatestocklist() #下载列表到文件
         self.stocklist = self.data_engine.init_stock_list(self) #加载
 
-        self.data_engine.downloadstockdata(self,reload = True)
+        self.data_engine.downloadstockdata(self)
+
+    # 下载当前数据
+    def updateall(self):
+        self.data_engine.updatestockdata(self,check=False)
 
 Kl = Klang()
 

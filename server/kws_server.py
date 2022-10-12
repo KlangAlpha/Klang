@@ -93,8 +93,15 @@ def kloopexec(content):
 def updateall(msg):
     #pw   = msg['pw']
     print("update",msg)
+    t = threading.Thread(target=Kl.updateall)
+    t.start()
+def downloadall(msg):
+    #pw   = msg['pw']
+    print("download",msg)
     t = threading.Thread(target=Kl.downloadall)
     t.start()
+
+
 ###################web socket######################
 mutex = Lock ()
 
@@ -185,6 +192,8 @@ class KlangMSG():
         if msg["type"] == K_CMD:
             if msg["content"] == "UPDATEALL":
                 updateall(msg)
+            if msg["content"] == "DOWNLOADALL":
+                downloadall(msg)
 
     async def done(self):
         msg ={"type":K_DONE}

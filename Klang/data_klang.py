@@ -236,7 +236,7 @@ class GetData:
 
     # 下载数据 更新数据，只做差异补偿
 
-    def update_data(self,Kl,code):
+    def update_data(self,Kl,code,check=True):
         ext_table = {"d":"day","w":"week","m":"month"}
         ext = ext_table.get(self.freq,"day")
 
@@ -247,7 +247,7 @@ class GetData:
 
         name = Kl.stockdict[code]['name']
         lastday = stockupdate.get(code,{}).get(ext,'2021-01-01')
-        if lastday == today:
+        if lastday == today and check:
             return 
         jsondata = self._read_server_data(code,lastday,Kl.end_date,json=True,append=True)
         jsondata = self.append_data(code,jsondata)
@@ -264,7 +264,7 @@ class GetData:
         
 
 # 下载所有的股票
-def downloadstockdata(Kl,reload=False):
+def downloadstockdata(Kl):
 
     bar = Bar('Downloading ',max=len(Kl.stocklist))
     today = get_date(0)
@@ -280,16 +280,17 @@ def downloadstockdata(Kl,reload=False):
     save_stockupdate()
 
 # 更新所有的股票
-def updatestockdata(Kl,reload=False):
+# 更新仅仅更新日K，下载是下载日，月，周
+def updatestockdata(Kl,check=True):
 
     bar = Bar('Downloading ',max=len(Kl.stocklist))
     today = get_date(0)
     for stock in Kl.stocklist:
         code = stock['code']
 
-        day_data.update_data(Kl,code)
-        week_data.update_data(Kl,code)
-        month_data.update_data(Kl,code)
+        day_data.update_data(Kl,code,check=True)
+        #week_data.update_data(Kl,code,check=True)
+        #month_data.update_data(Kl,code,chedk=True)
 
         bar.next()
     bar.finish()
