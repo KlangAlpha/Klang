@@ -288,9 +288,9 @@ def updatestockdata(Kl,check=True):
     for stock in Kl.stocklist:
         code = stock['code']
 
-        day_data.update_data(Kl,code,check=True)
-        #week_data.update_data(Kl,code,check=True)
-        #month_data.update_data(Kl,code,chedk=True)
+        day_data.update_data(Kl,code,check)
+        #week_data.update_data(Kl,code,check)
+        #month_data.update_data(Kl,code,chedk)
 
         bar.next()
     bar.finish()

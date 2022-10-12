@@ -164,9 +164,8 @@ class UserMSG():
             mutex.release()
 
         if msg["type"] == U_CMD:
-            if msg["content"] == "UPDATEALL":
-                msg["type"] = K_CMD
-                await updateall(msg)
+            msg["type"] = K_CMD
+            await updateall(msg)
 
     def list_increase(self):
         mutexsu.acquire()
@@ -181,7 +180,7 @@ class UserMSG():
 
 async def updateall(msg):
     data = json.dumps(msg)
-    for s in server_list:
+    for s in server_list[msg["stype"]]:
         try:
             await s.send(data)
         except:
