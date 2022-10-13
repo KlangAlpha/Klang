@@ -320,9 +320,11 @@ def add_factor(name,order):
     # tdxgn 有多个字段用 ',' 分开，所以要处理
 
 def updatestocklist(stname=filename_sl):
-
+    global stocklist
     listjson = kapi.get_stocklist().json()
     index = 0
+    stocklist = []
+
     for i in listjson:
         stocklist.append({"code":i['code'],"name":i['name'],"df":None})
         stockindex[i['code']] = index
