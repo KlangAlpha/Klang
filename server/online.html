@@ -71,7 +71,7 @@
             工具箱
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <li><a class="dropdown-item" href="#">结构</a></li>
+            <li><a class="dropdown-item" href="#" @click="connect()">连接服务器</a></li>
             <li><a class="dropdown-item" href="#" id="resetcmd">复位列表和数据</a></li>
             <li><a class="dropdown-item" href="#" id="resetstock">复位数据</a></li>
             <li><hr class="dropdown-divider"></li>
@@ -281,6 +281,9 @@
                 })
         },
         methods: {
+		connect:function(){
+		    connect_server()
+		}
         }
       }//VueApp
       window.vue = Vue.createApp(VueApp).mount('#app')
@@ -292,7 +295,6 @@
                 resetstock = document.querySelector('#resetstock'),
                 content = document.querySelector('#content'),
                 display = document.querySelector('#display'),
-                flexbusy = document.querySelector('#flexbusy'),
                 connstate = document.querySelector('#flexCheckCheckedDisabled'),
                 ltszcheck = document.querySelector('#ltszCheck'),
                 STcheck = document.querySelector('#STCheck'),
@@ -327,11 +329,18 @@
             reset.onclick = function (event) {
                 content.value = ""
             }
+	    function connect_server(){
+		onmessage = websocket.onmessage
+		onclose   = websocket.onclose
+                websocket = new WebSocket(wshost);
+		websocket.onmessage = onmessage
+		websocket.onclose = onclose
+	    }
             resetcmd.onclick = function (event) {
-                websocket.send(JSON.stringify({type: 'U_CMD',content:"UPDATEALL",pw:"Klang"}));
+                websocket.send(JSON.stringify({type: 'U_CMD',content:"UPDATEALL",stype:0,pw:"Klang"}));
             }
             resetstock.onclick = function (event) {
-                websocket.send(JSON.stringify({action: 'U_CMD',content:"UPDATEALL",pw:"Klang"}));
+                websocket.send(JSON.stringify({type: 'U_CMD',content:"UPDATEALL",stype:0,pw:"Klang"}));
             }
             websocket.onmessage = function (event) {
                 data = JSON.parse(event.data);
@@ -402,7 +411,7 @@
                     console.log('websocket 断开: ' + e.code + ' ' + e.reason + ' ' + e.wasClean)
                     vue.$data.online = 0
                     vue.$data.usercount = 0
-                    flexbusy.checked  = false 
+                    vue.$data.work = 0
                     connstate.checked = false
             }
  
