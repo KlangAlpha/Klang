@@ -106,7 +106,8 @@ class KlangMSG():
 
     def list_decrease(self):
         mutexsu.acquire()
-        server_list[self.stype].remove(self.websocket)
+        if self.websocket in server_list[self.stype]:
+            server_list[self.stype].remove(self.websocket)
         mutexsu.release()
 #
 # 浏览器用户和管理者交互
