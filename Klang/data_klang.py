@@ -368,9 +368,12 @@ def init_stock_list(Kl,offset=0):
     # 获取股票 更新列表
     #
     if os.path.exists(file_updata_list):
-        f = open(file_updata_list)
-        stockupdate = json.load(f)
-        f.close()
+        try:
+            f = open(file_updata_list)
+            stockupdate = json.load(f)
+            f.close()
+        except: #存在列表保存不完整的情况
+            pass
 
     return stocklist
 
