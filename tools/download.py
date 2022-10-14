@@ -14,8 +14,13 @@ bar.Bar.color = bar.color('blue')
 host = "https://klang.org.cn/"
 filename = "stockdata.zip"
 url = host + filename
-filename_jsont = os.path.expanduser("~/.klang_stock_trader.json")
+def get_path(name):
+    t = os.path.expanduser(name)
+    return os.path.normpath(t)
 
+data_path = get_path("~/.klang")
+os.makedirs(data_path, exist_ok=True)
+dst_path = data_path
 
 def download():
 
@@ -38,12 +43,8 @@ def download():
     prog.finish()
 
 def unzip():
-    zf = zipfile.ZipFile(filename)
-    for name in zf.namelist():
-        print("unzip ",name)
-        zf.extract(name)
-    zf.close()
-
+    with zipfile.ZipFile(filename,"r") as zipObj:
+        zipObj.extractall(dst_path)
 # step 1. download file
 download()
 
@@ -53,5 +54,4 @@ unzip()
 
 
 # step 3. remove 
-
-shutil.move('.klang_stock_trader.json',filename_jsont)
+os.remove(filename)
