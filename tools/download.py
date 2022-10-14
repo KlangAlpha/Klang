@@ -26,9 +26,9 @@ def download():
 
     resp = requests.head(url)
     filelength = int(resp.headers.get('Content-Length', -1))
-
+    
     prog = bar.Bar('Downloading ' + filename, max=filelength)
-
+    prog.is_tty = lambda : True
     req = requests.get(url, stream=True)
 
     try:
