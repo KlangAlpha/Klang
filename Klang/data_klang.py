@@ -84,9 +84,10 @@ def get_chouma(code):
 
 def save_stockupdate():
     buf = json.dumps(stockupdate)
-    f1 = open(file_updata_list,"w+")
+    f1 = open(file_updata_list+'.tmp',"w+")
     f1.write(buf)
     f1.close()
+    shutil.move(file_updata_list+".tmp",file_updata_list)
 
 def json_to_df(json,setindex=False):
 
