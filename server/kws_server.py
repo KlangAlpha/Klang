@@ -112,12 +112,27 @@ def await_run(coroutine):
     except StopIteration as e:
         return e.value
 
+def PROGRESS(val=None):
+    name,code,hqltsz,tdxbk,tdxgn = getstockinfo()
+    message = {"type":K_RET,"retcode":"PROGRESS","name":name,"code":code,\
+        "value":str(val)}
+    msg = json.dumps(message)
+    await_run(ws.send(msg))
+
+    # Windows 平台需要使用 run_once刷新要发送的数据，否则堆积发送数据直到下一个loop run发生
+    if sys.platform == 'win32':
+        try:
+            loop = asyncio.get_running_loop()
+            loop._run_once()
+        except:
+            pass
+
 # 因为DISPLAY是需要在Klang执行，所以需要await_run执行 sync消息
 def DISPLAY(value):
 
     name,code,hqltsz,tdxbk,tdxgn = getstockinfo()
     chouma = Kl.chouma()
-    message = {"type":K_RET,"name":name,"code":code,\
+    message = {"type":K_RET,"retcode":"DISPLAY","name":name,"code":code,\
         "value":str(value),"hqltsz":hqltsz,'tdxbk':tdxbk,'tdxgn':tdxgn,'chouma':chouma}
     msg = json.dumps(message)
     await_run(ws.send(msg))

@@ -85,7 +85,7 @@ class KlangMSG():
     async def parse(self,msg):
         if msg["type"] == K_RET:
             msg["type"] = U_RET
-            msg["retcode"] = "DISPLAY"
+            #msg["retcode"] = "DISPLAY"
             data = json.dumps(msg)
             await self.exe_user.send(data) #转发给用户
 
