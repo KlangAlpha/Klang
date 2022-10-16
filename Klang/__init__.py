@@ -8,9 +8,10 @@ from .Kdatas import *            #2.
 from .KSeq2Feature import *      #3. 特征计算
 from .talib_api import *         # 引用talib库的 基础算法
 from .tdx import *               # tdx公式算法
+from .Kfeature import *
 
-#2022.10.12
-version="0.9.2"
+#2022.10.16
+version="0.9.3"
 
 #1. Kl 是全局使用的变量 
 # 共享 Kl 给 kdatas 
@@ -65,7 +66,8 @@ __all__ = [
     "COUNT",
     "HHV",
     "LLV",
-    "IF", "IIF"
+    "IF", "IIF",
+    "TRANSVERSE"
 ]
 
 

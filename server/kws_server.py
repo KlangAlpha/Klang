@@ -56,7 +56,8 @@ from Klang import (Kl,
     HHV,
     LLV,
     IF, IIF,
-    MACD,APPROX)
+    MACD,APPROX,
+    TRANSVERSE)
 
 from Klang.Klang import Klang_init
 
