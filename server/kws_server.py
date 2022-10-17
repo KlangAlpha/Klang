@@ -149,23 +149,32 @@ async def execute(handler,data):
     print(data)
 
     # 1. 判断是否加loop循环之行
-    if data.get("loop") is not None:
-        code = kloopexec(data['content'])
+    # 2. loop == False, manager 处理循环
+    if data.get("loop") is not None and data.get("loop") != False:
+        content = kloopexec(data['content'])
     else:
-        code = data['content']+"\n"
+        content = data['content']+"\n"
 
     # 2. 执行 busy lock 执行锁
     mutex.acquire()
 
-    Kexec(code)
+    Kexec(content)
     # unlock
 
     mutex.release()   #之行完成，解锁，发通知给web用户
     print('执行完成')
 
-    # 3. 执行完成 
-    await handler.done()
+    # 3. 执行完成
 
+    await handler.done(data.get("loop"))
+
+async def return_list(handler,data):
+    print(data)
+    stocklist = Kl.stocklist
+    data ["stocklist"]  = stocklist
+    data ["type"]  = "LOOP_EXE"
+    msg = json.dumps(data)
+    await handler.websocket.send(msg)
 # server 和klang执行服务器交互
 # Klang msg type
 #K_REG          = "K_REG"   #服务器发送给管理这服务器上线
@@ -199,7 +208,11 @@ class KlangMSG():
  
     async def parse(self,msg):
         if msg["type"] == K_EXE:
-            await execute(self,msg)    
+            if msg["event"] == "DO":
+                await execute(self,msg) 
+            if msg["event"] == "GET_BASE_LIST":
+                await return_list(self,msg)
+
         if msg["type"] == K_DONE:
             mutex.acquire()
             self.state = 0
@@ -211,8 +224,8 @@ class KlangMSG():
             if msg["content"] == "DOWNLOADALL":
                 downloadall(msg)
 
-    async def done(self):
-        msg ={"type":K_DONE}
+    async def done(self,loop):
+        msg ={"type":K_DONE,"loop":loop}
         data = json.dumps(msg)
         await self.websocket.send(data)
 

@@ -10,8 +10,8 @@ from .talib_api import *         # 引用talib库的 基础算法
 from .tdx import *               # tdx公式算法
 from .Kfeature import *
 
-#2022.10.16
-version="0.9.3"
+#2022.10.17
+version="0.9.5"
 
 #1. Kl 是全局使用的变量 
 # 共享 Kl 给 kdatas 
