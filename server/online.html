@@ -304,10 +304,11 @@
                 content.value = preOne.textContent
                 connstate.checked = false
             run.onclick = function (event) {
-                if (vue.$data.servers.indexOf(0) == -1){
+		// 不再检查 服务器 状态
+                /*if (vue.$data.servers.indexOf(0) == -1){
                     alert("没有空闲服务器请稍等")
                     return
-                }
+                }*/
 
                 if (connstate.checked == false){
                     alert("请先链接,或者刷新页面链接服务器")
