@@ -61,6 +61,11 @@ from Klang import (Kl,
 
 from Klang.Klang import Klang_init
 
+if len(sys.argv) > 1:
+    canUpdate = sys.argv[1]
+    if canUpdate == "canUpdate":
+        Kl.canUpdate = True
+
 Klang_init()
 
 code = Kl.code
@@ -235,11 +240,6 @@ class KlangMSG():
 server_host = 'ws://localhost:9088/klang'
 #server_host = 'wss://klang.org.cn:8099/klang'
 #server_host = 'ws://klang.org.cn:9099/klang'
-
-if len(sys.argv) > 1:
-    server_host = sys.argv[1]
-
-print(server_host)
 
 async def conn_server():
 

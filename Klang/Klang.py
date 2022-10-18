@@ -25,7 +25,7 @@ class Klang():
         self.dfstart      = "2021-01-01"
         self.dfend        = end #当前要计算的交易周期
         self.reload       = False
-        
+        self.canUpdate    = False # 允许更新update_list.csv        
 
 
 

@@ -267,6 +267,8 @@ class GetData:
 # 下载所有的股票
 def downloadstockdata(Kl):
 
+    if Kl.canUpdate == False: #仅仅一个server能下载，其他server直接返回
+        return
     bar = Bar('Downloading ',max=len(Kl.stocklist))
     bar.is_tty = lambda :True
     today = get_date(0)
@@ -285,6 +287,8 @@ def downloadstockdata(Kl):
 # 更新所有的股票
 # 更新仅仅更新日K，下载是下载日，月，周
 def updatestockdata(Kl,check=True):
+    if Kl.canUpdate == False: #仅仅一个server更新，其他server直接返回
+        return
 
     bar = Bar('Downloading ',max=len(Kl.stocklist))
     bar.is_tty = lambda :True
@@ -295,7 +299,6 @@ def updatestockdata(Kl,check=True):
         day_data.update_data(Kl,code,check)
         #week_data.update_data(Kl,code,check)
         #month_data.update_data(Kl,code,chedk)
-
         save_stockupdate()
         bar.next()
     bar.finish()
