@@ -114,7 +114,7 @@ def DISPLAY(value):
 
 def execute(data):
     global user_id 
-    print(data)
+    #print(data)
     
     # 1. 判断是否加loop循环之行
     # 2. loop == False, manager 处理循环
@@ -129,7 +129,7 @@ def execute(data):
     Kexec(content)
     # unlock
     mutex.release()   #之行完成，解锁，发通知给web用户
-    print('执行完成')
+    #print('执行完成')
 
     # 3. 执行完成
     

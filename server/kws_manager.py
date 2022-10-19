@@ -46,7 +46,7 @@ def do_loop(data):
             source_code = "code('" + stock["code"] + "')\n;" + content
             data ["content"] = source_code
             sio.emit("do_exec",data,to=ws,namespace="/Kserver")
-            eventlet.sleep(0.001)
+            #eventlet.sleep(0.001)
         sio.emit('u_done',{"done":"ok"},to=user_id,namespace="/user")
 
 class Kserver(socketio.Namespace):
@@ -61,16 +61,12 @@ class Kserver(socketio.Namespace):
 
     def on_ret_loop_list(self,sid,data):
 
-        mutex.acquire()
         server_list[sid] = 0
-        mutex.release()
         sio.start_background_task(do_loop,data)
 
     def on_exec_done(self,sid,data):
         #lock
-        mutex.acquire()
         server_list[sid] = 0
-        mutex.release()
 
     def on_user_ret(self,sid,data):
         self.emit('u_ret',data,to=data["user_id"],namespace="/user")
