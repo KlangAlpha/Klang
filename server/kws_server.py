@@ -6,6 +6,8 @@ logging.basicConfig()
 import threading
 import sys,os
 
+sys.path.append(os.path.expanduser(sys.path[0] + "/../"))
+
 ######################klang #######################
 from Klang.lang import kparser,setPY,Kexec
 
