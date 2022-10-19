@@ -255,7 +255,6 @@
         iohost = "https://klang.org.cn:8099/user"
      }
    
-      iohost = "http://192.168.123.169:9088/user"
       const VueApp = {
         data() {
             return {
@@ -379,73 +378,6 @@
                     
 			}//if
 		      })
-	    /*
-            websocket.onmessage = function (event) {
-                data = JSON.parse(event.data);
-                connstate.checked = true 
-                console.log(data)
-                switch (data.type) {
-                    case 'U_RET':
-                        if (data.retcode=="ERROR"){
-                            alert("系统正在执行其他任务，请稍等");
-                        } 
-                        if (data.retcode=="DISPLAY"){
-                          code = data.code.replace(".","")
-                          hqltsz = data.hqltsz.toFixed(2)
-                          tdxbk = data.tdxbk
-                          tdxgn = data.tdxgn
-                          chouma = data.chouma
-
-                          if (ltszcheck.checked == true && hqltsz < 100.0){
-                            break;
-                          }
-                          if (STcheck.checked == true && data.name.includes("ST")){
-                            break;
-                          }
-
-                          value = data.value
-                          vue.$data.result.push({name:data.name,code:code,value:value,hqltsz:hqltsz,tdxbk:tdxbk,tdxgn:tdxgn,chouma:chouma})
-                          break;
-                        }  
-                         
-                        break;
-                    case 'U_INFO':
-                        vue.$data.usercount = data.users
-                        vue.$data.online = 1
-                        vue.$data.servers = data.servers
-                        break;
-                    case 'U_DONE':
-                        vue.$data.work = 0
-                        break;
-                    case 'display':
-                        code = data.code.replace(".","")
-                        hqltsz = data.hqltsz.toFixed(2)
-                        tdxbk = data.tdxbk
-                        tdxgn = data.tdxgn
-                        chouma = data.chouma
-
-                        if (ltszcheck.checked == true && hqltsz < 100.0){
-                            break;
-                        }
-                        if (STcheck.checked == true && data.name.includes("ST")){
-                            break;
-                        }
-
-                        value = data.value
-                        vue.$data.result.push({name:data.name,code:code,value:value,hqltsz:hqltsz,tdxbk:tdxbk,tdxgn:tdxgn,chouma:chouma})
-                        break;
-                    default:
-                        console.error(
-                            "unsupported event", data);
-                }
-            };
-            websocket.onclose = function (e) {
-                    console.log('websocket 断开: ' + e.code + ' ' + e.reason + ' ' + e.wasClean)
-                    vue.$data.online = 0
-                    vue.$data.usercount = 0
-                    vue.$data.work = 0
-                    connstate.checked = false
-            }*/
  
    </script>
 

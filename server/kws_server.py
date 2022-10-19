@@ -144,6 +144,7 @@ def get_stock_list(data):
 
 sio = socketio.Client()
 hostserver = 'http://localhost:9088'
+#hostserver = 'https://klang.org.cn:8099'
           
 class KserverNamespace(socketio.ClientNamespace):
     def on_connect(self):
