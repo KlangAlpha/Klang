@@ -21,6 +21,7 @@ def get_path(name):
 data_path = get_path("~/.klang")
 os.makedirs(data_path, exist_ok=True)
 dst_path = data_path
+temp_zipfile = get_path("~/"+filename)
 
 def download():
 
@@ -32,7 +33,7 @@ def download():
     req = requests.get(url, stream=True)
 
     try:
-        with(open(filename, 'ab')) as f:
+        with(open(temp_zipfile, 'ab')) as f:
             for chunk in req.iter_content(chunk_size=1024*100):
                 if chunk:
                     f.write(chunk)
@@ -43,7 +44,7 @@ def download():
     prog.finish()
 
 def unzip():
-    with zipfile.ZipFile(filename,"r") as zipObj:
+    with zipfile.ZipFile(temp_zipfile,"r") as zipObj:
         zipObj.extractall(dst_path)
 # step 1. download file
 download()
@@ -54,4 +55,4 @@ unzip()
 
 
 # step 3. remove 
-os.remove(filename)
+os.remove(temp_zipfile)
