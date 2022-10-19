@@ -242,18 +242,20 @@
   <script src="https://klang.org.cn/assets/vendor/glightbox/js/glightbox.min.js"></script>
 <script crossorigin="anonymous" integrity="sha512-KvaXQuRkPKYVQnd5RtRnFPR51W3+Vz+uq0IX8/TYaA2F6hDS2VQQv11BjdHES9boHiHXmqT9oC4H3AJLbq2Szg==" src="https://lib.baomitu.com/vue/3.2.31/vue.global.js"></script>
 <script crossorigin="anonymous" integrity="sha512-bPh3uwgU5qEMipS/VOmRqynnMXGGSRv+72H/N260MQeXZIK4PG48401Bsby9Nq5P5fz7hy5UGNmC/W1Z51h2GQ==" src="https://lib.baomitu.com/axios/0.26.1/axios.min.js"></script>
-    <script>
+<script crossorigin="anonymous" integrity="sha512-GtM/5c/Ie0lStj6QwEG0HkpMQuGr9vrOAgFD4nNmImviyZvsJxN7TYU7b+R7Kthob0zFBUpuxfl3R3Mn1qekTw==" src="https://lib.baomitu.com/socket.io/4.5.3/socket.io.min.js"></script>
+  <script>
    var hostname = window.location.hostname
    var host = window.location.host
      if (hostname == "" || hostname=="127.0.0.1" || hostname=="localhost"){
         hostname = "127.0.0.1"
         apihost = "http://127.0.0.1:1337"
-        wshost = "ws://localhost:9088/user"
+        iohost = "http://localhost:9088/user"
      } else {
         apihost = "//data.klang.org.cn"
-        wshost = "wss://klang.org.cn:8099/user"
+        iohost = "https://klang.org.cn:8099/user"
      }
    
+      iohost = "http://192.168.123.169:9088/user"
       const VueApp = {
         data() {
             return {
@@ -289,6 +291,7 @@
       window.vue = Vue.createApp(VueApp).mount('#app')
 
 
+           var socket = new io(iohost);
            var run = document.querySelector('#run'),
                 reset = document.querySelector('#reset'),
                 resetcmd = document.querySelector('#resetcmd'),
@@ -298,25 +301,16 @@
                 connstate = document.querySelector('#flexCheckCheckedDisabled'),
                 ltszcheck = document.querySelector('#ltszCheck'),
                 STcheck = document.querySelector('#STCheck'),
-                websocket = new WebSocket(wshost);
 
-                preOne = document.querySelector('#preOne'),
-                content.value = preOne.textContent
-                connstate.checked = false
+                preOne = document.querySelector('#preOne');
+
+            content.value = preOne.textContent
+            connstate.checked = false
             run.onclick = function (event) {
-		// 不再检查 服务器 状态
-                /*if (vue.$data.servers.indexOf(0) == -1){
-                    alert("没有空闲服务器请稍等")
-                    return
-                }*/
 
-                if (connstate.checked == false){
-                    alert("请先链接,或者刷新页面链接服务器")
-                    return 
-                }
                 vue.$data.result = []
                 vue.$data.work = true
-                websocket.send(JSON.stringify({type: 'U_EXE',content:content.value,loop:true,stype:0}));
+                socket.emit("uexec_event",{content:content.value,loop:true});
             }
 
             function CopyN(arg1){
@@ -331,18 +325,61 @@
                 content.value = ""
             }
 	    function connect_server(){
-		onmessage = websocket.onmessage
-		onclose   = websocket.onclose
-                websocket = new WebSocket(wshost);
-		websocket.onmessage = onmessage
-		websocket.onclose = onclose
+           	 socket = new io(iohost);
 	    }
             resetcmd.onclick = function (event) {
-                websocket.send(JSON.stringify({type: 'U_CMD',content:"UPDATEALL",stype:0,pw:"Klang"}));
+                socket.emit("u_cmd_event",{content:"UPDATEALL"});
             }
-            resetstock.onclick = function (event) {
-                websocket.send(JSON.stringify({type: 'U_CMD',content:"UPDATEALL",stype:0,pw:"Klang"}));
-            }
+
+	    socket.on("disconnect",(data) =>{
+			console.log("disconnected")
+			socket.connect()      
+		})
+
+	    socket.on("u_done",(data) =>{
+		    console.log(data)
+                    vue.$data.online = 0
+                    vue.$data.usercount = 0
+                    vue.$data.work = 0
+                    connstate.checked = false
+      
+		})
+	    
+	    socket.on("u_info",(data) =>{
+                    connstate.checked = true 
+		    console.log(data)
+      
+                        vue.$data.usercount = data.users
+                        vue.$data.online = 1
+                        vue.$data.servers = data.servers
+		})
+	    
+	    socket.on("u_ret",(data) =>{
+		    console.log(data)
+                    connstate.checked = true 
+		         if (data.retcode=="ERROR"){
+                            alert("系统正在执行其他任务，请稍等");
+                        } 
+                        if (data.retcode=="DISPLAY"){
+                          code = data.code.replace(".","")
+                          hqltsz = data.hqltsz.toFixed(2)
+                          tdxbk = data.tdxbk
+                          tdxgn = data.tdxgn
+                          chouma = data.chouma
+
+                          if (ltszcheck.checked == true && hqltsz < 100.0){
+                            return
+                          }
+                          if (STcheck.checked == true && data.name.includes("ST")){
+                            return
+                          }
+
+                          value = data.value
+                          vue.$data.result.push({name:data.name,code:code,value:value,hqltsz:hqltsz,tdxbk:tdxbk,tdxgn:tdxgn,chouma:chouma})
+                    
+			}//if
+		      })
+	    /*
             websocket.onmessage = function (event) {
                 data = JSON.parse(event.data);
                 connstate.checked = true 
@@ -367,9 +404,6 @@
                           }
 
                           value = data.value
-                        /*if (String(parseFloat(value)) != "NaN"){ //NaN 是无法直接比较的
-                            value = parseFloat(value).toFixed(2)
-                        }*/
                           vue.$data.result.push({name:data.name,code:code,value:value,hqltsz:hqltsz,tdxbk:tdxbk,tdxgn:tdxgn,chouma:chouma})
                           break;
                         }  
@@ -398,9 +432,6 @@
                         }
 
                         value = data.value
-                        /*if (String(parseFloat(value)) != "NaN"){ //NaN 是无法直接比较的
-                            value = parseFloat(value).toFixed(2)
-                        }*/
                         vue.$data.result.push({name:data.name,code:code,value:value,hqltsz:hqltsz,tdxbk:tdxbk,tdxgn:tdxgn,chouma:chouma})
                         break;
                     default:
@@ -414,7 +445,7 @@
                     vue.$data.usercount = 0
                     vue.$data.work = 0
                     connstate.checked = false
-            }
+            }*/
  
    </script>
 

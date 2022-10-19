@@ -7,3 +7,5 @@ ply
 websockets
 TA-Lib
 progress
+eventlet
+python-socketio[client]
