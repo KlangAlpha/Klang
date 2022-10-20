@@ -101,9 +101,11 @@ mutex = Lock ()
 user_id = ""
 p_count = 0 
 def PROGRESS(val=1):
+    global p_count
+    p_count +=1
     if val == 0 or p_count % val != 0:
         return 
-
+    
     name,code,hqltsz,tdxbk,tdxgn = getstockinfo()
     message = {"retcode":"PROGRESS","name":name,"code":code,\
         "value":str(val)}
