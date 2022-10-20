@@ -99,7 +99,11 @@ def downloadall(msg):
 mutex = Lock ()
 
 user_id = ""
-def PROGRESS(val=None):
+p_count = 0 
+def PROGRESS(val=1):
+    if val == 0 or p_count % val != 0:
+        return 
+
     name,code,hqltsz,tdxbk,tdxgn = getstockinfo()
     message = {"retcode":"PROGRESS","name":name,"code":code,\
         "value":str(val)}
