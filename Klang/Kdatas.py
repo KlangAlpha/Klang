@@ -27,8 +27,9 @@ df2 = df[(df.date >= '2020-10-01') &
 def getstockdata(name):
     if isinstance(kl.day_df,pandas.core.frame.DataFrame):
         return kl.day_df[name]
+    kl.get_day()
 
-    return []
+    return kl.day_df[name]
         
 #做类似C/C[1]计算
 #计算涨跌率
@@ -263,7 +264,8 @@ class KWdatas(Kdatas):
     def get_week_stockdata(self,name):
         if isinstance(kl.week_df,pandas.core.frame.DataFrame):
             return kl.week_df[name]
-        return []
+        kl.get_week()
+        return kl.week_df[name]
  
     @property
     def data(self):
@@ -283,7 +285,9 @@ class KMdatas(Kdatas):
     def get_month_stockdata(self,name):
         if isinstance(kl.month_df,pandas.core.frame.DataFrame):
             return kl.month_df[name]
-        return []
+        kl.get_month()
+        return kl.month_df[name]
+
     @property
     def data(self):
         if len(self._data) == 0 or self.cur_code != kl.cur_code:

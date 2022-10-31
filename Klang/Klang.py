@@ -29,37 +29,47 @@ class Klang():
 
 
 
-    #df_all 是总的数据
-    #每次加载的时候可以设置并且获取部分数据
-    # copy.deepcopy 深度复制数据，以免破坏
-    def code(self,code):
-        self.cur_code = code
-        self.cur_name = self.stockdict[code]['name']
+    def get_day(self):
+        code = self.cur_code 
         df = self.data_engine.day_data.get_data(self,code,self.start_date,self.end_date)
         df = df[self.dfstart:self.dfend] 
         self.day_df = df
 
+    def get_week(self):
+        code = self.cur_code 
         wdf = self.data_engine.week_data.get_data(self,code,self.start_date,self.end_date)
+        wdf = wdf[self.dfstart:self.dfend] 
         self.week_df = wdf
 
+    def get_month(self):
+        code = self.cur_code   
         mdf = self.data_engine.month_data.get_data(self,code,self.start_date,self.end_date)
-        self.month_df = mdf
+        mdf = mdf[self.dfstart:self.dfend] 
+        self.month_df = mdf 
+
+    #每次加载的时候可以设置并且获取部分数据
+    # copy.deepcopy 深度复制数据，以免破坏
+
+    def code(self,code):
+        self.cur_code = code
+        self.cur_name = self.stockdict[code]['name']
+        self.get_day()
+        self.week_df = None
+        self.month_df = None
+
+
+
 
 
     def date(self,start="2021-01-01",end=end):
 
         self.dfstart=start
         self.dfend=end
+        
+        self.day_df = None 
+        self.week_df = None
+        self.month_df = None
 
-        df = self.data_engine.day_data.get_data(self,self.cur_code,self.start_date,self.end_date)
-        df = df[self.dfstart:self.dfend] 
-        self.day_df = df
-
-        wdf = self.data_engine.week_data.get_data(self,self.cur_code,self.start_date,self.end_date)
-        self.week_df = wdf
-
-        mdf = self.data_engine.month_data.get_data(self,self.cur_code,self.start_date,self.end_date)
-        self.month_df = mdf
 
 
 
