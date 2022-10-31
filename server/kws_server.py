@@ -134,7 +134,10 @@ def execute(data):
     # 2. 执行 busy lock 执行锁
     mutex.acquire()
     user_id = data["user_id"]
-    Kexec(content)
+    try:
+        Kexec(content)
+    except:
+        pass
     # unlock
     mutex.release()   #之行完成，解锁，发通知给web用户
     #print('执行完成')
