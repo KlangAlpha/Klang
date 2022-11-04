@@ -3,5 +3,5 @@ from Klang.Klang import (
 )
 
 Kl = Klang()
-
+Kl.canUpdate = True
 Kl.downloadall()
