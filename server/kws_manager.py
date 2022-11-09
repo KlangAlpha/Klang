@@ -38,7 +38,7 @@ def do_loop(data):
         del data["stocklist"]
         content = data["content"]
         user_id = data["user_id"]
-        #for stock in stocklist:
+        
         for i in range(0,len(stocklist),20):
             new_stock_list = stocklist[i:i+20]
 
@@ -46,11 +46,11 @@ def do_loop(data):
             if ws is None:
                 self.emit('u_done',{"retcode":"没有服务器终止"},to=user_id,namespace="/user")
 
-            #source_code = "code('" + stock["code"] + "')\n;" + content
+            
             data ['stocklist'] = new_stock_list
-            #data ["content"] = source_code
+            
             sio.emit("do_exec",data,to=ws,namespace="/Kserver")
-            #eventlet.sleep(0.001)
+            
         sio.emit('u_done',{"done":"ok"},to=user_id,namespace="/user")
 
 class Kserver(socketio.Namespace):
