@@ -134,10 +134,12 @@ def execute(data):
     # 2. 执行 busy lock 执行锁
     mutex.acquire()
     user_id = data["user_id"]
-    try:
-        Kexec(content)
-    except:
-        pass
+    for stockcode in data ["stocklist"]:
+        content1 = "code('" + stockcode["code"] + "')\n;" + content
+        try:
+            Kexec(content1)
+        except:
+            pass
     # unlock
     mutex.release()   #之行完成，解锁，发通知给web用户
     #print('执行完成')
