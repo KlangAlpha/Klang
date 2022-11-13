@@ -5,7 +5,7 @@ block_cipher = None
 
 
 a = Analysis(
-    ['server\\kws_server.py'],
+    ['server/kws_server.py'],
     pathex=[],
     binaries=[],
     datas=[],
