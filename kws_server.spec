@@ -12,7 +12,7 @@ a = Analysis(
     hiddenimports=[
         'eventlet.hubs.epolls', 'eventlet.hubs.kqueue', 'eventlet.hubs.selects', 'dns', 'dns.asyncbackend', 'dns.asyncquery',
     'dns.dnssec','dns.e164','dns.hash','dns.namedict','dns.tsigkeyring','dns.update','dns.version','dns.zone','dns.asyncresolver',
-    'dns.versioned','engineio', 'socketio', 'flask_socketio', 'threading', 'time', 'queue','engineio.async_drivers.eventlet',
+    'dns.versioned','engineio', 'socketio', 'threading', 'time', 'queue','engineio.async_drivers.eventlet',
     'talib','talib.stream','ply.yacc'
     ],
     hookspath=[],
