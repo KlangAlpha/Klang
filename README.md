@@ -26,6 +26,10 @@ Klang 最大的亮点是支持中文编程,可以看最后的完整例子
 
 # install
 * 安装过程中遇到talib错误，需要搜索talib源代码解决
+* Linux 参考 https://forum.klang.org.cn/topic/6
+* MacOSX brew install ta-lib
+* Windows 参考 https://forum.klang.org.cn/topic/30
+
 ```
 git clone https://github.com/KlangAlpha/Klang
 cd Klang
