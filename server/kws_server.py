@@ -114,9 +114,8 @@ def PROGRESS(val=1):
 
 def DISPLAY(value):
     name,code,hqltsz,tdxbk,tdxgn = getstockinfo()
-    chouma = Kl.chouma()
     message = {"retcode":"DISPLAY","name":name,"code":code,\
-        "value":str(value),"hqltsz":hqltsz,'tdxbk':tdxbk,'tdxgn':tdxgn,'chouma':chouma}
+        "value":str(value),"hqltsz":hqltsz,'tdxbk':tdxbk,'tdxgn':tdxgn}
     message['user_id'] = user_id
     sio.emit("user_ret",message,namespace="/Kserver")
 
