@@ -53,7 +53,10 @@ testblock1 =\
 """
 a,b,c = MACD(C)
 a = 1
+if a > 2:
+    kstop
 e = C[1]
+kstop
 Kl.date('2021-10-01','2022-10-22')
 print(str(e)+":"+str(1))
 """
@@ -67,6 +70,7 @@ Kexec("""\n
 kloop
 
 info = getstockinfo(0)
+kstop
 istran = TRANSVERSE(H,L,60,15)
 if istran:
     print(info,istran)

@@ -56,7 +56,7 @@ def p_kloop(p):
 
 def p_kstop(p):
     '''
-    line_statement : KSTOP SEMI
+    expression : KSTOP
     '''
     p[0] = mAST(action='kstop',params=p[1:])
 
