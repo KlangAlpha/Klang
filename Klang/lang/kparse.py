@@ -21,7 +21,6 @@ def p_function(p):
              | function line_statement
              | function statement_assign 
              | function kloop
-             | function kstop
              | empty
     '''
     if len(p) > 2:
@@ -57,7 +56,7 @@ def p_kloop(p):
 
 def p_kstop(p):
     '''
-    kstop : KSTOP SEMI
+    line_statement : KSTOP SEMI
     '''
     p[0] = mAST(action='kstop',params=p[1:])
 
