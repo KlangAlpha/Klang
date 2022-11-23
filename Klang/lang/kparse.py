@@ -21,6 +21,7 @@ def p_function(p):
              | function line_statement
              | function statement_assign 
              | function kloop
+             | function kstop
              | empty
     '''
     if len(p) > 2:
@@ -53,6 +54,12 @@ def p_kloop(p):
     global blockList
     p[0] = mAST(action='kloop',params=copy.copy(blockList))
     blockList = []
+
+def p_kstop(p):
+    '''
+    kstop : KSTOP SEMI
+    '''
+    p[0] = mAST(action='kstop',params=p[1:])
 
 def p_statement_none(p):
     'line_statement : SEMI'
@@ -337,6 +344,9 @@ def Kexec(datas):
     result = kparser.parse(datas)
     for x in result:
         if x is not None:
-            x.run()
+            ret = x.run()
+             
+            if ret == "KSTOP":
+                return 
 
 
