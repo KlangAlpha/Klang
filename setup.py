@@ -6,7 +6,7 @@ from setuptools import setup
 
 setup(
     name="Klang",
-    version="0.9.6",
+    version="0.9.7",
     url="https://github.com/KlangAlpha/Klang",
     author="asmcos",
     author_email="asmcos@jeapedu.com",
