@@ -50,7 +50,7 @@ from Klang import (Kl,
     LLV,
     IF, IIF,
     MACD,APPROX,
-    TRANSVERSE)
+    TRANSVERSE,RSI,BOLL,STOCH)
 
 from Klang.Klang import Klang_init
 
