@@ -81,6 +81,7 @@ def getstockinfo(name=0):
             Kl.stockdict[code]['tdxgn']
 
 def getInfo(name):
+    code = Kl.cur_code
     return Kl.stockdict[code][name]
 
 def get_chouma(code=0):
