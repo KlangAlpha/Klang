@@ -1,7 +1,13 @@
 from Klang.Klang import (
-    Klang
+    Kl,Klang_init
 )
+import sys
 
-Kl = Klang()
 Kl.canUpdate = True
-Kl.downloadall()
+
+if len(sys.argv) > 1:
+    Kl.downloadall()
+else:
+    Klang_init()
+    Kl.updateall()
+
