@@ -86,7 +86,7 @@ def WMA(X,N):
 # 默认浮动率 0.1
 # 也就是默认浮动10%为接近值
  
-def APPROX(A,B,f_rate=0.1):
+def APPROX(a,b,f_rate=0.1):
 
     if a <= b and a * (1+f_rate) >= b:
         return True
