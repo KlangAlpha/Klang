@@ -50,7 +50,7 @@ from Klang import (Kl,
     LLV,
     IF, IIF,
     MACD,APPROX,
-    TRANSVERSE)
+    TRANSVERSE,RSI,BOLL,STOCH)
 
 from Klang.Klang import Klang_init
 
@@ -79,6 +79,10 @@ def getstockinfo(name=0):
             Kl.day_df['hqltsz'].iloc[-1],\
             Kl.stockdict[code]['tdxbk'],\
             Kl.stockdict[code]['tdxgn']
+
+def getInfo(name):
+    code = Kl.cur_code
+    return Kl.stockdict[code][name]
 
 def get_chouma(code=0):
     return Kl.chouma()
@@ -114,9 +118,8 @@ def PROGRESS(val=1):
 
 def DISPLAY(value):
     name,code,hqltsz,tdxbk,tdxgn = getstockinfo()
-    chouma = Kl.chouma()
     message = {"retcode":"DISPLAY","name":name,"code":code,\
-        "value":str(value),"hqltsz":hqltsz,'tdxbk':tdxbk,'tdxgn':tdxgn,'chouma':chouma}
+        "value":str(value),"hqltsz":hqltsz,'tdxbk':tdxbk,'tdxgn':tdxgn}
     message['user_id'] = user_id
     sio.emit("user_ret",message,namespace="/Kserver")
 

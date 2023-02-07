@@ -11,7 +11,7 @@ a = Analysis(
     datas=[],
     hiddenimports=['eventlet.hubs.epolls', 'eventlet.hubs.kqueue', 'eventlet.hubs.selects', 'dns', 'dns.asyncbackend', 'dns.asyncquery',
     'dns.dnssec','dns.e164','dns.hash','dns.namedict','dns.tsigkeyring','dns.update','dns.version','dns.zone','dns.asyncresolver',
-    'dns.versioned','engineio', 'socketio', 'flask_socketio', 'threading', 'time', 'queue','engineio.async_drivers.eventlet', 'socketserver','http.server'],
+    'dns.versioned','engineio', 'socketio', 'threading', 'time', 'queue','engineio.async_drivers.eventlet', 'socketserver','http.server'],
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
@@ -25,25 +25,30 @@ a = Analysis(
 pyz = PYZ(a.pure, a.zipped_data, cipher=block_cipher)
 
 exe = EXE(
-
     pyz,
     a.scripts,
-    a.binaries,
-    a.zipfiles,
-    a.datas,
     [],
+    exclude_binaries=True,
+    name='kws_manager',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
     upx=True,
-    upx_exclude=[],
-    name='kws_manager',
     console=True,
-    runtime_tmpdir=None,
     disable_windowed_traceback=False,
     argv_emulation=False,
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
+)
+coll = COLLECT(
+    exe,
+    a.binaries,
+    a.zipfiles,
+    a.datas,
+    strip=False,
+    upx=True,
+    upx_exclude=[],
+    name='kws_manager',
 )
 

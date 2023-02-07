@@ -212,7 +212,6 @@
             <th scope="col">流通值(亿)</th>
             <th scope="col">板块</th>
             <th scope="col">概念板块</th>
-            <th scope="col">筹码</th>
             </tr>
             </thead>
              <tbody>
@@ -224,7 +223,6 @@
                 <td>{{item.hqltsz}}</td>
                 <td>{{item.tdxbk}}</td>
                 <td>{{item.tdxgn}}</td>
-                <td>{{item.chouma}}</td>
                 </tr>
                 </tbody>
             </table> 
@@ -364,7 +362,6 @@
                           hqltsz = data.hqltsz.toFixed(2)
                           tdxbk = data.tdxbk
                           tdxgn = data.tdxgn
-                          chouma = data.chouma
 
                           if (ltszcheck.checked == true && hqltsz < 100.0){
                             return
@@ -374,7 +371,7 @@
                           }
 
                           value = data.value
-                          vue.$data.result.push({name:data.name,code:code,value:value,hqltsz:hqltsz,tdxbk:tdxbk,tdxgn:tdxgn,chouma:chouma})
+                          vue.$data.result.push({name:data.name,code:code,value:value,hqltsz:hqltsz,tdxbk:tdxbk,tdxgn:tdxgn})
                     
 			}//if
 		      })

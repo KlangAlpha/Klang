@@ -53,12 +53,25 @@ testblock1 =\
 """
 a,b,c = MACD(C)
 a = 1
+if a > 2:
+    kstop
 e = C[1]
+kstop
 Kl.date('2021-10-01','2022-10-22')
 print(str(e)+":"+str(1))
 """
 
+test3 = """
+PERIOD_RISE = C;riseobjval = 9.9;retrise_top = 0 
+ret = (PERIOD_RISE - PERIOD_RISE[1]) / PERIOD_RISE[1]
+ret = ret * 100 
+if ret > riseobjval:
+   kstop
+if True  and retvol and retvolatility and retrise_top:
+      DISPLAY(C);
 
+"""
+Kexec(test3)
 
 Kexec(testblock1)
 print(a)
@@ -67,13 +80,13 @@ Kexec("""\n
 kloop
 
 info = getstockinfo(0)
+kstop
 istran = TRANSVERSE(H,L,60,15)
 if istran:
     print(info,istran)
 
 endp
 """)
-
 
 while True:
     # 通过Klang谁知一个变量    

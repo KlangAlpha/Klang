@@ -115,6 +115,8 @@ class mAST:
                     'AND': lambda a, b: (a and b),
                     'OR':  lambda a, b: (a or b),
                 }[op](prev, comp)
+        elif self.action == "kstop":
+            result = "KSTOP"
 
         elif self.action == 'binop':
             a = mAST.resolve(self.params[0])
