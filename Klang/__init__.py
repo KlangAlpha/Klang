@@ -6,12 +6,11 @@
 from .Klang import Kl,Klang_init #1.
 from .Kdatas import *            #2.
 from .KSeq2Feature import *      #3. 特征计算
-from .talib_api import *         # 引用talib库的 基础算法
 from .tdx import *               # tdx公式算法
 from .Kfeature import *
 
-#2022.11.23
-version="0.9.7"
+#2023.3.4
+version="0.9.8"
 
 #1. Kl 是全局使用的变量 
 # 共享 Kl 给 kdatas 
