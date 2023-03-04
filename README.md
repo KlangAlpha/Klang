@@ -18,17 +18,11 @@ Klang 最大的亮点是支持中文编程,可以看最后的完整例子
 * 语言解释器采用 python的 ply库，他采用了flex，yacc语法的实现
 * 股票数据来源 baostock,zhanluejia
 * 支持 同花顺、通达信、文华财经等的公式, 感谢funcat 移植到了 Python 版本
-* 支持结构形态 感谢talib
 * Klang 语言是基于Python语法拓展了部分自己的语法，并且编写了快捷的股票公式 
 * 支持网页直接使用,交互方便
 * 支持中文编程,一看就懂
 * 增加了股票特征计算
 
-# install
-* 安装过程中遇到talib错误，需要搜索talib源代码解决
-* Linux 参考 https://forum.klang.org.cn/topic/6
-* MacOSX brew install ta-lib
-* Windows 参考 https://forum.klang.org.cn/topic/30
 
 ```
 git clone https://github.com/KlangAlpha/Klang
