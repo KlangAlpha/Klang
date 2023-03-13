@@ -52,6 +52,22 @@ def _SMA(S, N, M=1):       #中国式的SMA,至少需要120周期才精确 (雪�
 def _WMA(S, N):            #通达信S序列的N日加权移动平均 Yn = (1*X1+2*X2+3*X3+...+n*Xn)/(1+2+3+...+Xn)
     return pd.Series(S).rolling(N).apply(lambda x:x[::-1].cumsum().sum()*2/N/(N+1),raw=True).values 
 
+def __WMA(X, n): #网友提供的版本
+    # type: (np.ndarray, int) -> np.ndarray
+    """
+    通达信WMA, X的N日加权移动平均，算法 Yn = (1*X1+2*X2+3*X3+...+n*Xn)/(1+2+3+...+Xn)
+    :param X: 数组。源数据。
+
+    :param n: 整数。周期。
+    :return: 数组。X的N日加权移动平均
+    """
+    weights = np.array(range(1, n + 1))
+    w = weights / np.sum(weights)
+    S = pd.Series(X)
+
+    res = S.rolling(window=n).apply(lambda x: np.sum(w * x), raw=False).values
+    return res
+
 def _DMA(S, A):            #求S的动态移动平均，A作平滑因子,必须 0<A<1  (此为核心函数，非指标）
     if isinstance(A,(int,float)):  return pd.Series(S).ewm(alpha=A,adjust=False).mean().values    
     A=np.array(A);   A[np.isnan(A)]=1.0;   Y= np.zeros(len(S));   Y[0]=S[0]     
@@ -68,6 +84,13 @@ def _HHV(S,N):             #HHV(C, 5) 最近5天收盘最高价
 def _LLV(S,N):             #LLV(C, 5) 最近5天收盘最低价     
     return pd.Series(S).rolling(N).min().values    
 
+def _SLOPE(S, N):
+    # type: (np.ndarray, int) -> np.ndarray
+    """
+    通达信SLOPE。返S序列N周期回线性回归斜率，N暂时不支持变量。
+    """
+    M = pd.Series(S)
+    return M.rolling(window=N).apply(lambda y: np.polyfit(y.index, y.values, deg=1)[0], raw=False)
 #--------------------------------------------------------------------------------------
 
 
@@ -355,6 +378,88 @@ def WMA(X,N):
     ret = KdataBase()
     ret._data = _WMA(X.data,N)
     return ret
+
+def FORCAST(X,N):
+    
+    """
+    通达信FORCAST. 返回X的线性回归预测值，n暂时不支持变量
+    参考资料：[FORCAST函数的真实含义](http://www.70822.com/soft/sort013/sort03/down-18804.html)
+    
+    :param X: 数组。源数据。
+    :param n: 整数。周期。
+    :return: 数组。线性回归预测值
+    """
+    return 3 * WMA(X, n) - 2 * MA(X, n)
+
+def SLOPE(X,N):
+    ret = KdataBase()
+    ret._data = _SLOPE(X.data,N)
+    return ret 
+
+
+"""
+CODELIKE
+类型：其他函数
+
+功能：代码开头匹配
+
+描述：用法：CODELIKE(代码前缀字符串);
+返回值为1，表示代码以该字符串开头；为0，表示代码不以该字符串开头。
+
+例如：CODELIKE(‘600') AND C>O;
+股票代码以600开头且收阳线。
+"""
+
+def CODELIKE(str1):
+    # "sh." or "sz."
+    code = kl.cur_code[3:] # code 现在是纯数字 
+    l = len(str1)
+    if  code[:1] == str1:
+        return 1
+    return 0
+"""
+INBLOCK
+类型：其他函数
+
+功能：属于板块
+
+描述：用法：INBLOCK(板块名称);
+返回值为1，表示属于该板块；为0，表示不属于该板块。
+
+例如：INBLOCK('沪深300') AND C>O;
+是沪深300成份且收阳线。
+"""
+
+def INBLOCK(bkname):
+    code = kl.cur_code
+    if bkname in kl.stockdict[code]['tdxbk']:
+        return 1
+    if bkname in kl.stockdict[code]['tdxgn']:
+        return 1
+    return 
+
+"""
+NAMELIKE
+类型：其他函数
+
+功能：名称开头匹配
+
+描述：用法：NAMELIKE(名称前缀字符串);
+返回值为1，表示股票名称以该字符串开头；为0，表示股票名称不以该字符串开头。
+
+例如：NAMELIKE(‘ST') AND C>O;
+股票名称以ST开头且收阳线。
+"""
+
+def NAMELIKE(name1):
+    name = kl.cur_name      
+    l = len(name1)
+    if  name[:1] == name1:
+        return 1
+    return 0
+
+
+
 
 
 
