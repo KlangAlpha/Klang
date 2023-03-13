@@ -1,3 +1,10 @@
+import sys
+from pathlib import Path # if you haven't already done so
+root = Path(__file__).resolve().parents[1]
+sys.path.append(str(root))
+sys.path.append(str(root)+"/Klang")
+
+
 from Klang import (
     C,O,Klang,
     MC,WC,MO,WO,T,WT,MT,
