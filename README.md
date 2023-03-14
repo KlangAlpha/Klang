@@ -252,7 +252,8 @@ python3 setup install
 └── testparse.py
 
 ```
-
+# 增加pattern代码
+   通过zigzag 折点实现模型识别。
 
 # 麦语言 文化财经， 通达信公式支持列表
    * DNULL,DRAWNULL,REF,REFDATE,CROSS,BARSCOUNT,BARSLAST,BARSLASTFIND
