@@ -91,6 +91,13 @@ def _SLOPE(S, N):
     """
     M = pd.Series(S)
     return M.rolling(window=N).apply(lambda y: np.polyfit(y.index, y.values, deg=1)[0], raw=False)
+
+def _shift(x, n):
+    if n >= 0:
+        return np.r_[np.full(n, np.nan), x[:-n]]
+    else:
+        return np.r_[x[-n:], np.full(-n, np.nan)]
+
 #--------------------------------------------------------------------------------------
 
 
@@ -394,6 +401,12 @@ def FORCAST(X,N):
 def SLOPE(X,N):
     ret = KdataBase()
     ret._data = _SLOPE(X.data,N)
+    return ret 
+
+
+def ALIGNRIGHT(X,N):
+    ret = KdataBase()
+    ret._data = _shift(X.data,N).tolist()
     return ret 
 
 
