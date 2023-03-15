@@ -98,6 +98,35 @@ def _shift(x, n):
     else:
         return np.r_[x[-n:], np.full(-n, np.nan)]
 
+
+def _KAMA(X, n=10, pow1=2, pow2=30):
+    ''' kama indicator '''
+    ''' accepts pandas dataframe of prices '''
+
+    price = pd.DataFrame(X) 
+    absDiffx = np.concatenate(abs(price - price.shift(1) ).values)
+
+    ER_num = np.concatenate(abs( price - price.shift(n) ).values)
+    ER_den = _SUM(absDiffx,n)
+    ER = ER_num / ER_den
+
+    sc = ( ER*(2.0/(pow1+1)-2.0/(pow2+1.0))+2/(pow2+1.0) ) ** 2.0
+
+
+    answer = np.zeros(sc.size)
+    N = len(answer)
+    first_value = True
+
+    for i in range(N):
+        if sc[i] != sc[i]:
+            answer[i] = np.nan
+        else:
+            if first_value:
+                answer[i] = X[i]
+                first_value = False
+            else:
+                answer[i] = answer[i-1] + sc[i] * (X[i] - answer[i-1])
+    return answer
 #--------------------------------------------------------------------------------------
 
 
@@ -407,6 +436,11 @@ def SLOPE(X,N):
 def ALIGNRIGHT(X,N):
     ret = KdataBase()
     ret._data = _shift(X.data,N).tolist()
+    return ret 
+
+def AMA(X,N):
+    ret = KdataBase()
+    ret._data = _KAMA(X.data,N).tolist()
     return ret 
 
 
