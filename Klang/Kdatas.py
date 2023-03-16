@@ -95,6 +95,7 @@ class KdataBase(object):
             kb = KdataBase()
             d1,d2 = match_size(self.data,other.data)
             kb._data = d1 < d2
+            kb.dtype = bool
             return kb
         else: #int float
             return self.value < other
@@ -106,6 +107,7 @@ class KdataBase(object):
             kb = KdataBase()
             d1,d2 = match_size(self.data,other.data)
             kb._data = d1 > d2
+            kb.dtype = bool
             return kb
         else: #int float
             return self.value > other
@@ -117,6 +119,7 @@ class KdataBase(object):
             kb = KdataBase()
             d1,d2 = match_size(self.data,other.data)
             kb._data = d1 == d2
+            kb.dtype = bool
             return kb
         else: #int float
             return self.value == other
@@ -128,6 +131,7 @@ class KdataBase(object):
             kb = KdataBase()
             d1,d2 = match_size(self.data,other.data)
             kb._data = d1 != d2
+            kb.dtype = bool
             return kb
         else: #int float
             return self.value != other
@@ -139,6 +143,7 @@ class KdataBase(object):
             kb = KdataBase()
             d1,d2 = match_size(self.data,other.data)
             kb._data = d1 >= d2
+            kb.dtype = bool
             return kb
         else: #int float
             return self.value >= other
@@ -150,6 +155,7 @@ class KdataBase(object):
             kb = KdataBase()
             d1,d2 = match_size(self.data,other.data)
             kb._data = d1 <= d2
+            kb.dtype = bool
             return kb
         else: #int float
             return self.value <= other
