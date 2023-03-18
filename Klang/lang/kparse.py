@@ -45,7 +45,7 @@ def p_func_block(p):
     else:
         debug('FUNCTION', p[1:])
 
-#讲循环里面的语句块 加入到loop里面
+#将循环里面的语句块 加入到loop里面
 def p_kloop(p):
     '''
     kloop : KLOOP SEMI func_block  ENDP %prec LOOP_INSTR

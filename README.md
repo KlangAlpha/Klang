@@ -47,7 +47,11 @@ python3 update_data.py
 
 # 应用示例 python  版本
 * 第一次会下载数据,预计需要几分钟,推荐先用上面的步骤下载数据后再执行
-* 具体例子可以看 test.py,testparse.py
+* 具体例子可以看 
+```
+python3 examples/test.py
+python3 examples/testparse.py
+```
 
 ```
 from Klang import Klang,C,O
@@ -134,7 +138,7 @@ Kexec("ABCD=pi+1;") #调用K语言执行，执行后K变量共享给了python
 
 
 ### 执行一段代码
-* 详细例子参见 testparse.py
+* 详细例子参见 python3 examples/testparse.py
 * 这里我们定制了一段kloop...endp，表示循环计算所有的A股
 ```
 testblock=\
@@ -226,32 +230,41 @@ python3 setup install
 
 
 # 文件说明
-```
-├── Klang
-│   ├── Kdatas.py               # 封装数据接口
-│   ├── Kfeature.py             # 股票特征计算,形态计算
-│   ├── Klang.py                # 主类
-│   ├── __init__.py         
-│   ├── common.py               # 公共设置
-│   ├── data_klang.py           # 股票数据接口 klang.org.cn
-│   ├── lang                    # Klang 编程语言目录
-│   │   ├── __init__.py
-│   │   ├── klex.py
-│   │   ├── kparse.py
-│   │   └── mAST.py             # 语言的解释
-│   ├── talib_api.py            # 应用封装talib
-│   └── tdx.py                  # 兼容 通达信公式
-├── LICENSE
-├── README.md
-├── server
-│   ├── online.html             # 在线使用的代码
-│   └── wsserver.py             # 通过websocket和后台联系
-├── requirements.txt
-├── setup.py
+```bash
+tree server/ examples/ Klang
+server/
+├── __init__.py
+├── kws_manager.py
+├── kws_manager_ws.py
+├── kws_server.py
+├── kws_server_ws.py
+└── online.html
+examples/
+├── test_feature.py
+├── testparse.py
 ├── test.py
-└── testparse.py
+└── test_tdx_api.py
+Klang
+├── common.py
+├── data_klang.py
+├── __init__.py
+├── Kdatas.py
+├── Kfeature.py
+├── Klang.py
+├── KSeq2Feature.py
+├── lang
+│   ├── __init__.py
+│   ├── klex.py
+│   ├── kparse.py
+│   └── mAST.py
+├── pattern
+│   ├── patterns.py
+│   ├── zigzag.js
+│   └── zigzag_lib.py
+└── tdx.py
 
 ```
+
 # 增加pattern代码
    通过zigzag 折点实现模型识别。
 
@@ -263,6 +276,8 @@ python3 setup install
 ### 其他函数
    * CODELIKE,INBLOCK,NAMELIKE
 
+### 未来函数
+   * BACKSET
 
 #### 未实现列表
    * EXTERNSTR,EXTERNVALUE,SIGNALS\_USER,

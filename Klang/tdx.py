@@ -217,6 +217,37 @@ def BARSLASTFIND(X,val):
     return i
 #
 
+"""
+BARSLASTCOUNT
+类型：引用函数
+
+功能：条件连续成立次数
+
+描述：统计连续满足条件的周期数。
+
+用法：BARSLASTCOUNT(X);
+
+统计连续满足X条件的周期数。
+
+例如：BARSLASTCOUNT(CLOSE>OPEN);
+
+表示统计连续收阳的周期数。
+"""
+def BARSLASTCOUNT(X):
+    result = [0] * len(X)
+    count = 0
+    for i in range(0,len(X.data)) :
+        if X.data[i]:
+            count +=1
+            result[i] = count
+        else:
+            count = 0
+    
+    ret = KdataBase()
+    ret._data = result
+    return ret 
+    
+
 def HHV(X,N):
     ret = KdataBase()
     if N == 0:
@@ -507,9 +538,29 @@ def NAMELIKE(name1):
 
 
 
+"""
+用法: BACKSET(X,N), 若X非0,则将当前位置到N周期前的数值设为1.
 
+例如: BACKSET(CLOSE>OPEN,2) 若收阳则将该周期及前一周期数值设为1,否则为0
+"""
 
+def BACKSET(X,N):
+    
+    result = [0] * len(X.data) #生成返回数组
 
+    # 设置当前位置和当前N个周期前为1,除非已经到达0位置
+    def set_n_1(offset):
+        for j in range(0,N):
+            if offset -j >=0:
+                result[offset - j] = 1
+
+    for n in range(1,len(X.data)+1):
+        if X.data[-n]:
+            ofs = len(X.data) - n 
+            set_n_1(ofs)
+  
+    return result 
+    
 #######################
 # Klang 自己的公式
 #######################
