@@ -23,6 +23,26 @@ Klang 最大的亮点是支持中文编程,可以看最后的完整例子
 * 支持中文编程,一看就懂
 * 增加了股票特征计算
 
+# 增加pattern代码
+   通过zigzag 折点实现模型识别。 支持W底，支持V型反转，支持杯柄（cup-handle）算法
+
+# 麦语言 文化财经， 通达信公式支持列表
+   * DNULL,DRAWNULL,REF,REFDATE,CROSS
+   * HHV,LLV,IIF,MIN,MAX,EVERY,EXIST,COUNT,SMA,MA,ABS,MACD,RSI,BOLL,
+   * KDJ(STOCH),SUM,STD,EMA,WMA,APPROX,FORCAST,SLOPE,ALIGNRIGHT,AMA
+
+### 其他函数
+   * CODELIKE,INBLOCK,NAMELIKE
+
+### 未来函数
+   * BACKSET
+
+### 引用函数
+   * BARSLASTCOUNT ,BARSCOUNT,BARSLAST,BARSLASTFIND,BARSNEXT
+
+
+#### 未实现列表
+   * EXTERNSTR,EXTERNVALUE,SIGNALS\_USER,
 
 ```
 git clone https://github.com/KlangAlpha/Klang
@@ -265,23 +285,4 @@ Klang
 
 ```
 
-# 增加pattern代码
-   通过zigzag 折点实现模型识别。
 
-# 麦语言 文化财经， 通达信公式支持列表
-   * DNULL,DRAWNULL,REF,REFDATE,CROSS
-   * HHV,LLV,IIF,MIN,MAX,EVERY,EXIST,COUNT,SMA,MA,ABS,MACD,RSI,BOLL,
-   * KDJ(STOCH),SUM,STD,EMA,WMA,APPROX,FORCAST,SLOPE,ALIGNRIGHT,AMA
-
-### 其他函数
-   * CODELIKE,INBLOCK,NAMELIKE
-
-### 未来函数
-   * BACKSET
-
-### 引用函数
-   * BARSLASTCOUNT ,BARSCOUNT,BARSLAST,BARSLASTFIND,BARSNEXT
-
-
-#### 未实现列表
-   * EXTERNSTR,EXTERNVALUE,SIGNALS\_USER,
