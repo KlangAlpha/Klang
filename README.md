@@ -14,7 +14,7 @@ Klang 最大的亮点是支持中文编程,可以看最后的完整例子
 你可以在线体验 Klang 编程, 无需安装,网站内置了多个选股公式 [Online](https://klang.org.cn/online.html)
 
 
-# Klang 是股票K线形态语言,基于 python3
+## Klang 是股票K线形态语言,基于 python3
 * 语言解释器采用 python的 ply库，他采用了flex，yacc语法的实现
 * 股票数据来源 baostock,zhanluejia
 * 支持 同花顺、通达信、文华财经等的公式, 感谢funcat 移植到了 Python 版本
@@ -23,10 +23,10 @@ Klang 最大的亮点是支持中文编程,可以看最后的完整例子
 * 支持中文编程,一看就懂
 * 增加了股票特征计算
 
-# 增加pattern代码
+## 增加pattern代码
    通过zigzag 折点实现模型识别。 支持W底，支持V型反转，支持杯柄（cup-handle）算法
 
-# 麦语言 文华财经， 通达信，同花顺公式支持列表
+## 麦语言 文华财经， 通达信，同花顺公式支持列表
    * DNULL,DRAWNULL,REF,REFDATE,CROSS
    * HHV,LLV,IIF,MIN,MAX,EVERY,EXIST,COUNT,SMA,MA,ABS,MACD,RSI,BOLL,
    * KDJ(STOCH),SUM,STD,EMA,WMA,APPROX,FORCAST,SLOPE,ALIGNRIGHT,AMA
@@ -44,6 +44,7 @@ Klang 最大的亮点是支持中文编程,可以看最后的完整例子
 #### 未实现列表
    * EXTERNSTR,EXTERNVALUE,SIGNALS\_USER,
 
+# 安装
 ```
 git clone https://github.com/KlangAlpha/Klang
 cd Klang
@@ -51,7 +52,7 @@ pip3 install -r requirements.txt
 python3 setup.py install
 ```
 
-# 下载数据, 也可以直接使用不下载数据，下载数据约10分钟。
+## 下载数据, 也可以直接使用不下载数据，下载数据约10分钟。
 * 可以跳过，直接运行
 * 下载数据有2种方法，第一种是直接下载压缩包，第二种是使用API下载
 
@@ -126,7 +127,7 @@ REF(C,5) # 5周期前的收盘价，5日前收盘价
 ### 同时实现了MA,SMA,HHV,LLV,ABS等
 
 
-# Klang 语言(K浪)
+## Klang 语言(K浪)
 * testparse.py 代码片段
 
 ```
@@ -221,7 +222,7 @@ python3 setup install
 ```
 
 浏览 online.html 即可运算公式了
-# 支持中文编程
+## 支持中文编程
 
 ```
 
