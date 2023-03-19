@@ -97,6 +97,11 @@ class KdataBase(object):
             kb._data = d1 < d2
             kb.dtype = bool
             return kb
+        if isinstance(other,float) or isinstance(other,int):
+            kb = KdataBase()
+            kb._data = self.data < other
+            kb.dtype = bool
+            return kb     
         else: #int float
             return self.value < other
 
@@ -109,6 +114,11 @@ class KdataBase(object):
             kb._data = d1 > d2
             kb.dtype = bool
             return kb
+        if isinstance(other,float) or isinstance(other,int):
+            kb = KdataBase()
+            kb._data = self.data > other
+            kb.dtype = bool
+            return kb             
         else: #int float
             return self.value > other
 
@@ -121,6 +131,11 @@ class KdataBase(object):
             kb._data = d1 == d2
             kb.dtype = bool
             return kb
+        if isinstance(other,float) or isinstance(other,int):
+            kb = KdataBase()
+            kb._data = self.data == other
+            kb.dtype = bool
+            return kb             
         else: #int float
             return self.value == other
 
@@ -133,6 +148,11 @@ class KdataBase(object):
             kb._data = d1 != d2
             kb.dtype = bool
             return kb
+        if isinstance(other,float) or isinstance(other,int):
+            kb = KdataBase()
+            kb._data = self.data != other
+            kb.dtype = bool
+            return kb             
         else: #int float
             return self.value != other
 
@@ -145,6 +165,11 @@ class KdataBase(object):
             kb._data = d1 >= d2
             kb.dtype = bool
             return kb
+        if isinstance(other,float) or isinstance(other,int):
+            kb = KdataBase()
+            kb._data = self.data >= other
+            kb.dtype = bool
+            return kb 
         else: #int float
             return self.value >= other
 
@@ -157,6 +182,11 @@ class KdataBase(object):
             kb._data = d1 <= d2
             kb.dtype = bool
             return kb
+        if isinstance(other,float) or isinstance(other,int):
+            kb = KdataBase()
+            kb._data = self.data <= other
+            kb.dtype = bool
+            return kb             
         else: #int float
             return self.value <= other
 
@@ -167,6 +197,10 @@ class KdataBase(object):
             d1,d2 = match_size(self.data,other.data)
             kb._data = d1 + d2
             return kb
+        if isinstance(other,float) or isinstance(other,int):
+            kb = KdataBase()
+            kb._data = self.data + other
+            return kb             
         else: #int float
             return self.value + other
     # -
@@ -176,6 +210,10 @@ class KdataBase(object):
             d1,d2 = match_size(self.data,other.data)
             kb._data = d1 - d2
             return kb
+        if isinstance(other,float) or isinstance(other,int):
+            kb = KdataBase()
+            kb._data = self.data - other
+            return kb 
         else: #int float
             return self.value - other
     # -
@@ -185,6 +223,10 @@ class KdataBase(object):
             d1,d2 = match_size(self.data,other.data)
             kb._data = d2 - d1
             return kb
+        if isinstance(other,float) or isinstance(other,int):
+            kb = KdataBase()
+            kb._data = self.data - other
+            return kb             
         else: #int float
             return other - self.value
 
@@ -195,6 +237,10 @@ class KdataBase(object):
             d1,d2 = match_size(self.data,other.data)
             kb._data = d1 * d2
             return kb
+        if isinstance(other,float) or isinstance(other,int):
+            kb = KdataBase()
+            kb._data = self.data * other
+            return kb             
         else: #int float
             return round(self.value * other,3)
 
@@ -206,6 +252,10 @@ class KdataBase(object):
             d1,d2 = match_size(self.data,other.data)
             kb._data = d1 / d2
             return kb
+        if isinstance(other,float) or isinstance(other,int):
+            kb = KdataBase()
+            kb._data = self.data / other
+            return kb             
         else:
             return round(self.value / other,3)
 
@@ -216,6 +266,10 @@ class KdataBase(object):
             d1,d2 = match_size(self.data,other.data)
             kb._data = d2 / d1
             return kb
+        if isinstance(other,float) or isinstance(other,int):
+            kb = KdataBase()
+            kb._data = self.data / other
+            return kb             
         else:
             return round(other / self.value,3)
 

@@ -33,3 +33,9 @@ print(WC,MC,T,MT[-2],WT[-2])
 from Klang import BARSLASTCOUNT
 
 print("BARSLASTCOUNT",BARSLASTCOUNT(C>O).data)
+
+# 设置为隆基
+code('sh.601398')
+from Klang import BARSNEXT
+
+print("BARSNEXT",BARSNEXT(C/REF(C,1)>1).data)

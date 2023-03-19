@@ -9,8 +9,8 @@ from .KSeq2Feature import *      #3. 特征计算
 from .tdx import *               # tdx公式算法
 from .Kfeature import *
 
-#2023.3.4
-version="0.9.8"
+#2023.03.19
+version="0.9.9"
 
 #1. Kl 是全局使用的变量 
 # 共享 Kl 给 kdatas 

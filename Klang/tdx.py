@@ -246,7 +246,37 @@ def BARSLASTCOUNT(X):
     ret = KdataBase()
     ret._data = result
     return ret 
+
+
+"""
+类型：引用函数
+
+功能：下一次条件成立位置
+
+描述：下一次条件成立到当前的周期数。
+
+用法：BARSNEXT(X);
+下一次 X 不为 0 到现在的天数。
+
+例如：BARSNEXT(CLOSE/REF(CLOSE,1)>=1.1);
+表示下一个涨停板到当前的周期数。
+"""
+
+def BARSNEXT(X):
+    result = [0] * len(X)
     
+    for i in range(0,len(X)):
+        X1 = X._data[i+1:]
+        count = 0
+        for j in X1:
+            if j:
+                result[i] = count
+                break 
+            else:
+                count += 1
+    ret = KdataBase()
+    ret._data = result
+    return ret      
 
 def HHV(X,N):
     ret = KdataBase()
@@ -347,16 +377,9 @@ def COUNT(condition,N):
 国内SMA算法,和TA-lib算法不同
 """
 def SMA(datas,period,period2):
-    y1 = 0
-    result = []
-    for d in datas:
-        if str(d) == 'nan':
-            result.append(np.nan)
-            continue
-        y1=(d * period2 + (period-period2)*y1 )/period
-        result.append(y1)
-    return np.array(result,dtype='float64')
-
+    ret = KdataBase()
+    ret._data = _SMA(datas.data,period,period2)
+    return ret 
 
 
 ###########################################################
