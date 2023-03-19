@@ -26,7 +26,7 @@ Klang 最大的亮点是支持中文编程,可以看最后的完整例子
 # 增加pattern代码
    通过zigzag 折点实现模型识别。 支持W底，支持V型反转，支持杯柄（cup-handle）算法
 
-# 麦语言 文化财经， 通达信公式支持列表
+# 麦语言 文华财经， 通达信，同花顺公式支持列表
    * DNULL,DRAWNULL,REF,REFDATE,CROSS
    * HHV,LLV,IIF,MIN,MAX,EVERY,EXIST,COUNT,SMA,MA,ABS,MACD,RSI,BOLL,
    * KDJ(STOCH),SUM,STD,EMA,WMA,APPROX,FORCAST,SLOPE,ALIGNRIGHT,AMA
