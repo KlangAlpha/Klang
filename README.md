@@ -39,6 +39,7 @@ Klang 最大的亮点是支持中文编程,可以看最后的完整例子
 
 ### 引用函数
    * BARSLASTCOUNT ,BARSCOUNT,BARSLAST,BARSLASTFIND,BARSNEXT
+   * BARSSINCE,
 
 
 #### 未实现列表
@@ -192,23 +193,23 @@ Kexec(testblock)
 * kloop,endp 是自定义语法，会遍历整个A股的股票，
 
 
-### examples
-* 使用了网页+websocket server模式
+### server 
+* 使用了网页+ socketio server模式
 * server里调用 Kexec执行 所有的输入
 * 默认的输入会扫描所有的A股4000多只股票
 * 计算结果回传到网页界面显示
 
 ```
-python3 kws_manager.py 
-python3 kws_server.py
+python3 server/kws_manager.py 
+python3 server/kws_server.py
 ```
 
 两个服务同时启动，可以Linux使用 "&" 放到后台
 ```
-python3 kws_manager.py
+python3 server/kws_manager.py
 ```
 
-* 如果kws_server.py启动出错可以有2中方法。
+* 如果kws_server.py启动出错可以有2种方法。
 * 方法一、 安装Klang
 
 ```

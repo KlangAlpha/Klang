@@ -278,6 +278,59 @@ def BARSNEXT(X):
     ret._data = result
     return ret      
 
+"""
+用法: BACKSET(X,N), 若X非0,则将当前位置到N周期前的数值设为1.
+
+例如: BACKSET(CLOSE>OPEN,2) 若收阳则将该周期及前一周期数值设为1,否则为0
+"""
+
+def BACKSET(X,N):
+    
+    result = [0] * len(X.data) #生成返回数组
+
+    # 设置当前位置和当前N个周期前为1,除非已经到达0位置
+    def set_n_1(offset):
+        for j in range(0,N):
+            if offset -j >=0:
+                result[offset - j] = 1
+
+    for n in range(1,len(X.data)+1):
+        if X.data[-n]:
+            ofs = len(X.data) - n 
+            set_n_1(ofs)
+  
+    ret = KdataBase()
+    ret._data = result
+    return ret  
+
+"""
+BARSSINCE
+类型：引用函数
+
+功能：首个条件成立位置
+
+描述：第一个条件成立到当前的周期数。
+
+用法：BARSSINCE(X);
+第一次X不为0到现在的天数。
+
+例如：BARSSINCE(HIGH>10);
+表示股价超过10元时到当前的周期数。
+"""
+def BARSSINCE(X):
+    result = [0] * len(X)
+    count = 0
+    start = False
+    for n in range(0,len(X.data)):
+        if X.data[n] or start:
+            start = True
+            count += 1
+        result[n] = count
+    ret = KdataBase()
+    ret._data = result
+    return ret  
+
+
 def HHV(X,N):
     ret = KdataBase()
     if N == 0:
@@ -561,28 +614,7 @@ def NAMELIKE(name1):
 
 
 
-"""
-用法: BACKSET(X,N), 若X非0,则将当前位置到N周期前的数值设为1.
 
-例如: BACKSET(CLOSE>OPEN,2) 若收阳则将该周期及前一周期数值设为1,否则为0
-"""
-
-def BACKSET(X,N):
-    
-    result = [0] * len(X.data) #生成返回数组
-
-    # 设置当前位置和当前N个周期前为1,除非已经到达0位置
-    def set_n_1(offset):
-        for j in range(0,N):
-            if offset -j >=0:
-                result[offset - j] = 1
-
-    for n in range(1,len(X.data)+1):
-        if X.data[-n]:
-            ofs = len(X.data) - n 
-            set_n_1(ofs)
-  
-    return result 
     
 #######################
 # Klang 自己的公式
