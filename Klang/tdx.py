@@ -330,6 +330,37 @@ def BARSSINCE(X):
     ret._data = result
     return ret  
 
+"""
+BARSSINCEN
+类型：引用函数
+
+功能：N周期内首个条件成立位置
+
+描述：N周期内第一个条件成立到当前的周期数。
+
+用法：BARSSINCEN(X,N);
+N周期内第一次 X 不为 0 到现在的天数。
+
+例如：BARSSINCEN(HIGH>10,10);
+表示10个周期内股价超过10元时到当前的周期数。
+"""
+def BARSSINCEN(X,N):
+    result = [0] * len(X)
+    if N < 0 :
+        N = 0
+
+    for n in range(0,len(X.data)):
+        X1 = X.data[n:n+N]
+        count = 0
+        for j in range(0,len(X1.data)):
+            if X1.data[j]:
+                count = len(X1.data)-j
+                break
+        result[n] = count
+    ret = KdataBase()
+    ret._data = result
+    return ret
+
 
 def HHV(X,N):
     ret = KdataBase()
