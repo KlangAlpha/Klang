@@ -4,6 +4,7 @@
 
 import numpy as np
 from .Kdatas import KdataBase
+
 import pandas as pd
 
 
@@ -360,6 +361,32 @@ def BARSSINCEN(X,N):
     ret = KdataBase()
     ret._data = result
     return ret
+"""
+CALCSTOCKINDEX
+类型：引用函数
+
+功能：指标引用
+
+描述：指标引用。
+
+用法：CALCSTOCKINDEX(品种代码,指标名称,指标线);
+返回该指标相应输出的计算值。
+
+例如：CALCSTOCKINDEX('600000SH','KDJ',3);
+表示上证600000的KDJ指标第3个输出即J之值。
+
+例如：CALCSTOCKINDEX('IFL0','MACD',2);
+表示IFL0品种的MACD指标第2个输出值。
+"""
+def CALCSTOCKINDEX(code,index,N):
+    kl.code(code)
+    func = {"macd":MACD,"kdj":KDJ}
+    if func.get(index):
+        return func.get(index)(C)[N]
+
+    print(index,"Not config or undefine");
+    return None
+
 
 
 def HHV(X,N):
@@ -456,7 +483,24 @@ def COUNT(condition,N):
 
     return count
 
-    
+"""
+CURRBARSCOUNT
+类型：引用函数
+
+功能：到最后交易日的周期
+
+描述：求到最后交易日的周期数。
+"""
+def CURRBARSCOUNT(X):
+    result = [0] * len(X)
+    l = len(X.data)
+    for n in range(0,l):
+        result[n] = l - n
+    ret = KdataBase()
+    ret._data = result
+    return ret
+
+
 """
 国内SMA算法,和TA-lib算法不同
 """
