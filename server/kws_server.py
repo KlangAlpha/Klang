@@ -1,3 +1,4 @@
+import trio
 import socketio
 from threading import Lock
 import logging
