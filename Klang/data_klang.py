@@ -29,7 +29,10 @@ def gethostname():
     for i in resp:
         if i['key'] == 'dataserver':
             serveriplist = i['value'].split(',')
-    host = "http://" + serveriplist[0] + "/api"
+    if 'http://' not in serveriplist[0] and 'https://' not in serveriplist[0]:
+        host = "http://" + serveriplist[0] + "/api"
+    else:
+        host = serveriplist[0] + "/api"
     return host
     
 hostname = gethostname()
