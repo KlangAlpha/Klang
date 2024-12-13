@@ -367,26 +367,11 @@ def _kurtosis(x:list):
 @listify_type
 @filter_none
 def _abs_energy(x:list):
-    """
-      .. math::
-        E = \\sum_{i=1,\ldots, n} x_i^2
-    :param x:
-    :return:
-    """
     return sum([xi**2 for xi in x])
 
 @set_property("name","cid_ce","stypes",[1])
 @filter_none
 def _cid_ce(x:list):
-    """
-    .. math::
-        \\sqrt{ \\sum_{i=0}^{n-2lag} ( x_{i} - x_{i+1})^2 }
-    .. rubric:: References
-    |  [1] Batista, Gustavo EAPA, et al (2014).
-    |  CID: an efficient complexity-invariant distance for time series.
-    :param x:
-    :return:
-    """
     x_z_transformed = _z_transform(x)
     return _abs_energy(x_z_transformed)**(0.5)
 
